@@ -1,6 +1,7 @@
 (function(){
 'use strict';
 var D=window.__D,P=D.prompts;
+var SNAP=null;try{SNAP={app:document.getElementById('app').outerHTML,toast:document.getElementById('toast').outerHTML,tpl:document.getElementById('brain-tpl').outerHTML}}catch(e){}
 var $=function(s,r){return (r||document).querySelector(s)};
 var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
 var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
@@ -429,6 +430,41 @@ function renderPlan(){
   $('#startTxt').textContent=st.start;
   $('#startToday').addEventListener('click',function(){st.start=iso(new Date());save();$('#startTxt').textContent=st.start;refresh()});
 }
+var DEVS=[{n:'모바일',w:390,h:780},{n:'태블릿',w:834,h:1112},{n:'데스크탑',w:1366,h:860}];
+var devIdx=-1,devFrame=null;
+function previewDoc(){
+  if(!SNAP)return '';
+  var h='<!doctype html><html lang="ko" data-theme="'+(document.documentElement.getAttribute('data-theme')||'dark')+'"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">';
+  $$('meta[name="claude:viewport-fit-sides"],link[rel="stylesheet"],style').forEach(function(n){if(n.id!=='devstyle')h+=n.outerHTML});
+  h+='</head><body style="margin:0">'+SNAP.app+SNAP.toast+SNAP.tpl;
+  $$('script[data-nomad]').forEach(function(n){h+=n.outerHTML});
+  return h+'</body></html>';
+}
+function fitDev(){
+  var st=$('#devStage'),box=$('#devBox'),dev=$('#dev');if(!st||!box||devIdx<0)return;
+  var d=DEVS[devIdx],avail=Math.max(200,st.clientWidth-32),s=Math.min(1,avail/d.w);
+  dev.style.width=d.w+'px';dev.style.height=d.h+'px';dev.style.transform='scale('+s+')';
+  box.style.width=Math.round(d.w*s)+'px';box.style.height=Math.round(d.h*s)+'px';
+  $('#devInfo').textContent=d.n+' · 폭 '+d.w+'px'+(s<1?' · '+Math.round(s*100)+'% 축소':'');
+}
+function setDev(i){
+  devIdx=i;
+  $$('#bp button').forEach(function(b){b.setAttribute('aria-pressed',+b.getAttribute('data-d')===i?'true':'false')});
+  fitDev();
+}
+function initDevPreview(){
+  var sel=$('#devView');
+  Object.keys(VIEWS).forEach(function(k){if(k==='spec')return;var o=document.createElement('option');o.value=k;o.textContent=VIEWS[k].t;sel.appendChild(o)});
+  var mq=[matchMedia('(max-width:767px)'),matchMedia('(min-width:768px) and (max-width:1199px)')];
+  setDev(mq[0].matches?0:(mq[1].matches?1:2));
+  var fr=document.createElement('iframe');fr.title='선택한 기기 폭으로 보는 대시보드 미리보기';fr.setAttribute('loading','lazy');
+  $('#dev').appendChild(fr);devFrame=fr;fr.srcdoc=previewDoc();
+  function go(){try{fr.contentWindow.location.hash='#'+sel.value}catch(e){}}
+  fr.addEventListener('load',function(){setTimeout(go,50)});
+  sel.addEventListener('change',go);
+  $$('#bp button').forEach(function(b){b.addEventListener('click',function(){setDev(+b.getAttribute('data-d'))})});
+  if(window.ResizeObserver){new ResizeObserver(fitDev).observe($('#devStage'))}else{window.addEventListener('resize',fitDev)}
+}
 function renderSpec(){
   $('#v-spec').innerHTML='<div style="display:flex;flex-direction:column;gap:var(--sec)"><div class="sec-head"><p class="eyebrow">PLAN</p><h2>기획 요약</h2></div>'+
   '<div class="spec"><section><h3>무엇을 위한 화면인가</h3><p>SSR+ 네 단계의 진행 상태를 한 화면에서 점검하고, 세컨드 브레인 폴더가 어떻게 연결되어 있는지 눈으로 확인합니다. 단계마다 새 대화에서 바로 확인할 수 있는 완료 기준을 둡니다. 사용법은 PDF 가이드를 그대로 화면에 담았습니다.</p></section>'+
@@ -440,11 +476,12 @@ function renderSpec(){
   '<section><h3>다른 대시보드·앱</h3><ul><li>브랜드 라이브러리</li><li>콘텐츠 라이브러리</li><li>아이디어 패드</li><li>ArtCraft 앱 구조</li></ul></section>'+
   '<section><h3>가이드</h3><ul><li>사용 가이드(PDF 17쪽 뷰어·검색)</li><li>7일 세팅 계획·체크리스트</li><li>기획 요약</li></ul></section></div></div>'+
   '<div class="note"><b>사업 연결 아이디어</b> 이 대시보드는 \"AI 업무 시스템 세팅\" 강의·템플릿의 데모로 쓸 수 있습니다. 순서는 (1) 이 화면과 랜딩페이지로 관심 수강생 모으기 → (2) 사전예약으로 수요 확인 → (3) 정부지원사업 신청 시 시연 자료로 활용 → (4) 반응이 있으면 Next.js + Supabase로 정식 개발해 SaaS화.</div>'+
-  '<div class="bp" id="bp" aria-label="화면 구간별 폰트 크기"><div><b>모바일</b><span>~767px · 본문 14 · 보조 12 · 제목 26 · 메뉴는 서랍</span></div><div><b>태블릿</b><span>768~1199px · 본문 15 · 보조 13 · 제목 32 · 아이콘 레일</span></div><div><b>데스크탑</b><span>1200px~ · 본문 16 · 보조 13 · 제목 38 · 전체 GNB</span></div></div>'+
+  '<div class="devwrap"><div class="sec-head" style="margin-bottom:10px"><h3>기기별 화면 미리보기</h3><p class="sub">기기를 고르면 아래에서 그 화면 폭 기준의 실제 대시보드를 볼 수 있습니다. 폰트 크기와 메뉴 형태가 구간마다 달라집니다.</p></div>'+
+  '<div class="bp" id="bp" role="group" aria-label="기기 구간 선택"><button type="button" data-d="0" aria-pressed="false"><b>모바일</b><span>~767px · 본문 14 · 보조 12 · 제목 26 · 메뉴는 서랍</span></button><button type="button" data-d="1" aria-pressed="false"><b>태블릿</b><span>768~1199px · 본문 15 · 보조 13 · 제목 32 · 아이콘 레일</span></button><button type="button" data-d="2" aria-pressed="false"><b>데스크탑</b><span>1200px~ · 본문 16 · 보조 13 · 제목 38 · 전체 GNB</span></button></div>'+
+  '<div class="devbar"><label class="sub" for="devView">보여줄 화면</label><select id="devView"></select><span class="pill" id="devInfo"></span></div>'+
+  '<div class="devstage" id="devStage"><div class="devbox" id="devBox"><div class="dev" id="dev"></div></div></div></div>'+
   '<p class="foot">단계 구성과 문구는 SSR+ 가이드 PDF와 ArtCraft 가이드 PDF를 따랐고, 노드·목록·숫자는 예시입니다. 체크와 메모는 이 브라우저에만 저장됩니다.</p></div>';
-  var mqs=[matchMedia('(max-width:767px)'),matchMedia('(min-width:768px) and (max-width:1199px)'),matchMedia('(min-width:1200px)')];
-  function bp(){var c=$$('#bp div');mqs.forEach(function(m,i){if(c[i])c[i].classList.toggle('on',m.matches)})}
-  mqs.forEach(function(m){if(m.addEventListener){m.addEventListener('change',bp)}else{m.addListener(bp)}});bp();
+  initDevPreview();
 }
 
 /* ---------- 라우터 ---------- */

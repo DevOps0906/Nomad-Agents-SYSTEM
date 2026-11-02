@@ -24,16 +24,16 @@ ${body}
 <template id="brain-tpl">
 ${tpl}
 </template>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script>window.__D=${JSON.stringify({prompts,pages}).replace(/</g,'\\u003c')};</script>
-<script>
+<script data-nomad src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script data-nomad src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script data-nomad>window.__D=${JSON.stringify({prompts,pages}).replace(/</g,'\\u003c')};</script>
+<script data-nomad>
 ${app}
 </script>
-<script>
+<script data-nomad>
 ${ex}
 </script>
-<script>
+<script data-nomad>
 ${home3d}
 </script>
 `;
