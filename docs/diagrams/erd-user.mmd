@@ -1,0 +1,95 @@
+erDiagram
+  user_settings {
+    uuid owner_id PK,FK
+    date plan_start
+    timestamptz imported_v1_at
+    timestamptz created_at
+    timestamptz updated_at
+  }
+  level_progress {
+    uuid owner_id PK,FK
+    text stage_key PK
+    smallint level_index PK
+    boolean done
+    timestamptz updated_at
+  }
+  plan_days {
+    uuid owner_id PK,FK
+    smallint day_index PK,FK
+    boolean done
+    text custom_text
+    timestamptz updated_at
+  }
+  checklist_progress {
+    uuid owner_id PK,FK
+    smallint item_index PK,FK
+    boolean done
+    timestamptz updated_at
+  }
+  ideas {
+    bigint id PK
+    uuid owner_id FK
+    text body
+    text category
+    smallint score
+    bigint legacy_id
+    timestamptz created_at
+  }
+  content_items {
+    bigint id PK
+    uuid owner_id FK
+    text title
+    text channel
+    smallint stage
+    integer sort_order
+    timestamptz created_at
+  }
+  skills {
+    bigint id PK
+    uuid owner_id FK
+    text name
+    text command
+    text frequency
+    integer sort_order
+    timestamptz created_at
+  }
+  routines {
+    bigint id PK
+    uuid owner_id FK
+    text name
+    text schedule_text
+    text skill_command
+    boolean enabled
+    integer sort_order
+    timestamptz created_at
+  }
+  user_extensions {
+    bigint id PK
+    uuid owner_id FK
+    text name
+    text kind_desc
+    boolean connected
+    integer sort_order
+    timestamptz created_at
+  }
+  recent_files {
+    bigint id PK
+    uuid owner_id FK
+    text name
+    text file_type
+    text brain_node_id
+    text when_label
+    integer sort_order
+    timestamptz created_at
+  }
+  date_notes {
+    uuid owner_id PK,FK
+    date note_date PK
+    text body
+    timestamptz updated_at
+  }
+  user_imports {
+    uuid owner_id PK,FK
+    text device_id PK
+    timestamptz imported_at
+  }

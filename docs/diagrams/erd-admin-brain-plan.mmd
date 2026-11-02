@@ -1,0 +1,83 @@
+erDiagram
+  admins {
+    uuid user_id PK,FK
+    timestamptz created_at
+  }
+  catalog_audit {
+    bigint id PK
+    uuid actor_id FK
+    text table_name
+    text op
+    jsonb row_key
+    jsonb old_row
+    jsonb new_row
+    timestamptz created_at
+  }
+  api_tokens {
+    bigint id PK
+    uuid owner_id FK
+    text name
+    text token_prefix
+    text token_hash
+    text scope
+    timestamptz created_at
+    timestamptz last_used_at
+    timestamptz revoked_at
+  }
+  brain_sources {
+    uuid owner_id PK,FK
+    text method
+    text generator
+    integer node_count
+    integer link_count
+    timestamptz last_synced_at
+    timestamptz rate_window_start
+    smallint rate_window_count
+    timestamptz created_at
+  }
+  user_brain_nodes {
+    uuid owner_id PK,FK
+    text node_id PK
+    text kind
+    text domain
+    text parent_id
+    text name
+    text path
+    text summary
+    integer sort_order
+  }
+  user_brain_links {
+    uuid owner_id PK,FK
+    text source_id PK
+    text target_id PK
+  }
+  user_plans {
+    bigint id PK
+    uuid owner_id FK
+    text plan
+    text source
+    timestamptz starts_at
+    timestamptz ends_at
+    bigint bundle_code_id
+    timestamptz created_at
+  }
+  bundle_codes {
+    bigint id PK
+    uuid created_by FK
+    text code_hash
+    text label
+    smallint months
+    integer max_uses
+    integer used_count
+    timestamptz expires_at
+    timestamptz revoked_at
+    timestamptz created_at
+  }
+  redeem_attempts {
+    uuid owner_id PK,FK
+    timestamptz window_start
+    smallint fail_count
+  }
+  user_brain_nodes ||--o{ user_brain_nodes : "owner_id"
+  user_brain_nodes ||--o{ user_brain_links : "owner_id"
+  bundle_codes ||--o{ user_plans : "bundle_code_id"

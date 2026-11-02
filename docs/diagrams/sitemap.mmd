@@ -1,0 +1,106 @@
+flowchart LR
+  subgraph g0["누구나"]
+    n_S00["S00 공통 셸<br/>(모든 화면)"]
+    n_S01["S01 홈<br/>#home"]
+    n_S02["S02 S · 스킬<br/>#skill"]
+    n_S03["S03 S · 세컨드 브레인<br/>#brain"]
+    n_S04["S04 R · 루틴<br/>#routine"]
+    n_S05["S05 + · 익스텐션<br/>#ext"]
+    n_S06["S06 브랜드 라이브러리<br/>#brand"]
+    n_S07["S07 콘텐츠 라이브러리<br/>#content"]
+    n_S08["S08 아이디어 패드<br/>#ideas"]
+    n_S09["S09 ArtCraft 앱<br/>#artcraft"]
+    n_S10["S10 ArtCraft 앱 16종 가이드<br/>#artapps"]
+    n_S11["S11 사용 가이드 (PDF)<br/>#guide"]
+    n_S12["S12 7일 세팅 계획<br/>#plan"]
+    n_S13["S13 기획 요약<br/>#spec"]
+    n_M1["M1 스킬 추가/편집<br/>S01 위 모달"]
+    n_M2["M2 루틴 추가/편집<br/>S01 위 모달"]
+    n_M3["M3 익스텐션 추가/편집<br/>S01 위 모달"]
+    n_M4["M4 최근 파일 추가/편집<br/>S01 위 모달"]
+    n_M5["M5 n일차 목표 편집<br/>S01·S12 위 모달"]
+    n_M6["M6 날짜 편집<br/>S01 위 모달"]
+  end
+  subgraph g1["비로그인"]
+    n_T1["T1 로그인<br/>/login [추정]"]
+    n_T3["T3 로그인 권유 시트<br/>바텀시트(모바일)/모달(태블릿·데스크톱) [추정 구간 배분]"]
+  end
+  subgraph g2["로그인"]
+    n_T2["T2 이 기기 데이터 가져오기<br/>기기마다 첫 로그인 직후 모달 [추정] · 계정 메뉴"]
+    n_B1["B1 두뇌 연동<br/>계정 메뉴 #quot;두뇌 연동 토큰#quot; → /settings/brain [추정]"]
+    n_P1["P1 내 플랜<br/>계정 메뉴 #quot;내 플랜#quot; → /settings/plan [추정]"]
+  end
+  subgraph g3["관리자(`admins`, 아니면 404)"]
+    n_AD1["AD1 카탈로그 목록<br/>/admin"]
+  end
+  subgraph g4["관리자"]
+    n_AD2["AD2 항목 편집<br/>/admin/[table]/[id] [추정]"]
+    n_AD3["AD3 이미지 업로드<br/>/admin/images [추정]"]
+    n_AD4["AD4 변경 이력<br/>/admin/audit [추정]"]
+    n_AD5["AD5 번들 코드 발급<br/>/admin/codes"]
+  end
+  n_S00 --> n_S01
+  n_S00 --> n_S02
+  n_S00 --> n_S03
+  n_S00 --> n_S04
+  n_S00 --> n_S05
+  n_S00 --> n_S06
+  n_S00 --> n_S07
+  n_S00 --> n_S08
+  n_S00 --> n_S09
+  n_S00 --> n_S10
+  n_S00 --> n_S11
+  n_S00 --> n_S12
+  n_S00 --> n_S13
+  n_S00 --> n_T1
+  n_S00 --> n_T2
+  n_S00 --> n_T3
+  n_S00 --> n_B1
+  n_S00 --> n_P1
+  n_S01 --> n_S02
+  n_S01 --> n_S03
+  n_S01 --> n_S04
+  n_S01 --> n_S05
+  n_S01 --> n_S06
+  n_S01 --> n_S07
+  n_S01 --> n_S08
+  n_S01 --> n_S12
+  n_S01 --> n_M1
+  n_S01 --> n_M2
+  n_S01 --> n_M3
+  n_S01 --> n_M4
+  n_S01 --> n_M5
+  n_S01 --> n_M6
+  n_S02 --> n_S11
+  n_S03 --> n_S11
+  n_S04 --> n_S11
+  n_S05 --> n_S11
+  n_S09 --> n_S10
+  n_S09 --> n_S11
+  n_S10 --> n_S09
+  n_S12 --> n_M5
+  n_M1 --> n_S01
+  n_M2 --> n_S01
+  n_M3 --> n_S01
+  n_M4 --> n_S01
+  n_M5 --> n_S01
+  n_M5 --> n_S12
+  n_M6 --> n_S01
+  n_T1 --> n_S01
+  n_T1 --> n_T2
+  n_T2 --> n_S01
+  n_T3 --> n_T1
+  n_B1 --> n_S03
+  n_B1 --> n_S01
+  n_B1 --> n_P1
+  n_P1 --> n_S01
+  n_P1 --> n_B1
+  n_AD1 --> n_AD2
+  n_AD1 --> n_AD3
+  n_AD1 --> n_AD4
+  n_AD1 --> n_AD5
+  n_AD2 --> n_AD1
+  n_AD3 --> n_AD1
+  n_AD4 --> n_AD2
+  n_AD4 --> n_AD1
+  n_AD5 --> n_S01

@@ -10,14 +10,21 @@ sequenceDiagram
   U->>N: 링크 클릭 (콜백)
   N->>A: 코드 → 세션 교환
   A-->>N: 세션 쿠키
-  N->>D: imported_v1_at 확인
-  alt imported_v1_at null + nomad-lab-v1 있음
-    N-->>U: T2 가져오기 확인
-    B->>N: nomad-lab-v1 값 1회 전송
-    N->>N: 형식 검증 (누락 키는 DEF로 보충)
-    N->>D: upsert (owner = auth.uid())
-    N-->>B: 가져오기 완료 표시 [추정]
-  else 이미 가져옴 또는 로컬 값 없음
+  B->>N: 기기 UUID (없으면 생성)
+  N->>D: user_imports에 이 기기 있는지 확인
+  alt 이 기기 처음 + nomad-lab-v1 있음
+    N-->>U: T2 가져올 항목 수 미리보기
+    alt 가져오기
+      B->>N: nomad-lab-v1 + 기기 UUID 전송
+      N->>N: 형식 검증 (zod, 편의 계층)
+      N->>D: import_nomad_v1(p, p_device) — 256KB 재검사
+      D->>D: 병합 (체크 합집합 · 기본값만 로컬 값 · 같은 이름 없을 때만 추가)
+      D-->>N: 완료 (같은 기기 두 번째면 409)
+      N-->>B: 가져오기 완료 표시, 로컬 키 보관 [추정]
+    else 건너뛰기
+      N-->>U: 서버 데이터 그대로
+    end
+  else 이 기기 이미 가져옴 또는 로컬 값 없음
     N-->>U: 가져오기 없음 (DEF는 가입 트리거가 생성, D15)
   end
   N-->>U: 홈(/)으로 이동

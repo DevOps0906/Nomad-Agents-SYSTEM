@@ -1,0 +1,10 @@
+flowchart LR
+  st0["S00 계정 메뉴 #quot;두뇌 연동 토큰#quot;"]
+  st1["B1 토큰 발급(원문 복사)"]
+  st0 --> st1
+  st2["로컬 `nomad-brain sync`(graph.json 생성·업로드)"]
+  st1 --> st2
+  st3["B1 상태 갱신"]
+  st2 --> st3
+  st4["S03·S01이 내 두뇌 (D22)"]
+  st3 --> st4

@@ -1,0 +1,10 @@
+flowchart LR
+  st0["/admin AD1 테이블 선택(3테이블, D39)"]
+  st1["AD2 편집·저장(또는 AD3 이미지)"]
+  st0 --> st1
+  st2["catalog_audit 기록"]
+  st1 --> st2
+  st3["AD4 확인"]
+  st2 --> st3
+  st4["공개 화면 반영 (D21)"]
+  st3 --> st4

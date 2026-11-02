@@ -278,7 +278,7 @@ create table public.recent_files (
   owner_id uuid not null references auth.users (id) on delete cascade,
   name text not null check (length(trim(name)) > 0),
   file_type text not null default 'MD' check (file_type in ('MD','XLS','PDF','DOC','TXT')),
-  brain_node_id text references public.brain_nodes (id) on delete set null, -- NODEOPT, null=연결 없음
+  brain_node_id text,  -- NODEOPT. FK 없음(D37): 예시 카탈로그 노드 또는 내 두뇌 노드 id를 화면에서 해석, 없으면 "연결 없음"
   when_label text not null default '방금',
   sort_order integer not null default 0,  -- 새 항목은 맨 앞
   created_at timestamptz not null default now()
@@ -366,30 +366,49 @@ begin
     (new.id, '구글 드라이브', '커넥터 · 문서 찾기', true, 2),
     (new.id, 'Supabase', 'MCP · DB 조회', false, 3),
     (new.id, 'brain-explorer', '직접 만든 도구 · Extensions/', true, 4);
-  insert into public.recent_files (owner_id, name, file_type, brain_node_id, when_label, sort_order) values
-    (new.id, 'AGENTS.md', 'MD', 'agents', '방금', 0),
-    (new.id, '전체목록.md', 'MD', 'all', '1시간 전', 1),
-    (new.id, '쇼츠 대본_최종.md', 'MD', 'c_s1', '어제', 2),
-    (new.id, '프로젝트 기획서.md', 'MD', 'd_s1', '어제', 3),
-    (new.id, '월간 매출 정리.xlsx', 'XLS', 'f_s1', '3일 전', 4);
+  -- brain_node_id는 FK 없음(D37): 노드가 없어도 가입은 실패하지 않고, 화면이 없는 노드를 "연결 없음"으로 보여 준다
+  insert into public.recent_files (owner_id, name, file_type, brain_node_id, when_label, sort_order)
+  select new.id, v.name, v.file_type, v.node, v.when_label, v.sort_order
+  from (values
+    ('AGENTS.md', 'MD', 'agents', '방금', 0),
+    ('전체목록.md', 'MD', 'all', '1시간 전', 1),
+    ('쇼츠 대본_최종.md', 'MD', 'c_s1', '어제', 2),
+    ('프로젝트 기획서.md', 'MD', 'd_s1', '어제', 3),
+    ('월간 매출 정리.xlsx', 'XLS', 'f_s1', '3일 전', 4)
+  ) as v(name, file_type, node, when_label, sort_order);
   return new;
 end $$;
 
 create trigger on_auth_user_created after insert on auth.users
   for each row execute function public.seed_user_defaults();
 
--- nomad-lab-v1 가져오기: 본인 데이터를 st JSON으로 한 트랜잭션에 교체 (security invoker → RLS 적용)
+-- nomad-lab-v1 가져오기: 기기마다 1회, 병합(D33·D34). security definer — 본인(auth.uid()) 행만 쓰도록 함수 안에서 owner_id를 고정한다
 -- 입력 검증(형식·길이·개수 상한)은 Route Handler에서 먼저 수행. 1회만 허용(imported_v1_at).
-create or replace function public.import_nomad_v1(p jsonb) returns void
-  language plpgsql security invoker set search_path = '' as $$
+-- 가져오기는 기기마다 1회, 방식은 병합(덮어쓰기 없음) (D33·D34). imported_v1_at은 "첫 가져오기 시각"으로만 남긴다.
+create table public.user_imports (
+  owner_id uuid not null references auth.users (id) on delete cascade,
+  device_id text not null check (device_id ~ '^[0-9a-f-]{36}$'), -- 기기 localStorage의 무작위 UUID
+  imported_at timestamptz not null default now(),
+  primary key (owner_id, device_id)
+);
+alter table public.user_imports enable row level security;
+create policy user_imports_own_sel on public.user_imports for select to authenticated using (owner_id = (select auth.uid()));
+-- 쓰기 정책 없음: import_nomad_v1만 쓴다
+
+create or replace function public.import_nomad_v1(p jsonb, p_device text) returns jsonb
+  language plpgsql security definer set search_path = '' as $$
 declare uid uuid := (select auth.uid());
 begin
-  if uid is null then raise exception 'not authenticated'; end if;
-  if (select imported_v1_at from public.user_settings where owner_id = uid) is not null then
-    raise exception 'already imported';
-  end if;
-  -- 실제 본문은 구현 단계에서 작성: lv/days/dayText/ck/start → upsert,
-  -- ideas/content/skills/rt/exts/recent → 기존 기본값 delete 후 insert(배열 순서 = sort_order),
-  -- content가 null이면 기존(content_seeds 복사본) 유지, notes → date_notes insert.
-  update public.user_settings set imported_v1_at = now(), updated_at = now() where owner_id = uid;
+  if uid is null then raise exception 'not authenticated' using errcode = 'PT401'; end if;
+  -- 상한은 DB가 기준(rpc 직접 호출로 Route Handler 검사를 건너뛸 수 있음): 256KB
+  if octet_length(p::text) > 262144 then raise exception 'too large' using errcode = 'PT413'; end if;
+  insert into public.user_imports (owner_id, device_id) values (uid, p_device); -- 같은 기기 두 번째는 PK 위반 → 409
+  -- 실제 본문은 구현 단계(task-15)에서 작성. 병합 규칙(D34):
+  --   lv/days/ck → 완료 합집합(OR) · start/dayText → 서버가 DEF 그대로면 로컬 값
+  --   ideas/content/skills/rt/exts/recent → 서버에 같은 제목(이름)이 없을 때만 추가(배열 순서 = sort_order 뒤에)
+  --   notes → 같은 날짜가 없을 때만 추가 · content가 null이면 건너뜀
+  update public.user_settings set imported_v1_at = coalesce(imported_v1_at, now()), updated_at = now() where owner_id = uid;
+  return jsonb_build_object('device', p_device, 'imported_at', now());
 end $$;
+revoke execute on function public.import_nomad_v1(jsonb, text) from public, anon;
+grant execute on function public.import_nomad_v1(jsonb, text) to authenticated;

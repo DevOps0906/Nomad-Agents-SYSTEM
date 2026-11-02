@@ -10,40 +10,43 @@ Nomad-Lab AI 업무 시스템 — **SSR+** (Skill · Second brain · Routine · 
 - `app/index.html`에는 `<meta charset>`이 없습니다(Claude 아티팩트 게시 때 래퍼가 붙임). 로컬에서는 UTF-8을 알려 주는 서버로 여세요(예: Python `http.server`에서 `.html`을 `text/html; charset=utf-8`로). 그렇지 않으면 한글이 깨질 수 있습니다.
 
 ## 진행 현황 (2026-11-03 기준)
-단일 파일 시안(아티팩트 정본)은 완성됐고, 이를 Next.js + Supabase 플랫폼으로 옮기는 **역기획 문서 세트**를 작성했습니다. 플랫폼 구현은 아직 시작 전입니다.
+단일 파일 시안(아티팩트 정본)은 완성됐고, 이를 Next.js + Supabase 플랫폼으로 옮기는 **역기획 문서 세트가 확정**됐습니다(미결 질문 0, 결정 D1~D40). DB 설계는 실제 Supabase Postgres 컨테이너에서 시험했습니다. 플랫폼 구현은 아직 시작 전입니다.
 
 | 영역 | 현재 상태 |
 |---|---|
 | 시안 사이트 (`app/index.html`) | 완료 — 13화면, 3D 2종, 반응형 3구간, localStorage 저장 |
-| 플랫폼 기획 (`docs/`) | 초안 완료 — LEAN·PRD·아키텍처·화면·API·데이터·작업 분해·ADR 3, 문서 리뷰 반영 |
-| 플랫폼 구현 | 시작 전 — W0 게이트(미결 Q1~Q4, 제3자 이미지 사용 허락) 대기 |
+| 플랫폼 기획 (`docs/`) | 확정 — LEAN(세그먼트 2)·PRD(요금제 포함)·아키텍처·화면(사이트 19 + 신규 11)·API·데이터·작업 분해 22·ADR 5, 문서 리뷰 2회·보안 리뷰·계획 공격 반영 |
+| DB 설계 (`docs/sql/`) | 0001~0004 적용·RLS 시험 29항목 PASS(supabase/postgres 17 컨테이너) |
+| 플랫폼 구현 | 시작 전 — W0 게이트(제3자 이미지 사용 허락, 스택 버전, 지불 의사 조사 설계) 대기 |
 
-제한: 시안은 서버·로그인이 없고 데이터가 브라우저에만 남습니다. 기획의 [추정] 항목(가격, 성공 지표 목표치, 일부 설계)은 확정 전입니다.
+제한: 시안은 서버·로그인이 없고 데이터가 브라우저에만 남습니다. 요금은 벤치마킹 기반 제안가로 출시 전 지불 의사 조사로 재검증합니다. 관리자·두뇌 연동(MVP-2)은 게이트 통과 후 착수합니다.
 
 ### 작업 진행률
 근거: [`docs/06_AGENT_PLAN.md`](docs/06_AGENT_PLAN.md)의 작업 개수(완료/전체).
 
-| 웨이브 | 내용 | 완료/전체 |
-|---|---|---|
-| 기획 | 역기획 문서 세트 | 1/1 |
-| W0 | 착수 전 게이트 | 0/1 |
-| W1 | 뼈대·보안·마이그레이션·셸 | 0/4 |
-| W2 | 카탈로그 시드·Storage | 0/2 |
-| W3 | 13화면 패리티 | 0/5 |
-| W4 | 로그인·서버 저장·가져오기 | 0/4 |
-| W5 | 패리티 검수·배포 | 0/2 |
+| 단계 | 웨이브 | 내용 | 완료/전체 |
+|---|---|---|---|
+| 기획 | — | 역기획 문서 세트·DB 시험 | 1/1 |
+| — | W0 | 착수 전 게이트 | 0/1 |
+| MVP-1 | W1 | 뼈대·보안·DB·데이터 계층·셸 | 0/5 |
+| MVP-1 | W2 | 카탈로그 시드·Storage | 0/2 |
+| MVP-1 | W3 | 13화면 패리티 | 0/5 |
+| MVP-1 | W4 | 로그인·서버 저장·가져오기·플랜 | 0/5 |
+| MVP-1 | W5 | 패리티 검수·배포 | 0/2 |
+| MVP-2 | W6~W7 | 관리자·두뇌 연동 | 0/3 |
 
 ### 구현된 주요 항목
 - [x] 시안 13화면(홈·SSR+ 4단계·브랜드·콘텐츠·아이디어·ArtCraft 2화면·가이드·7일 계획·기획 요약)
 - [x] 홈 입자 구 3D, 세컨드 브레인 3D 탐색기
 - [x] ArtCraft 앱 16종 카드(런처 아이콘)·상세 가이드·설치 프롬프트
-- [x] 플랫폼 역기획 문서 세트(`docs/`)
+- [x] 플랫폼 역기획 문서 세트(`docs/`)와 DB 설계 시험(`docs/sql-test/`)
 
 ### 다음 개발 단계
-- [ ] W0: 요금제·첫 고객·카탈로그 편집 방식·second-brain 연동 방식 결정, 아이콘·가이드 이미지 사용 허락 확인
-- [ ] W1: Next.js 뼈대·토큰 이식, Supabase 마이그레이션(RLS), 공통 셸
+- [ ] W0: 아이콘·가이드 이미지 사용 허락, 스택 최신 버전 확정, 수강생 지불 의사 조사 설계
+- [ ] W1: Next.js 뼈대·토큰 이식, 마이그레이션 0001~0004, 데이터 접근 계층, 공통 셸
 - [ ] W2~W3: 카탈로그 시드 후 13화면 패리티 구현
-- [ ] W4~W5: 로그인·서버 저장·가져오기, 패리티 검수, 배포
+- [ ] W4~W5: 로그인·서버 저장·기기별 가져오기·체험/번들 코드, 패리티 검수, 배포
+- [ ] 게이트 통과 후 MVP-2: 관리자 화면(축소 범위)·second-brain 연동(CLI·웹 폴더 색인)
 
 ## 콘텐츠 바로가기
 | 콘텐츠 | 화면 경로 | 기획·명세 문서 | 구현 코드 |
@@ -55,7 +58,8 @@ Nomad-Lab AI 업무 시스템 — **SSR+** (Skill · Second brain · Routine · 
 | ArtCraft 앱 16종 | `#artcraft` `#artapps` | [`docs/03_SCREENS_UX.md`](docs/03_SCREENS_UX.md) S09·S10 | [`src/app.js`](src/app.js), [`src/style.css`](src/style.css) |
 | 사용 가이드(PDF 17쪽) | `#guide` | [`docs/03_SCREENS_UX.md`](docs/03_SCREENS_UX.md) S11 | [`app/guide/`](app/guide/), [`src/pages.json`](src/pages.json) |
 | 7일 계획·기획 요약 | `#plan` `#spec` | [`docs/03_SCREENS_UX.md`](docs/03_SCREENS_UX.md) S12·S13 | [`src/app.js`](src/app.js) |
-| 데이터·API (플랫폼) | — | [`docs/05_DATA_MODEL.md`](docs/05_DATA_MODEL.md), [`docs/04_API.md`](docs/04_API.md), [`docs/sql/0001_init.sql`](docs/sql/0001_init.sql) | — |
+| 데이터·API (플랫폼) | — | [`docs/05_DATA_MODEL.md`](docs/05_DATA_MODEL.md), [`docs/04_API.md`](docs/04_API.md), [`docs/sql/`](docs/sql/) | [`docs/sql-test/10_rls_smoke.sql`](docs/sql-test/10_rls_smoke.sql) |
+| 요금제·결정 | — | [`docs/01_PRD.md`](docs/01_PRD.md) 4절, [`docs/_research/DECISIONS.md`](docs/_research/DECISIONS.md) | — |
 | 디자인 | — | [`docs/DESIGN.md`](docs/DESIGN.md) | [`src/style.css`](src/style.css) |
 
 ## 저장소 구조

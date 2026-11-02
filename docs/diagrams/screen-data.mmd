@@ -1,0 +1,262 @@
+flowchart LR
+  subgraph SC["화면"]
+    n_S00["S00 공통 셸"]
+    n_S01["S01 홈"]
+    n_S02["S02 S · 스킬"]
+    n_S03["S03 S · 세컨드 브레인"]
+    n_S04["S04 R · 루틴"]
+    n_S05["S05 + · 익스텐션"]
+    n_S06["S06 브랜드 라이브러리"]
+    n_S07["S07 콘텐츠 라이브러리"]
+    n_S08["S08 아이디어 패드"]
+    n_S09["S09 ArtCraft 앱"]
+    n_S10["S10 ArtCraft 앱 16종 가이드"]
+    n_S11["S11 사용 가이드 (PDF)"]
+    n_S12["S12 7일 세팅 계획"]
+    n_S13["S13 기획 요약"]
+    n_M1["M1 스킬 추가/편집"]
+    n_M2["M2 루틴 추가/편집"]
+    n_M3["M3 익스텐션 추가/편집"]
+    n_M4["M4 최근 파일 추가/편집"]
+    n_M5["M5 n일차 목표 편집"]
+    n_M6["M6 날짜 편집"]
+    n_T1["T1 로그인"]
+    n_T2["T2 이 기기 데이터 가져오기"]
+    n_T3["T3 로그인 권유 시트"]
+    n_B1["B1 두뇌 연동"]
+    n_P1["P1 내 플랜"]
+    n_AD1["AD1 카탈로그 목록"]
+    n_AD2["AD2 항목 편집"]
+    n_AD3["AD3 이미지 업로드"]
+    n_AD4["AD4 변경 이력"]
+    n_AD5["AD5 번들 코드 발급"]
+  end
+  subgraph AP["API"]
+    n_api_A01["A01 POST (R) /api/import/nomad-v1"]
+    n_api_A02["A02 GET (R) /auth/callback"]
+    n_api_A03["A03 — (D) Supabase Auth `signInWithOtp({email})"]
+    n_api_A04["A04 POST (R) /api/account/delete"]
+    n_api_AD01["AD01 select (D) admins` (본인 행)"]
+    n_api_AD02["AD02 select (D) 편집 대상 3테이블(`art_apps`·`prompts`·`guide_pages`) 중 선택"]
+    n_api_AD03["AD03 insert/update/delete (D) 편집 대상 3테이블"]
+    n_api_AD04["AD04 upload/remove (D) Storage `art-icons`·`guide` `upload(path, file, {upsert:true})"]
+    n_api_AD05["AD05 select (D) catalog_audit"]
+    n_api_AD06["AD06 rpc (D) bundle_code_create(p_label, p_months, p_max_uses, p_expires_at)"]
+    n_api_AD06b["AD06b rpc (D) bundle_codes_create_batch(p_label, p_months, p_count, p_expires_at)"]
+    n_api_AD07["AD07 rpc (D) bundle_code_revoke(p_id)"]
+    n_api_B01["B01 rpc (D) brain_token_create(p_name)"]
+    n_api_B02["B02 select (D) api_tokens"]
+    n_api_B03["B03 rpc (D) brain_token_revoke(p_id)"]
+    n_api_B05["B05 POST (R) /api/brain/upload"]
+    n_api_B06["B06 select (D) brain_sources` + `user_brain_nodes` + `user_brain_links"]
+    n_api_B07["B07 rpc (D) brain_disconnect()"]
+    n_api_C01["C01 select (D) ssr_stages`·`ssr_personas`·`ssr_levels`·`prompts"]
+    n_api_C02["C02 select (D) art_apps` (+`prompts` key `art_*`·`ai_*`)"]
+    n_api_C03["C03 select (D) guide_docs`·`guide_pages"]
+    n_api_C04["C04 select (D) plan_day_defaults`·`ssr_checklist_items"]
+    n_api_C05["C05 select (D) brand_colors"]
+    n_api_C06["C06 select (D) brain_nodes`·`brain_links"]
+    n_api_C07["C07 select (D) content_seeds"]
+    n_api_P01["P01 rpc (D) redeem_bundle_code(p_code)"]
+    n_api_P02["P02 rpc (D) my_plan()"]
+    n_api_U01["U01 select (D) user_settings`·`level_progress`·`plan_days`·`checklist_progress"]
+    n_api_U02["U02 upsert (D) level_progress"]
+    n_api_U03["U03 upsert (D) plan_days"]
+    n_api_U04["U04 upsert (D) checklist_progress"]
+    n_api_U05["U05 update (D) user_settings"]
+    n_api_U06["U06 select/insert/update/delete (D) skills"]
+    n_api_U07["U07 select/insert/update/delete (D) routines"]
+    n_api_U08["U08 select/insert/update/delete (D) user_extensions"]
+    n_api_U09["U09 select/insert/update/delete (D) recent_files"]
+    n_api_U10["U10 select/upsert/delete (D) date_notes"]
+    n_api_U11["U11 select/insert/update/delete (D) ideas"]
+    n_api_U12["U12 select/insert/update/delete (D) content_items"]
+  end
+  subgraph DB["데이터"]
+    n_t_api_tokens[("api_tokens")]
+    n_t_art_apps[("art_apps")]
+    n_t_brain_links[("brain_links")]
+    n_t_brain_nodes[("brain_nodes")]
+    n_t_brain_sources[("brain_sources")]
+    n_t_brand_colors[("brand_colors")]
+    n_t_bundle_codes[("bundle_codes")]
+    n_t_catalog_audit[("catalog_audit")]
+    n_t_checklist_progress[("checklist_progress")]
+    n_t_content_items[("content_items")]
+    n_t_content_seeds[("content_seeds")]
+    n_t_date_notes[("date_notes")]
+    n_t_guide_docs[("guide_docs")]
+    n_t_guide_pages[("guide_pages")]
+    n_t_ideas[("ideas")]
+    n_t_level_progress[("level_progress")]
+    n_t_plan_day_defaults[("plan_day_defaults")]
+    n_t_plan_days[("plan_days")]
+    n_t_prompts[("prompts")]
+    n_t_recent_files[("recent_files")]
+    n_t_routines[("routines")]
+    n_t_skills[("skills")]
+    n_t_ssr_checklist_items[("ssr_checklist_items")]
+    n_t_ssr_levels[("ssr_levels")]
+    n_t_ssr_personas[("ssr_personas")]
+    n_t_ssr_stages[("ssr_stages")]
+    n_t_user_brain_links[("user_brain_links")]
+    n_t_user_brain_nodes[("user_brain_nodes")]
+    n_t_user_extensions[("user_extensions")]
+    n_t_user_plans[("user_plans")]
+    n_t_user_settings[("user_settings")]
+  end
+  n_S00 --> n_api_U01
+  n_S00 -.-> n_t_user_settings
+  n_S00 -.-> n_t_level_progress
+  n_S01 --> n_api_U01
+  n_S01 --> n_api_U03
+  n_S01 --> n_api_U06
+  n_S01 --> n_api_U07
+  n_S01 --> n_api_U08
+  n_S01 --> n_api_U09
+  n_S01 --> n_api_U10
+  n_S01 --> n_api_U11
+  n_S01 --> n_api_U12
+  n_S01 --> n_api_C04
+  n_S01 --> n_api_C05
+  n_S01 --> n_api_C06
+  n_S01 --> n_api_B06
+  n_S01 -.-> n_t_user_settings
+  n_S01 -.-> n_t_level_progress
+  n_S01 -.-> n_t_plan_days
+  n_S01 -.-> n_t_plan_day_defaults
+  n_S01 -.-> n_t_date_notes
+  n_S01 -.-> n_t_recent_files
+  n_S01 -.-> n_t_skills
+  n_S01 -.-> n_t_routines
+  n_S01 -.-> n_t_user_extensions
+  n_S01 -.-> n_t_ideas
+  n_S01 -.-> n_t_content_items
+  n_S01 -.-> n_t_brand_colors
+  n_S01 -.-> n_t_brain_nodes
+  n_S01 -.-> n_t_user_brain_nodes
+  n_S02 --> n_api_C01
+  n_S02 --> n_api_U02
+  n_S02 -.-> n_t_ssr_stages
+  n_S02 -.-> n_t_ssr_personas
+  n_S02 -.-> n_t_ssr_levels
+  n_S02 -.-> n_t_prompts
+  n_S02 -.-> n_t_level_progress
+  n_S03 --> n_api_C01
+  n_S03 --> n_api_C06
+  n_S03 --> n_api_B06
+  n_S03 --> n_api_U02
+  n_S03 -.-> n_t_ssr_stages
+  n_S03 -.-> n_t_ssr_personas
+  n_S03 -.-> n_t_ssr_levels
+  n_S03 -.-> n_t_prompts
+  n_S03 -.-> n_t_level_progress
+  n_S03 -.-> n_t_brain_nodes
+  n_S03 -.-> n_t_brain_links
+  n_S03 -.-> n_t_user_brain_nodes
+  n_S03 -.-> n_t_user_brain_links
+  n_S04 --> n_api_C01
+  n_S04 --> n_api_U02
+  n_S04 -.-> n_t_ssr_stages
+  n_S04 -.-> n_t_ssr_personas
+  n_S04 -.-> n_t_ssr_levels
+  n_S04 -.-> n_t_prompts
+  n_S04 -.-> n_t_level_progress
+  n_S05 --> n_api_C01
+  n_S05 --> n_api_U02
+  n_S05 -.-> n_t_ssr_stages
+  n_S05 -.-> n_t_ssr_personas
+  n_S05 -.-> n_t_ssr_levels
+  n_S05 -.-> n_t_prompts
+  n_S05 -.-> n_t_level_progress
+  n_S06 --> n_api_C05
+  n_S06 -.-> n_t_brand_colors
+  n_S07 --> n_api_U12
+  n_S07 --> n_api_C07
+  n_S07 -.-> n_t_content_items
+  n_S07 -.-> n_t_content_seeds
+  n_S08 --> n_api_U11
+  n_S08 -.-> n_t_ideas
+  n_S09 --> n_api_C02
+  n_S09 -.-> n_t_art_apps
+  n_S09 -.-> n_t_prompts
+  n_S10 --> n_api_C02
+  n_S10 -.-> n_t_art_apps
+  n_S10 -.-> n_t_prompts
+  n_S11 --> n_api_C03
+  n_S11 -.-> n_t_guide_docs
+  n_S11 -.-> n_t_guide_pages
+  n_S12 --> n_api_U01
+  n_S12 --> n_api_U03
+  n_S12 --> n_api_U04
+  n_S12 --> n_api_U05
+  n_S12 --> n_api_C04
+  n_S12 -.-> n_t_plan_days
+  n_S12 -.-> n_t_plan_day_defaults
+  n_S12 -.-> n_t_user_settings
+  n_S12 -.-> n_t_checklist_progress
+  n_S12 -.-> n_t_ssr_checklist_items
+  n_M1 --> n_api_U06
+  n_M1 -.-> n_t_skills
+  n_M2 --> n_api_U07
+  n_M2 -.-> n_t_routines
+  n_M3 --> n_api_U08
+  n_M3 -.-> n_t_user_extensions
+  n_M4 --> n_api_U09
+  n_M4 -.-> n_t_recent_files
+  n_M4 -.-> n_t_brain_nodes
+  n_M5 --> n_api_U03
+  n_M5 -.-> n_t_plan_days
+  n_M5 -.-> n_t_plan_day_defaults
+  n_M6 --> n_api_U10
+  n_M6 --> n_api_U05
+  n_M6 -.-> n_t_date_notes
+  n_M6 -.-> n_t_user_settings
+  n_T1 --> n_api_A03
+  n_T1 --> n_api_A02
+  n_T2 --> n_api_A01
+  n_T2 -.-> n_t_user_settings
+  n_T2 -.-> n_t_level_progress
+  n_T2 -.-> n_t_plan_days
+  n_T2 -.-> n_t_checklist_progress
+  n_T2 -.-> n_t_skills
+  n_T2 -.-> n_t_routines
+  n_T2 -.-> n_t_user_extensions
+  n_T2 -.-> n_t_recent_files
+  n_T2 -.-> n_t_date_notes
+  n_T2 -.-> n_t_ideas
+  n_T2 -.-> n_t_content_items
+  n_B1 --> n_api_B01
+  n_B1 --> n_api_B02
+  n_B1 --> n_api_B03
+  n_B1 --> n_api_B05
+  n_B1 --> n_api_B06
+  n_B1 --> n_api_B07
+  n_B1 -.-> n_t_api_tokens
+  n_B1 -.-> n_t_brain_sources
+  n_B1 -.-> n_t_user_brain_nodes
+  n_B1 -.-> n_t_user_brain_links
+  n_P1 --> n_api_P01
+  n_P1 --> n_api_P02
+  n_P1 --> n_api_A04
+  n_P1 -.-> n_t_user_plans
+  n_AD1 --> n_api_AD01
+  n_AD1 --> n_api_AD02
+  n_AD1 -.-> n_t_prompts
+  n_AD1 -.-> n_t_art_apps
+  n_AD1 -.-> n_t_guide_pages
+  n_AD2 --> n_api_AD03
+  n_AD2 -.-> n_t_prompts
+  n_AD2 -.-> n_t_art_apps
+  n_AD2 -.-> n_t_guide_pages
+  n_AD2 -.-> n_t_catalog_audit
+  n_AD3 --> n_api_AD04
+  n_AD3 --> n_api_AD03
+  n_AD3 -.-> n_t_art_apps
+  n_AD3 -.-> n_t_guide_pages
+  n_AD4 --> n_api_AD05
+  n_AD4 -.-> n_t_catalog_audit
+  n_AD5 --> n_api_AD06
+  n_AD5 --> n_api_AD06b
+  n_AD5 --> n_api_AD07
+  n_AD5 -.-> n_t_bundle_codes

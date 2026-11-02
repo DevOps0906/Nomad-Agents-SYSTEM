@@ -1,0 +1,16 @@
+flowchart TD
+  start["계정 메뉴: 두뇌 연동 토큰 발급<br/>(brain:write, 원문 1회 표시, 해시 저장)"] --> run["로컬: nomad-brain sync<br/>토큰은 OS 키체인"]
+  run --> scan["폴더 스캔<br/>.brainignore 제외"]
+  scan --> parse["front-matter·제목·위키링크·Markdown 링크 추출<br/>본문은 읽기만"]
+  parse --> gj["graph.json 생성<br/>이름·경로·분야 · 요약은 front-matter summary가 있을 때만"]
+  gj --> dry{"--dry-run?"}
+  dry -->|"예"| list["보낼 목록만 출력, 업로드 안 함"]
+  dry -->|"아니오"| up["HTTPS 업로드 + Bearer 토큰"]
+  web["대체: 웹에서 폴더 선택<br/>브라우저가 같은 규칙으로 색인(본문은 기기 밖으로 안 나감)"] --> wup["세션 업로드"]
+  up --> rh{"Route Handler 편의 검사<br/>zod · Content-Length 4MB"}
+  wup --> rh
+  rh -->|"위반"| bad["400/413 응답, 기존 graph 유지"]
+  rh -->|"통과"| db{"DB 함수 검사(보안 경계)<br/>토큰·형식·4MB·Pro·분당 6회"}
+  db -->|"아니오"| err["401/400/402/429 응답<br/>CLI가 사유 출력"]
+  db -->|"예"| rep["소유자의 두뇌 graph 교체<br/>실패해도 레이트 카운터는 확정"]
+  rep --> view["탐색기·홈 입자 구가 내 두뇌 표시<br/>업로드 없으면 예시 카탈로그 · Pro 끝나면 읽기 전용"]

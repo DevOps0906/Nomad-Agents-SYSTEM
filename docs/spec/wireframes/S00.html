@@ -1,0 +1,40 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>S00 공통 셸 — 와이어프레임</title><style>:root{--color-bg:#ffffff;--color-surface:#f6f7f9;--color-text:#15171a;--color-text-muted:#5b6270;--color-border:#e3e6eb;--color-input:#858d9b;--color-primary:#2f5bea;--color-primary-fg:#ffffff;--color-success:#1f9d55;--color-warning:#c27c0e;--color-danger:#d64545;--font-sans:"Pretendard Variable", Pretendard, system-ui, sans-serif;--font-mono:"JetBrains Mono", ui-monospace, monospace;--text-display:28px;--text-h1:24px;--text-h2:20px;--text-body:15px;--text-caption:12px;--spacing:4px;--radius-control:8px;--radius-card:12px;--shadow-card:0 1px 2px rgb(0 0 0 / 0.06), 0 4px 12px rgb(0 0 0 / 0.06)}.dark{--color-bg:#0f1114;--color-surface:#181b20;--color-text:#eef0f3;--color-text-muted:#9aa2ae;--color-border:#2a2f37;--color-input:#666e7c;--color-primary:#6d8cff;--color-primary-fg:#0f1114}@media (min-width:768px){:root{--text-display:36px;--text-h1:28px;--text-h2:22px;--text-body:16px;--text-caption:13px}}@media (min-width:1200px){:root{--text-display:48px;--text-h1:34px;--text-h2:26px;--text-body:16px;--text-caption:13px}}
+*{box-sizing:border-box}body{margin:0;font-family:var(--font-sans,system-ui,sans-serif);background:var(--color-bg,#fff);color:var(--color-text,#15171a);font-size:var(--text-body,15px);line-height:1.5}
+.u{padding:calc(var(--spacing,4px)*4)}.meta{font-size:var(--text-caption,12px);color:var(--color-text-muted,#5b6270);background:var(--color-surface,#f6f7f9);border-bottom:1px dashed var(--color-border,#e3e6eb);padding:6px 16px;display:flex;gap:12px;flex-wrap:wrap}
+.meta a{color:var(--color-primary,#2f5bea)}.shell{display:grid;grid-template-columns:1fr;min-height:60vh}.side{display:none;background:var(--color-surface,#f6f7f9);border-right:1px solid var(--color-border,#e3e6eb);padding:16px}
+@media (min-width:1200px){.shell.has-side{grid-template-columns:220px 1fr}.side{display:block}.burger{display:none}}
+main{display:grid;gap:calc(var(--spacing,4px)*4);padding:calc(var(--spacing,4px)*4);align-content:start;min-width:0}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--color-border,#e3e6eb)}
+.hd h1{font-size:var(--text-h1,24px);margin:0}.hd nav{display:none;gap:12px}@media (min-width:768px){.hd nav{display:flex}}
+.burger{width:28px;height:20px;border-top:3px solid currentColor;border-bottom:3px solid currentColor;position:relative}
+.box{background:var(--color-surface,#f6f7f9);border:1px solid var(--color-border,#e3e6eb);border-radius:var(--radius-card,12px);padding:16px;min-width:0}
+.lab{font-size:var(--text-caption,12px);color:var(--color-text-muted,#5b6270);margin-bottom:6px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}.grid.wide{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.num{font-size:var(--text-h2,20px);font-weight:700}.delta{font-size:var(--text-caption,12px);color:var(--color-success,#1f9d55)}
+.bars{display:flex;align-items:flex-end;gap:6px;height:120px}.bars i{flex:1;background:var(--color-primary,#2f5bea);opacity:.35;border-radius:4px 4px 0 0}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:480px}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--color-border,#e3e6eb);font-size:var(--text-caption,13px)}
+th{color:var(--color-text-muted,#5b6270)}.skel{display:inline-block;height:10px;width:70%;background:var(--color-border,#e3e6eb);border-radius:4px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 16px;border-radius:var(--radius-control,8px);background:var(--color-primary,#2f5bea);color:var(--color-primary-fg,#fff);font-weight:600;border:0}
+.btn.sec{background:transparent;color:var(--color-text,#15171a);border:1px solid var(--color-input,#858d9b)}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.in{display:block;width:100%;min-height:40px;border:1px solid var(--color-input,#858d9b);border-radius:var(--radius-control,8px);background:var(--color-bg,#fff);padding:8px 12px;color:var(--color-text-muted,#5b6270)}
+.f{display:grid;gap:12px}.f label{display:grid;gap:4px;font-size:var(--text-caption,13px)}.chip{border:1px solid var(--color-input,#858d9b);border-radius:999px;padding:4px 12px;font-size:var(--text-caption,13px)}
+.tabs{display:flex;gap:16px;border-bottom:1px solid var(--color-border,#e3e6eb);overflow-x:auto}.tabs span{padding:8px 0}.tabs span:first-child{border-bottom:2px solid var(--color-primary,#2f5bea);font-weight:600}
+.board{display:flex;gap:12px;overflow-x:auto}.col{min-width:220px;flex:1}.card{background:var(--color-bg,#fff);border:1px solid var(--color-border,#e3e6eb);border-radius:var(--radius-control,8px);padding:10px;margin-top:8px}
+.hero{padding:48px 16px;text-align:center}.hero h2{font-size:var(--text-display,28px);margin:0 0 8px}
+.steps{display:flex;gap:8px;list-style:none;padding:0;margin:0;flex-wrap:wrap}.steps li{flex:1;min-width:90px;border-top:4px solid var(--color-border,#e3e6eb);padding-top:6px;font-size:var(--text-caption,13px)}.steps li:first-child{border-color:var(--color-primary,#2f5bea)}
+.dash{border:1px dashed var(--color-input,#858d9b);border-radius:var(--radius-card,12px);padding:16px;text-align:center;color:var(--color-text-muted,#5b6270)}
+.ft{margin-top:24px;padding:16px;border-top:1px solid var(--color-border,#e3e6eb);font-size:var(--text-caption,12px);color:var(--color-text-muted,#5b6270)}
+.wf{margin:24px 16px;display:grid;gap:12px}.wf h3{margin:0;font-size:var(--text-h2,20px)}.st{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.ok{color:var(--color-success,#1f9d55)}.no{color:var(--color-danger,#d64545);font-weight:600}.muted{color:var(--color-text-muted,#5b6270)}
+</style></head><body>
+<script>if(location.search.indexOf('dark')>=0)document.documentElement.classList.add('dark')</script>
+<div class="meta"><b>S00</b><span>설정</span><span>(모든 화면)</span><span>권한: 누구나</span><span>화면 이동·테마 전환</span><a href="index.html">전체 화면</a></div>
+<div class="shell has-side"><aside class="side"><div class="lab">메뉴</div><div>로고 &quot;Nomad-Agents-SYSTEM&quot;</div><div>NOMAD-LAB</div><div>AI WORK</div><div>메뉴 13(그룹 SSR+ FRAMEWORK</div><div>다른 대시보드</div><div>앱</div><div>가이드)</div><div>단계 카운트 n</div><div>3</div><div>&quot;SSR+ 진행&quot; 바</div></aside><div><header class="hd"><h1>공통 셸</h1><nav></nav><span class="burger" aria-label="메뉴"></span></header><main>
+
+
+<div class="box"><div class="lab">text</div>toast</div>
+</main></div></div>
+<section class="wf"><h3>상태</h3><div class="st"><div class="box"><b>빈</b><p class="muted">—</p></div><div class="box"><b>로딩</b><p class="muted">[추정] 로그인 상태 확인 중 로그인 버튼 자리 유지(폭 고정)</p></div><div class="box"><b>오류</b><p class="muted">—</p></div><div class="box"><b>성공</b><p class="muted">메뉴 `aria-current`·좌측 3px 막대, 제목·문서 제목 갱신. 로그인 후 같은 자리에 계정 메뉴</p></div></div>
+<h3>필수 구조 검사</h3><div><div class="no">❌ 설정 입력</div><div class="no">❌ 저장·저장됨 표시</div><div class="muted">· 권장: 위험 작업 구역(삭제·탈퇴) 분리·확인</div></div><h3>다음 화면</h3><div><a href="S01.html">S01 홈</a> · <a href="S02.html">S02 S · 스킬</a> · <a href="S03.html">S03 S · 세컨드 브레인</a> · <a href="S04.html">S04 R · 루틴</a> · <a href="S05.html">S05 + · 익스텐션</a> · <a href="S06.html">S06 브랜드 라이브러리</a> · <a href="S07.html">S07 콘텐츠 라이브러리</a> · <a href="S08.html">S08 아이디어 패드</a> · <a href="S09.html">S09 ArtCraft 앱</a> · <a href="S10.html">S10 ArtCraft 앱 16종 가이드</a> · <a href="S11.html">S11 사용 가이드 (PDF)</a> · <a href="S12.html">S12 7일 세팅 계획</a> · <a href="S13.html">S13 기획 요약</a> · <a href="T1.html">T1 로그인</a> · <a href="T2.html">T2 이 기기 데이터 가져오기</a> · <a href="T3.html">T3 로그인 권유 시트</a> · <a href="B1.html">B1 두뇌 연동</a> · <a href="P1.html">P1 내 플랜</a></div></section>
+</body></html>

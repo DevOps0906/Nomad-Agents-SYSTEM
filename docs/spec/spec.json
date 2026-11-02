@@ -1,0 +1,3851 @@
+{
+ "version": "1",
+ "generated": "2026-11-02T19:59:09+00:00",
+ "docs": "docs",
+ "tokens": "기본 시작 토큰(프로젝트 토큰 없음)",
+ "sources": {
+  "docs/03_SCREENS_UX.md": "cbbb3c20b1aa",
+  "docs/04_API.md": "673684355b10",
+  "docs/05_DATA_MODEL.md": "98230754b5d3"
+ },
+ "changed": [
+  "AD5"
+ ],
+ "removed": [],
+ "screens": {
+  "S00": {
+   "id": "S00",
+   "name": "공통 셸",
+   "type_raw": "설정",
+   "route": "(모든 화면)",
+   "purpose": "화면 이동·테마 전환",
+   "blocks": [
+    {
+     "type": "sidebar",
+     "label": "로고 \"Nomad-Agents-SYSTEM\"·NOMAD-LAB · AI WORK·메뉴 13(그룹 SSR+ FRAMEWORK·다른 대시보드·앱·가이드)·단계 카운트 n/3·\"SSR+ 진행\" 바",
+     "items": [
+      "로고 \"Nomad-Agents-SYSTEM\"",
+      "NOMAD-LAB",
+      "AI WORK",
+      "메뉴 13(그룹 SSR+ FRAMEWORK",
+      "다른 대시보드",
+      "앱",
+      "가이드)",
+      "단계 카운트 n",
+      "3",
+      "\"SSR+ 진행\" 바"
+     ]
+    },
+    {
+     "type": "header",
+     "label": "메뉴(모바일)·제목·pill \"SSR+ n%\"·테마·오른쪽 끝 로그인 버튼(비로그인)/계정 메뉴(로그인: 이메일·이 기기 데이터 가져오기·두뇌 연동 토큰·내 플랜·로그아웃 — 3구간 모두 D23)",
+     "items": [
+      "메뉴(모바일)",
+      "제목",
+      "pill \"SSR+ n%\"",
+      "테마",
+      "오른쪽 끝 로그인 버튼(비로그인)",
+      "계정 메뉴(로그인: 이메일",
+      "이 기기 데이터 가져오기",
+      "두뇌 연동 토큰",
+      "내 플랜",
+      "로그아웃 — 3구간 모두 D23)"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "toast",
+     "items": [
+      "toast"
+     ]
+    }
+   ],
+   "data": [
+    "user_settings",
+    "level_progress"
+   ],
+   "api": [
+    "U01"
+   ],
+   "role": "누구나",
+   "next": [
+    "S01",
+    "S02",
+    "S03",
+    "S04",
+    "S05",
+    "S06",
+    "S07",
+    "S08",
+    "S09",
+    "S10",
+    "S11",
+    "S12",
+    "S13",
+    "T1",
+    "T2",
+    "T3",
+    "B1",
+    "P1"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "settings",
+   "must_missing": [
+    "설정 입력",
+    "저장·저장됨 표시"
+   ],
+   "should_missing": [
+    "위험 작업 구역(삭제·탈퇴) 분리·확인"
+   ],
+   "states_missing": [],
+   "hash": "ea1fa0fc8991",
+   "wireframe": "docs/spec/wireframes/S00.html"
+  },
+  "S01": {
+   "id": "S01",
+   "name": "홈",
+   "type_raw": "대시보드",
+   "route": "#home",
+   "purpose": "오늘 할 일·진행 확인",
+   "blocks": [
+    {
+     "type": "header",
+     "label": "날짜 \"YYYY.MM.DD · X요일\"·\"오늘의 AI 업무 시스템\"·예시 데이터 안내",
+     "items": [
+      "날짜 \"YYYY.MM.DD",
+      "X요일\"",
+      "\"오늘의 AI 업무 시스템\"",
+      "예시 데이터 안내"
+     ]
+    },
+    {
+     "type": "card",
+     "label": "캘린더 \"YYYY년 M월\"",
+     "items": [
+      "캘린더 \"YYYY년 M월\""
+     ]
+    },
+    {
+     "type": "stat",
+     "label": "진행 링 n%·완료/12·7일 계획 n/7·아이디어·콘텐츠·\"25 두뇌 노드(예시)\"",
+     "items": [
+      "진행 링 n%",
+      "완료",
+      "12",
+      "7일 계획 n",
+      "7",
+      "아이디어",
+      "콘텐츠",
+      "\"25 두뇌 노드(예시)\""
+     ]
+    },
+    {
+     "type": "list",
+     "label": "오늘의 목표 3(체크·✎)·최근 파일(✎·+ 추가)",
+     "items": [
+      "오늘의 목표 3(체크",
+      "✎)",
+      "최근 파일(✎",
+      "+ 추가)"
+     ]
+    },
+    {
+     "type": "card",
+     "label": "다른 대시보드(브랜드 5색·콘텐츠 4단계·아이디어 메모)·세컨드 브레인 입자 구+범례 5색·\"탐색기 열기\"",
+     "items": [
+      "다른 대시보드(브랜드 5색",
+      "콘텐츠 4단계",
+      "아이디어 메모)",
+      "세컨드 브레인 입자 구+범례 5색",
+      "\"탐색기 열기\""
+     ]
+    },
+    {
+     "type": "list",
+     "label": "익스텐션·스킬·루틴(토글)",
+     "items": [
+      "익스텐션",
+      "스킬",
+      "루틴(토글)"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "+ 추가·전체 보기·복사(node)",
+     "items": [
+      "+ 추가",
+      "전체 보기",
+      "복사(node)"
+     ]
+    },
+    {
+     "type": "modal",
+     "label": "M1~M6",
+     "items": [
+      "M1~M6"
+     ]
+    }
+   ],
+   "data": [
+    "user_settings",
+    "level_progress",
+    "plan_days",
+    "plan_day_defaults",
+    "date_notes",
+    "recent_files",
+    "skills",
+    "routines",
+    "user_extensions",
+    "ideas",
+    "content_items",
+    "brand_colors",
+    "brain_nodes",
+    "user_brain_nodes"
+   ],
+   "api": [
+    "U01",
+    "U03",
+    "U06",
+    "U07",
+    "U08",
+    "U09",
+    "U10",
+    "U11",
+    "U12",
+    "C04",
+    "C05",
+    "C06",
+    "B06"
+   ],
+   "role": "누구나",
+   "next": [
+    "S02",
+    "S03",
+    "S04",
+    "S05",
+    "S06",
+    "S07",
+    "S08",
+    "S12",
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "dashboard",
+   "must_missing": [
+    "기간 선택",
+    "추세 차트 또는 표",
+    "마지막 갱신 시각"
+   ],
+   "should_missing": [
+    "이전 기간 대비(증감)",
+    "내보내기(CSV·PDF)",
+    "세그먼트·담당자 필터",
+    "할 일·알림(지표가 행동으로 이어지게)"
+   ],
+   "states_missing": [],
+   "hash": "6737d11192d9",
+   "wireframe": "docs/spec/wireframes/S01.html"
+  },
+  "S02": {
+   "id": "S02",
+   "name": "S · 스킬",
+   "type_raw": "상세",
+   "route": "#skill",
+   "purpose": "스킬 레벨 학습·완료",
+   "blocks": [
+    {
+     "type": "header",
+     "label": "글자 S·\"SKILL · PART 1 / 4\"·제목·리드",
+     "items": [
+      "글자 S",
+      "\"SKILL",
+      "PART 1",
+      "4\"",
+      "제목",
+      "리드"
+     ]
+    },
+    {
+     "type": "card",
+     "label": "페르소나 3(취업준비생·CEO·직장인)",
+     "items": [
+      "페르소나 3(취업준비생",
+      "CEO",
+      "직장인)"
+     ]
+    },
+    {
+     "type": "tabs",
+     "label": "초급·중급·고급(✓)",
+     "items": [
+      "초급",
+      "중급",
+      "고급(✓)"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "레벨 본문(문단·목록·트리·표·완료 기준·한계)",
+     "items": [
+      "레벨 본문(문단",
+      "목록",
+      "트리",
+      "표",
+      "완료 기준",
+      "한계)"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "가이드 p.N 보기·이 레벨 완료·복사",
+     "items": [
+      "가이드 p.N 보기",
+      "이 레벨 완료",
+      "복사"
+     ]
+    }
+   ],
+   "data": [
+    "ssr_stages",
+    "ssr_personas",
+    "ssr_levels",
+    "prompts",
+    "level_progress"
+   ],
+   "api": [
+    "C01",
+    "U02"
+   ],
+   "role": "누구나",
+   "next": [
+    "S11"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "detail",
+   "must_missing": [],
+   "should_missing": [
+    "활동·변경 이력"
+   ],
+   "states_missing": [],
+   "hash": "482f365037db",
+   "wireframe": "docs/spec/wireframes/S02.html"
+  },
+  "S03": {
+   "id": "S03",
+   "name": "S · 세컨드 브레인",
+   "type_raw": "상세",
+   "route": "#brain",
+   "purpose": "3D 탐색기로 파일 찾기·레벨 학습",
+   "blocks": [
+    {
+     "type": "header",
+     "label": "글자 S·\"SECOND BRAIN · PART 2 / 4\"",
+     "items": [
+      "글자 S",
+      "\"SECOND BRAIN",
+      "PART 2",
+      "4\""
+     ]
+    },
+    {
+     "type": "search",
+     "label": "이름·설명·본문·경로",
+     "items": [
+      "이름",
+      "설명",
+      "본문",
+      "경로"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "3D/2D·+/−·전체 보기·자동 회전·다시 재생·라벨 스타일(캡슐/밝은/글자만)·글자 크게",
+     "items": [
+      "3D",
+      "2D",
+      "+",
+      "−",
+      "전체 보기",
+      "자동 회전",
+      "다시 재생",
+      "라벨 스타일(캡슐",
+      "밝은",
+      "글자만)",
+      "글자 크게"
+     ]
+    },
+    {
+     "type": "card",
+     "label": "3D 탐색기(노드 25·포함선·링크선)",
+     "items": [
+      "3D 탐색기(노드 25",
+      "포함선",
+      "링크선)"
+     ]
+    },
+    {
+     "type": "list",
+     "label": "\"파일 목록\" 패널/선택 노드 상세",
+     "items": [
+      "\"파일 목록\" 패널",
+      "선택 노드 상세"
+     ]
+    },
+    {
+     "type": "card",
+     "label": "페르소나 3",
+     "items": [
+      "페르소나 3"
+     ]
+    },
+    {
+     "type": "tabs",
+     "label": "초급·중급·고급",
+     "items": [
+      "초급",
+      "중급",
+      "고급"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "레벨 본문",
+     "items": [
+      "레벨 본문"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "가이드 p.N 보기·이 레벨 완료·복사",
+     "items": [
+      "가이드 p.N 보기",
+      "이 레벨 완료",
+      "복사"
+     ]
+    }
+   ],
+   "data": [
+    "ssr_stages",
+    "ssr_personas",
+    "ssr_levels",
+    "prompts",
+    "level_progress",
+    "brain_nodes",
+    "brain_links",
+    "user_brain_nodes",
+    "user_brain_links"
+   ],
+   "api": [
+    "C01",
+    "C06",
+    "B06",
+    "U02"
+   ],
+   "role": "누구나",
+   "next": [
+    "S11"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "detail",
+   "must_missing": [],
+   "should_missing": [
+    "활동·변경 이력"
+   ],
+   "states_missing": [],
+   "hash": "401280c6b594",
+   "wireframe": "docs/spec/wireframes/S03.html"
+  },
+  "S04": {
+   "id": "S04",
+   "name": "R · 루틴",
+   "type_raw": "상세",
+   "route": "#routine",
+   "purpose": "루틴 레벨 학습·완료",
+   "blocks": [
+    {
+     "type": "header",
+     "label": "글자 R·\"ROUTINE · PART 3 / 4\"",
+     "items": [
+      "글자 R",
+      "\"ROUTINE",
+      "PART 3",
+      "4\""
+     ]
+    },
+    {
+     "type": "card",
+     "label": "페르소나 3",
+     "items": [
+      "페르소나 3"
+     ]
+    },
+    {
+     "type": "tabs",
+     "label": "초급·중급·고급",
+     "items": [
+      "초급",
+      "중급",
+      "고급"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "레벨 본문",
+     "items": [
+      "레벨 본문"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "가이드 p.N 보기·이 레벨 완료·복사",
+     "items": [
+      "가이드 p.N 보기",
+      "이 레벨 완료",
+      "복사"
+     ]
+    }
+   ],
+   "data": [
+    "ssr_stages",
+    "ssr_personas",
+    "ssr_levels",
+    "prompts",
+    "level_progress"
+   ],
+   "api": [
+    "C01",
+    "U02"
+   ],
+   "role": "누구나",
+   "next": [
+    "S11"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "detail",
+   "must_missing": [],
+   "should_missing": [
+    "활동·변경 이력"
+   ],
+   "states_missing": [],
+   "hash": "692141daaa6b",
+   "wireframe": "docs/spec/wireframes/S04.html"
+  },
+  "S05": {
+   "id": "S05",
+   "name": "+ · 익스텐션",
+   "type_raw": "상세",
+   "route": "#ext",
+   "purpose": "익스텐션 레벨 학습·완료",
+   "blocks": [
+    {
+     "type": "header",
+     "label": "글자 +·\"EXTENSION · PART 4 / 4\"",
+     "items": [
+      "글자 +",
+      "\"EXTENSION",
+      "PART 4",
+      "4\""
+     ]
+    },
+    {
+     "type": "card",
+     "label": "페르소나 3",
+     "items": [
+      "페르소나 3"
+     ]
+    },
+    {
+     "type": "tabs",
+     "label": "초급·중급·고급",
+     "items": [
+      "초급",
+      "중급",
+      "고급"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "레벨 본문",
+     "items": [
+      "레벨 본문"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "가이드 p.N 보기·이 레벨 완료·복사",
+     "items": [
+      "가이드 p.N 보기",
+      "이 레벨 완료",
+      "복사"
+     ]
+    }
+   ],
+   "data": [
+    "ssr_stages",
+    "ssr_personas",
+    "ssr_levels",
+    "prompts",
+    "level_progress"
+   ],
+   "api": [
+    "C01",
+    "U02"
+   ],
+   "role": "누구나",
+   "next": [
+    "S11"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "detail",
+   "must_missing": [],
+   "should_missing": [
+    "활동·변경 이력"
+   ],
+   "states_missing": [],
+   "hash": "0731b6ca052e",
+   "wireframe": "docs/spec/wireframes/S05.html"
+  },
+  "S06": {
+   "id": "S06",
+   "name": "브랜드 라이브러리",
+   "type_raw": "상세",
+   "route": "#brand",
+   "purpose": "브랜드 규칙 확인·색 복사",
+   "blocks": [
+    {
+     "type": "header",
+     "label": "",
+     "items": []
+    },
+    {
+     "type": "card",
+     "label": "로고+규칙 3줄",
+     "items": [
+      "로고+규칙 3줄"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "글꼴과 말투(금지 포함)",
+     "items": [
+      "글꼴과 말투(금지 포함)"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "팔레트 5칸(눌러서 HEX 복사)",
+     "items": [
+      "팔레트 5칸(눌러서 HEX 복사)"
+     ]
+    }
+   ],
+   "data": [
+    "brand_colors"
+   ],
+   "api": [
+    "C05"
+   ],
+   "role": "누구나",
+   "next": [],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "detail",
+   "must_missing": [],
+   "should_missing": [
+    "관련 항목 탭",
+    "활동·변경 이력"
+   ],
+   "states_missing": [],
+   "hash": "21e504cea085",
+   "wireframe": "docs/spec/wireframes/S06.html"
+  },
+  "S07": {
+   "id": "S07",
+   "name": "콘텐츠 라이브러리",
+   "type_raw": "보드",
+   "route": "#content",
+   "purpose": "콘텐츠 단계 관리",
+   "blocks": [
+    {
+     "type": "header",
+     "label": "",
+     "items": []
+    },
+    {
+     "type": "filter",
+     "label": "전체·유튜브·블로그·전자책·뉴스레터",
+     "items": [
+      "전체",
+      "유튜브",
+      "블로그",
+      "전자책",
+      "뉴스레터"
+     ]
+    },
+    {
+     "type": "form",
+     "label": "제목*·채널",
+     "items": [
+      "제목*",
+      "채널"
+     ]
+    },
+    {
+     "type": "board",
+     "label": "아이디어·기획·제작·발행(열 개수)",
+     "items": [
+      "아이디어",
+      "기획",
+      "제작",
+      "발행(열 개수)"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "추가·×",
+     "items": [
+      "추가",
+      "×"
+     ]
+    },
+    {
+     "type": "footer",
+     "label": "",
+     "items": []
+    }
+   ],
+   "data": [
+    "content_items",
+    "content_seeds"
+   ],
+   "api": [
+    "U12",
+    "C07"
+   ],
+   "role": "누구나",
+   "next": [],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "board",
+   "must_missing": [
+    "카드 → 상세"
+   ],
+   "should_missing": [
+    "열마다 건수·금액 합계"
+   ],
+   "states_missing": [],
+   "hash": "cc0ece8131c0",
+   "wireframe": "docs/spec/wireframes/S07.html"
+  },
+  "S08": {
+   "id": "S08",
+   "name": "아이디어 패드",
+   "type_raw": "목록",
+   "route": "#ideas",
+   "purpose": "아이디어 적고 검증",
+   "blocks": [
+    {
+     "type": "header",
+     "label": "",
+     "items": []
+    },
+    {
+     "type": "form",
+     "label": "아이디어*·분야(SaaS·AI 에이전트·자동화·콘텐츠·전자책·정부지원사업)",
+     "items": [
+      "아이디어*",
+      "분야(SaaS",
+      "AI 에이전트",
+      "자동화",
+      "콘텐츠",
+      "전자책",
+      "정부지원사업)"
+     ]
+    },
+    {
+     "type": "list",
+     "label": "별점순(별점 1–3·분야·본문)",
+     "items": [
+      "별점순(별점 1–3",
+      "분야",
+      "본문)"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "추가·검증 프롬프트 복사·삭제",
+     "items": [
+      "추가",
+      "검증 프롬프트 복사",
+      "삭제"
+     ]
+    }
+   ],
+   "data": [
+    "ideas"
+   ],
+   "api": [
+    "U11"
+   ],
+   "role": "누구나",
+   "next": [],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "list",
+   "must_missing": [
+    "검색",
+    "필터",
+    "페이지·더 보기",
+    "항목 → 상세 이동"
+   ],
+   "should_missing": [
+    "정렬",
+    "일괄 작업(선택·삭제·내보내기)",
+    "저장된 보기·열 설정"
+   ],
+   "states_missing": [],
+   "hash": "abbb6c48d764",
+   "wireframe": "docs/spec/wireframes/S08.html"
+  },
+  "S09": {
+   "id": "S09",
+   "name": "ArtCraft 앱",
+   "type_raw": "목록",
+   "route": "#artcraft",
+   "purpose": "앱 구조 이해·앱 고르기",
+   "blocks": [
+    {
+     "type": "header",
+     "label": "링크 4",
+     "items": [
+      "링크 4"
+     ]
+    },
+    {
+     "type": "steps",
+     "label": "런처·앱·MCP·CLI·AGENTS.md·Claude",
+     "items": [
+      "런처",
+      "앱",
+      "MCP",
+      "CLI",
+      "AGENTS.md",
+      "Claude"
+     ]
+    },
+    {
+     "type": "filter",
+     "label": "전체/이미지·사진/영상·사운드/문서·출판/디자인·설계/도구(6)",
+     "items": [
+      "전체",
+      "이미지",
+      "사진",
+      "영상",
+      "사운드",
+      "문서",
+      "출판",
+      "디자인",
+      "설계",
+      "도구(6)"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "\"n개\" pill",
+     "items": [
+      "\"n개\" pill"
+     ]
+    },
+    {
+     "type": "card",
+     "label": "앱 16(자동 채움 열 최소 236px·간격 22px: 런처 아이콘 52px·이름·한 줄 소개 → 비슷한 앱 → MCP·버전 태그 → \"상세 가이드 →\" — 개발 상태는 카드에 없음)",
+     "items": [
+      "앱 16(자동 채움 열 최소 236px",
+      "간격 22px: 런처 아이콘 52px",
+      "이름",
+      "한 줄 소개 → 비슷한 앱 → MCP",
+      "버전 태그 → \"상세 가이드 →\" — 개발 상태는 카드에 없음)"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "아이콘 출처 문구",
+     "items": [
+      "아이콘 출처 문구"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "02 알아둘 점·03 런처 설치·06 색감 보정·07 명함",
+     "items": [
+      "02 알아둘 점",
+      "03 런처 설치",
+      "06 색감 보정",
+      "07 명함"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "가이드 보기·복사",
+     "items": [
+      "가이드 보기",
+      "복사"
+     ]
+    },
+    {
+     "type": "table",
+     "label": "10 한계",
+     "items": [
+      "10 한계"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "사업 메모",
+     "items": [
+      "사업 메모"
+     ]
+    },
+    {
+     "type": "link",
+     "label": "외부",
+     "items": [
+      "외부"
+     ]
+    }
+   ],
+   "data": [
+    "art_apps",
+    "prompts"
+   ],
+   "api": [
+    "C02"
+   ],
+   "role": "누구나",
+   "next": [
+    "S10",
+    "S11"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "list",
+   "must_missing": [
+    "검색",
+    "페이지·더 보기"
+   ],
+   "should_missing": [
+    "새로 만들기",
+    "일괄 작업(선택·삭제·내보내기)",
+    "저장된 보기·열 설정"
+   ],
+   "states_missing": [],
+   "hash": "fadff785130d",
+   "wireframe": "docs/spec/wireframes/S09.html"
+  },
+  "S10": {
+   "id": "S10",
+   "name": "ArtCraft 앱 16종 가이드",
+   "type_raw": "상세",
+   "route": "#artapps",
+   "purpose": "앱별 설치·사용법 확인",
+   "blocks": [
+    {
+     "type": "header",
+     "label": "링크 3",
+     "items": [
+      "링크 3"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "정보 기준 note·01 설치 전에 정할 것",
+     "items": [
+      "정보 기준 note",
+      "01 설치 전에 정할 것"
+     ]
+    },
+    {
+     "type": "table",
+     "label": "02 권한(macOS·Windows·Linux·공통)",
+     "items": [
+      "02 권한(macOS",
+      "Windows",
+      "Linux",
+      "공통)"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "03 만능·04 여러 앱 프롬프트 복사",
+     "items": [
+      "03 만능",
+      "04 여러 앱 프롬프트 복사"
+     ]
+    },
+    {
+     "type": "list",
+     "label": "05 앱별 펼침 16(제목 앞 아이콘 36px · 태그 4개 모두 · 한 번에 하나만 펼침 — 핵심 기능·한눈에 보기 표·예시 요청·설치 프롬프트·알아둘 점·링크)",
+     "items": [
+      "05 앱별 펼침 16(제목 앞 아이콘 36px",
+      "태그 4개 모두",
+      "한 번에 하나만 펼침 — 핵심 기능",
+      "한눈에 보기 표",
+      "예시 요청",
+      "설치 프롬프트",
+      "알아둘 점",
+      "링크)"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "출처",
+     "items": [
+      "출처"
+     ]
+    }
+   ],
+   "data": [
+    "art_apps",
+    "prompts"
+   ],
+   "api": [
+    "C02"
+   ],
+   "role": "누구나",
+   "next": [
+    "S09"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "detail",
+   "must_missing": [],
+   "should_missing": [
+    "관련 항목 탭",
+    "활동·변경 이력"
+   ],
+   "states_missing": [],
+   "hash": "f6e1062753d0",
+   "wireframe": "docs/spec/wireframes/S10.html"
+  },
+  "S11": {
+   "id": "S11",
+   "name": "사용 가이드 (PDF)",
+   "type_raw": "상세",
+   "route": "#guide",
+   "purpose": "가이드 쪽 읽기·검색",
+   "blocks": [
+    {
+     "type": "header",
+     "label": "",
+     "items": []
+    },
+    {
+     "type": "tabs",
+     "label": "SSR+ 가이드(13쪽)·ArtCraft 가이드(4쪽)",
+     "items": [
+      "SSR+ 가이드(13쪽)",
+      "ArtCraft 가이드(4쪽)"
+     ]
+    },
+    {
+     "type": "list",
+     "label": "썸네일",
+     "items": [
+      "썸네일"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "←이전·다음→",
+     "items": [
+      "←이전",
+      "다음→"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "쪽수",
+     "items": [
+      "쪽수"
+     ]
+    },
+    {
+     "type": "search",
+     "label": "본문(ssr만 — \"n쪽 일치\" 또는 \"일치 없음\")",
+     "items": [
+      "본문(ssr만 — \"n쪽 일치\" 또는 \"일치 없음\")"
+     ]
+    },
+    {
+     "type": "card",
+     "label": "쪽 이미지(A4 세로)",
+     "items": [
+      "쪽 이미지(A4 세로)"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "\"이 쪽 텍스트 보기·복사\"(ssr만)",
+     "items": [
+      "\"이 쪽 텍스트 보기",
+      "복사\"(ssr만)"
+     ]
+    }
+   ],
+   "data": [
+    "guide_docs",
+    "guide_pages"
+   ],
+   "api": [
+    "C03"
+   ],
+   "role": "누구나",
+   "next": [],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "detail",
+   "must_missing": [],
+   "should_missing": [
+    "활동·변경 이력"
+   ],
+   "states_missing": [],
+   "hash": "beec2ed398b1",
+   "wireframe": "docs/spec/wireframes/S11.html"
+  },
+  "S12": {
+   "id": "S12",
+   "name": "7일 세팅 계획",
+   "type_raw": "상세",
+   "route": "#plan",
+   "purpose": "7일 할 일·체크리스트 진행",
+   "blocks": [
+    {
+     "type": "header",
+     "label": "",
+     "items": []
+    },
+    {
+     "type": "list",
+     "label": "날짜별 할 일 7(체크·✎·태그)·시작일",
+     "items": [
+      "날짜별 할 일 7(체크",
+      "✎",
+      "태그)",
+      "시작일"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "n/7",
+     "items": [
+      "n",
+      "7"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "시작일을 오늘로",
+     "items": [
+      "시작일을 오늘로"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "유지 관리 note \"매주 15분\"",
+     "items": [
+      "유지 관리 note \"매주 15분\""
+     ]
+    },
+    {
+     "type": "list",
+     "label": "SSR+ 체크리스트 4(n/4)",
+     "items": [
+      "SSR+ 체크리스트 4(n",
+      "4)"
+     ]
+    }
+   ],
+   "data": [
+    "plan_days",
+    "plan_day_defaults",
+    "user_settings",
+    "checklist_progress",
+    "ssr_checklist_items"
+   ],
+   "api": [
+    "U01",
+    "U03",
+    "U04",
+    "U05",
+    "C04"
+   ],
+   "role": "누구나",
+   "next": [
+    "M5"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "detail",
+   "must_missing": [],
+   "should_missing": [
+    "관련 항목 탭",
+    "활동·변경 이력"
+   ],
+   "states_missing": [],
+   "hash": "78b115c5cdf7",
+   "wireframe": "docs/spec/wireframes/S12.html"
+  },
+  "S13": {
+   "id": "S13",
+   "name": "기획 요약",
+   "type_raw": "상세",
+   "route": "#spec",
+   "purpose": "기획·기기별 화면 확인",
+   "blocks": [
+    {
+     "type": "header",
+     "label": "",
+     "items": []
+    },
+    {
+     "type": "text",
+     "label": "목적·탐색기 사양·단계별 확장",
+     "items": [
+      "목적",
+      "탐색기 사양",
+      "단계별 확장"
+     ]
+    },
+    {
+     "type": "card",
+     "label": "화면 구조 4칸",
+     "items": [
+      "화면 구조 4칸"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "사업 연결 note",
+     "items": [
+      "사업 연결 note"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "구간 모바일·태블릿·데스크탑(aria-pressed)",
+     "items": [
+      "구간 모바일",
+      "태블릿",
+      "데스크탑(aria-pressed)"
+     ]
+    },
+    {
+     "type": "filter",
+     "label": "보여줄 화면(12개)",
+     "items": [
+      "보여줄 화면(12개)"
+     ]
+    },
+    {
+     "type": "card",
+     "label": "iframe 미리보기(\"폭 390px · n% 축소\")",
+     "items": [
+      "iframe 미리보기(\"폭 390px",
+      "n% 축소\")"
+     ]
+    },
+    {
+     "type": "footer",
+     "label": "",
+     "items": []
+    }
+   ],
+   "data": [],
+   "api": [],
+   "role": "누구나",
+   "next": [],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "detail",
+   "must_missing": [],
+   "should_missing": [
+    "관련 항목 탭",
+    "활동·변경 이력"
+   ],
+   "states_missing": [],
+   "hash": "5a69e7ae0fbb",
+   "wireframe": "docs/spec/wireframes/S13.html"
+  },
+  "M1": {
+   "id": "M1",
+   "name": "스킬 추가/편집",
+   "type_raw": "폼",
+   "route": "S01 위 모달",
+   "purpose": "스킬 항목 관리",
+   "blocks": [
+    {
+     "type": "form",
+     "label": "이름*·호출 명령·사용 빈도",
+     "items": [
+      "이름*",
+      "호출 명령",
+      "사용 빈도"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "삭제(편집 시)·취소·저장",
+     "items": [
+      "삭제(편집 시)",
+      "취소",
+      "저장"
+     ]
+    }
+   ],
+   "data": [
+    "skills"
+   ],
+   "api": [
+    "U06"
+   ],
+   "role": "누구나",
+   "next": [
+    "S01"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "form",
+   "must_missing": [],
+   "should_missing": [
+    "임시 저장(긴 폼)"
+   ],
+   "states_missing": [],
+   "hash": "f8ceb7c4b80c",
+   "wireframe": "docs/spec/wireframes/M1.html"
+  },
+  "M2": {
+   "id": "M2",
+   "name": "루틴 추가/편집",
+   "type_raw": "폼",
+   "route": "S01 위 모달",
+   "purpose": "루틴 항목 관리",
+   "blocks": [
+    {
+     "type": "form",
+     "label": "루틴 이름*·실행 시각·호출할 스킬·상태(켜짐/꺼짐)",
+     "items": [
+      "루틴 이름*",
+      "실행 시각",
+      "호출할 스킬",
+      "상태(켜짐",
+      "꺼짐)"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "삭제(편집 시)·취소·저장",
+     "items": [
+      "삭제(편집 시)",
+      "취소",
+      "저장"
+     ]
+    }
+   ],
+   "data": [
+    "routines"
+   ],
+   "api": [
+    "U07"
+   ],
+   "role": "누구나",
+   "next": [
+    "S01"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "form",
+   "must_missing": [],
+   "should_missing": [
+    "임시 저장(긴 폼)"
+   ],
+   "states_missing": [],
+   "hash": "efa9b08c161d",
+   "wireframe": "docs/spec/wireframes/M2.html"
+  },
+  "M3": {
+   "id": "M3",
+   "name": "익스텐션 추가/편집",
+   "type_raw": "폼",
+   "route": "S01 위 모달",
+   "purpose": "익스텐션 항목 관리",
+   "blocks": [
+    {
+     "type": "form",
+     "label": "이름*·종류·용도·상태(연결됨/대기)",
+     "items": [
+      "이름*",
+      "종류",
+      "용도",
+      "상태(연결됨",
+      "대기)"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "삭제(편집 시)·취소·저장",
+     "items": [
+      "삭제(편집 시)",
+      "취소",
+      "저장"
+     ]
+    }
+   ],
+   "data": [
+    "user_extensions"
+   ],
+   "api": [
+    "U08"
+   ],
+   "role": "누구나",
+   "next": [
+    "S01"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "form",
+   "must_missing": [],
+   "should_missing": [
+    "임시 저장(긴 폼)"
+   ],
+   "states_missing": [],
+   "hash": "fb1877924d1b",
+   "wireframe": "docs/spec/wireframes/M3.html"
+  },
+  "M4": {
+   "id": "M4",
+   "name": "최근 파일 추가/편집",
+   "type_raw": "폼",
+   "route": "S01 위 모달",
+   "purpose": "최근 파일 관리",
+   "blocks": [
+    {
+     "type": "form",
+     "label": "파일 이름*·종류(MD/XLS/PDF/DOC/TXT)·탐색기에서 열 노드(8)·시점",
+     "items": [
+      "파일 이름*",
+      "종류(MD",
+      "XLS",
+      "PDF",
+      "DOC",
+      "TXT)",
+      "탐색기에서 열 노드(8)",
+      "시점"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "삭제(편집 시)·취소·저장",
+     "items": [
+      "삭제(편집 시)",
+      "취소",
+      "저장"
+     ]
+    }
+   ],
+   "data": [
+    "recent_files",
+    "brain_nodes"
+   ],
+   "api": [
+    "U09"
+   ],
+   "role": "누구나",
+   "next": [
+    "S01"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "form",
+   "must_missing": [],
+   "should_missing": [
+    "임시 저장(긴 폼)"
+   ],
+   "states_missing": [],
+   "hash": "aedc07b5077b",
+   "wireframe": "docs/spec/wireframes/M4.html"
+  },
+  "M5": {
+   "id": "M5",
+   "name": "n일차 목표 편집",
+   "type_raw": "폼",
+   "route": "S01·S12 위 모달",
+   "purpose": "일차 문구·완료 수정",
+   "blocks": [
+    {
+     "type": "form",
+     "label": "할 일·상태(완료/미완료)",
+     "items": [
+      "할 일",
+      "상태(완료",
+      "미완료)"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "기본값으로(수정본 있을 때)·취소·저장",
+     "items": [
+      "기본값으로(수정본 있을 때)",
+      "취소",
+      "저장"
+     ]
+    }
+   ],
+   "data": [
+    "plan_days",
+    "plan_day_defaults"
+   ],
+   "api": [
+    "U03"
+   ],
+   "role": "누구나",
+   "next": [
+    "S01",
+    "S12"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "form",
+   "must_missing": [],
+   "should_missing": [
+    "필수 표시·도움말",
+    "임시 저장(긴 폼)"
+   ],
+   "states_missing": [],
+   "hash": "0bd8fa5f4e7b",
+   "wireframe": "docs/spec/wireframes/M5.html"
+  },
+  "M6": {
+   "id": "M6",
+   "name": "날짜 편집",
+   "type_raw": "폼",
+   "route": "S01 위 모달",
+   "purpose": "날짜 메모·시작일 지정",
+   "blocks": [
+    {
+     "type": "form",
+     "label": "메모·7일 계획 시작일(변경 안 함/이 날짜부터 시작)",
+     "items": [
+      "메모",
+      "7일 계획 시작일(변경 안 함",
+      "이 날짜부터 시작)"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "취소·저장",
+     "items": [
+      "취소",
+      "저장"
+     ]
+    }
+   ],
+   "data": [
+    "date_notes",
+    "user_settings"
+   ],
+   "api": [
+    "U10",
+    "U05"
+   ],
+   "role": "누구나",
+   "next": [
+    "S01"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "form",
+   "must_missing": [],
+   "should_missing": [
+    "필수 표시·도움말",
+    "임시 저장(긴 폼)"
+   ],
+   "states_missing": [],
+   "hash": "35506d2b159c",
+   "wireframe": "docs/spec/wireframes/M6.html"
+  },
+  "T1": {
+   "id": "T1",
+   "name": "로그인",
+   "type_raw": "로그인",
+   "route": "/login [추정]",
+   "purpose": "이메일 매직링크로 로그인. 진입 = S00 로그인 버튼·T3 \"로그인\"(D23)",
+   "blocks": [
+    {
+     "type": "header",
+     "label": "",
+     "items": []
+    },
+    {
+     "type": "form",
+     "label": "이메일*",
+     "items": [
+      "이메일*"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "로그인 링크 보내기",
+     "items": [
+      "로그인 링크 보내기"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "메일 확인 안내·레이트 리밋 안내",
+     "items": [
+      "메일 확인 안내",
+      "레이트 리밋 안내"
+     ]
+    },
+    {
+     "type": "link",
+     "label": "로그인 없이 체험",
+     "items": [
+      "로그인 없이 체험"
+     ]
+    },
+    {
+     "type": "link",
+     "label": "이용약관·개인정보처리방침 [추정]",
+     "items": [
+      "이용약관",
+      "개인정보처리방침 [추정]"
+     ]
+    }
+   ],
+   "data": [],
+   "api": [
+    "A03",
+    "A02"
+   ],
+   "role": "비로그인",
+   "next": [
+    "S01",
+    "T2"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "auth",
+   "must_missing": [],
+   "should_missing": [],
+   "states_missing": [],
+   "hash": "7f4eb3261760",
+   "wireframe": "docs/spec/wireframes/T1.html"
+  },
+  "T2": {
+   "id": "T2",
+   "name": "이 기기 데이터 가져오기",
+   "type_raw": "폼",
+   "route": "기기마다 첫 로그인 직후 모달 [추정] · 계정 메뉴",
+   "purpose": "localStorage `nomad-lab-v1`을 계정에 병합(덮어쓰기 없음, 기기마다 1회 — D33·D34)",
+   "blocks": [
+    {
+     "type": "text",
+     "label": "이 기기에서 쓰던 기록이 있습니다 + 가져올 항목 수 미리보기(아이디어 n·콘텐츠 n·메모 n…)",
+     "items": [
+      "이 기기에서 쓰던 기록이 있습니다 + 가져올 항목 수 미리보기(아이디어 n",
+      "콘텐츠 n",
+      "메모 n…)"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "\"계정에 있는 기록은 그대로 두고 합칩니다\"",
+     "items": [
+      "\"계정에 있는 기록은 그대로 두고 합칩니다\""
+     ]
+    },
+    {
+     "type": "button",
+     "label": "가져오기·건너뛰기(=취소 — 계정 메뉴에서 나중에 다시)",
+     "items": [
+      "가져오기",
+      "건너뛰기(=취소 — 계정 메뉴에서 나중에 다시)"
+     ]
+    }
+   ],
+   "data": [
+    "user_settings",
+    "level_progress",
+    "plan_days",
+    "checklist_progress",
+    "skills",
+    "routines",
+    "user_extensions",
+    "recent_files",
+    "date_notes",
+    "ideas",
+    "content_items"
+   ],
+   "api": [
+    "A01"
+   ],
+   "role": "로그인",
+   "next": [
+    "S01"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "form",
+   "must_missing": [
+    "라벨 있는 입력"
+   ],
+   "should_missing": [
+    "필수 표시·도움말",
+    "임시 저장(긴 폼)"
+   ],
+   "states_missing": [],
+   "hash": "95095e41bdb5",
+   "wireframe": "docs/spec/wireframes/T2.html"
+  },
+  "T3": {
+   "id": "T3",
+   "name": "로그인 권유 시트",
+   "type_raw": "폼",
+   "route": "바텀시트(모바일)/모달(태블릿·데스크톱) [추정 구간 배분]",
+   "purpose": "비로그인 체험 중 로그인 권유(D24)",
+   "blocks": [
+    {
+     "type": "text",
+     "label": "트리거별 문구(개인 내용 저장 / 내 두뇌 보기 / \"이 기기에만 저장됩니다\"·다른 기기·백업·7일 계획)",
+     "items": [
+      "트리거별 문구(개인 내용 저장",
+      "내 두뇌 보기",
+      "\"이 기기에만 저장됩니다\"",
+      "다른 기기",
+      "백업",
+      "7일 계획)"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "로그인·예시로 계속 보기(=취소 — ✕·Esc·스크림도 같음 [추정])",
+     "items": [
+      "로그인",
+      "예시로 계속 보기(=취소 — ✕",
+      "Esc",
+      "스크림도 같음 [추정])"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "권유 기록은 sessionStorage [추정]",
+     "items": [
+      "권유 기록은 sessionStorage [추정]"
+     ]
+    }
+   ],
+   "data": [],
+   "api": [],
+   "role": "비로그인",
+   "next": [
+    "T1"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "form",
+   "must_missing": [
+    "라벨 있는 입력"
+   ],
+   "should_missing": [
+    "필수 표시·도움말",
+    "임시 저장(긴 폼)"
+   ],
+   "states_missing": [],
+   "hash": "d8c2ba4d12ca",
+   "wireframe": "docs/spec/wireframes/T3.html"
+  },
+  "B1": {
+   "id": "B1",
+   "name": "두뇌 연동",
+   "type_raw": "설정",
+   "route": "계정 메뉴 \"두뇌 연동 토큰\" → /settings/brain [추정]",
+   "purpose": "내 second-brain을 탐색기·입자 구에 연결(D22)",
+   "blocks": [
+    {
+     "type": "nav",
+     "label": "설정 구역 두뇌 연동·내 플랜 [추정]",
+     "items": [
+      "설정 구역 두뇌 연동",
+      "내 플랜 [추정]"
+     ]
+    },
+    {
+     "type": "header",
+     "label": "",
+     "items": []
+    },
+    {
+     "type": "text",
+     "label": "연동 상태(마지막 업로드 시각·노드·링크 수 / \"예시 카탈로그 표시 중\")",
+     "items": [
+      "연동 상태(마지막 업로드 시각",
+      "노드",
+      "링크 수",
+      "\"예시 카탈로그 표시 중\")"
+     ]
+    },
+    {
+     "type": "list",
+     "label": "토큰(이름·발급일·마지막 사용·폐기)",
+     "items": [
+      "토큰(이름",
+      "발급일",
+      "마지막 사용",
+      "폐기)"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "토큰 발급(원문 1회 표시·복사)",
+     "items": [
+      "토큰 발급(원문 1회 표시",
+      "복사)"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "CLI 안내 `nomad-brain sync`(`--dry-run`으로 보낼 목록 미리보기)·`.brainignore`·\"본문은 올리지 않습니다\"·요약은 front-matter `summary:`만",
+     "items": [
+      "CLI 안내 `nomad-brain sync`(`--dry-run`으로 보낼 목록 미리보기)",
+      "`.brainignore`",
+      "\"본문은 올리지 않습니다\"",
+      "요약은 front-matter `summary:`만"
+     ]
+    },
+    {
+     "type": "form",
+     "label": "폴더 선택*(CLI 없이 — 브라우저에서 색인",
+     "items": [
+      "폴더 선택*(CLI 없이 — 브라우저에서 색인"
+     ]
+    },
+    {
+     "type": "본문은 기기 밖으로 나가지 않음",
+     "label": "",
+     "items": []
+    },
+    {
+     "type": "d37)",
+     "label": "",
+     "items": []
+    },
+    {
+     "type": "text",
+     "label": "보낼 노드·링크 수 미리보기",
+     "items": [
+      "보낼 노드",
+      "링크 수 미리보기"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "올려서 저장(마지막 업로드 시각이 저장됨 표시)",
+     "items": [
+      "올려서 저장(마지막 업로드 시각이 저장됨 표시)"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "Pro가 끝나면 \"내 그래프는 읽기 전용",
+     "items": [
+      "Pro가 끝나면 \"내 그래프는 읽기 전용"
+     ]
+    },
+    {
+     "type": "업로드는 pro\"(d37)",
+     "label": "",
+     "items": []
+    },
+    {
+     "type": "danger",
+     "label": "두뇌 연결 해제(확인 후 예시 카탈로그로 B07)",
+     "items": [
+      "두뇌 연결 해제(확인 후 예시 카탈로그로 B07)"
+     ]
+    }
+   ],
+   "data": [
+    "api_tokens",
+    "brain_sources",
+    "user_brain_nodes",
+    "user_brain_links"
+   ],
+   "api": [
+    "B01",
+    "B02",
+    "B03",
+    "B05",
+    "B06",
+    "B07"
+   ],
+   "role": "로그인",
+   "next": [
+    "S03",
+    "S01",
+    "P1"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "settings",
+   "must_missing": [],
+   "should_missing": [],
+   "states_missing": [],
+   "hash": "ed34312de2c7",
+   "wireframe": "docs/spec/wireframes/B1.html"
+  },
+  "P1": {
+   "id": "P1",
+   "name": "내 플랜",
+   "type_raw": "설정",
+   "route": "계정 메뉴 \"내 플랜\" → /settings/plan [추정]",
+   "purpose": "Pro 상태 확인·수강생 번들 코드 입력(D30)",
+   "blocks": [
+    {
+     "type": "nav",
+     "label": "설정 구역 두뇌 연동·내 플랜 [추정]",
+     "items": [
+      "설정 구역 두뇌 연동",
+      "내 플랜 [추정]"
+     ]
+    },
+    {
+     "type": "header",
+     "label": "",
+     "items": []
+    },
+    {
+     "type": "text",
+     "label": "현재 플랜·종료일·체험 사용 여부",
+     "items": [
+      "현재 플랜",
+      "종료일",
+      "체험 사용 여부"
+     ]
+    },
+    {
+     "type": "form",
+     "label": "번들 코드*(20자리",
+     "items": [
+      "번들 코드*(20자리"
+     ]
+    },
+    {
+     "type": "대소문자·공백 무시)",
+     "label": "",
+     "items": []
+    },
+    {
+     "type": "button",
+     "label": "코드 적용해 저장(종료일 갱신이 저장됨 표시)",
+     "items": [
+      "코드 적용해 저장(종료일 갱신이 저장됨 표시)"
+     ]
+    },
+    {
+     "type": "danger",
+     "label": "위험 구역 \"계정 삭제\"(재확인 입력 후 삭제·되돌릴 수 없음 안내 — D42)",
+     "items": [
+      "위험 구역 \"계정 삭제\"(재확인 입력 후 삭제",
+      "되돌릴 수 없음 안내 — D42)"
+     ]
+    }
+   ],
+   "data": [
+    "user_plans"
+   ],
+   "api": [
+    "P01",
+    "P02",
+    "A04"
+   ],
+   "role": "로그인",
+   "next": [
+    "S01",
+    "B1"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "settings",
+   "must_missing": [],
+   "should_missing": [],
+   "states_missing": [],
+   "hash": "ea1ee2d691ca",
+   "wireframe": "docs/spec/wireframes/P1.html"
+  },
+  "AD1": {
+   "id": "AD1",
+   "name": "카탈로그 목록",
+   "type_raw": "목록",
+   "route": "/admin",
+   "purpose": "카탈로그 테이블 고르기·행 찾기(D21, MVP-2 — 편집 대상은 3테이블로 한정, 나머지는 마이그레이션 D39)",
+   "blocks": [
+    {
+     "type": "header",
+     "label": "",
+     "items": []
+    },
+    {
+     "type": "filter",
+     "label": "테이블 3 선택(`art_apps`·`prompts`·`guide_pages`)",
+     "items": [
+      "테이블 3 선택(`art_apps`",
+      "`prompts`",
+      "`guide_pages`)"
+     ]
+    },
+    {
+     "type": "search",
+     "label": "현재 테이블 행 검색(키·이름",
+     "items": [
+      "현재 테이블 행 검색(키",
+      "이름"
+     ]
+    },
+    {
+     "type": "ad02)",
+     "label": "",
+     "items": []
+    },
+    {
+     "type": "table",
+     "label": "행 목록(sort_order·PK 순 편집)",
+     "items": [
+      "행 목록(sort_order",
+      "PK 순 편집)"
+     ]
+    },
+    {
+     "type": "pagination",
+     "label": "50행 단위(AD02 range)",
+     "items": [
+      "50행 단위(AD02 range)"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "새 항목",
+     "items": [
+      "새 항목"
+     ]
+    }
+   ],
+   "data": [
+    "prompts",
+    "art_apps",
+    "guide_pages"
+   ],
+   "api": [
+    "AD01",
+    "AD02"
+   ],
+   "role": "관리자(`admins`, 아니면 404)",
+   "next": [
+    "AD2",
+    "AD3",
+    "AD4",
+    "AD5"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "list",
+   "must_missing": [],
+   "should_missing": [
+    "일괄 작업(선택·삭제·내보내기)",
+    "저장된 보기·열 설정"
+   ],
+   "states_missing": [],
+   "hash": "f7efc7178af4",
+   "wireframe": "docs/spec/wireframes/AD1.html"
+  },
+  "AD2": {
+   "id": "AD2",
+   "name": "항목 편집",
+   "type_raw": "폼",
+   "route": "/admin/[table]/[id] [추정]",
+   "purpose": "카탈로그 행 문구 추가·수정·삭제(3테이블)",
+   "blocks": [
+    {
+     "type": "form",
+     "label": "테이블 열별 입력(not null 열은 * 필수 표시)",
+     "items": [
+      "테이블 열별 입력(not null 열은 * 필수 표시)"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "삭제·취소·저장",
+     "items": [
+      "삭제",
+      "취소",
+      "저장"
+     ]
+    }
+   ],
+   "data": [
+    "prompts",
+    "art_apps",
+    "guide_pages",
+    "catalog_audit"
+   ],
+   "api": [
+    "AD03"
+   ],
+   "role": "관리자",
+   "next": [
+    "AD1"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "form",
+   "must_missing": [],
+   "should_missing": [
+    "임시 저장(긴 폼)"
+   ],
+   "states_missing": [],
+   "hash": "66866663052f",
+   "wireframe": "docs/spec/wireframes/AD2.html"
+  },
+  "AD3": {
+   "id": "AD3",
+   "name": "이미지 업로드",
+   "type_raw": "폼",
+   "route": "/admin/images [추정]",
+   "purpose": "Storage(`guide`·`art-icons`) 이미지 올리기·교체",
+   "blocks": [
+    {
+     "type": "form",
+     "label": "버킷*(art-icons 또는 guide)·파일*(png·webp — guide는 jpeg도 — 2MB 이하(재량))",
+     "items": [
+      "버킷*(art-icons 또는 guide)",
+      "파일*(png",
+      "webp — guide는 jpeg도 — 2MB 이하(재량))"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "올리기·취소",
+     "items": [
+      "올리기",
+      "취소"
+     ]
+    },
+    {
+     "type": "list",
+     "label": "기존 이미지",
+     "items": [
+      "기존 이미지"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "제3자 이미지 사용 허락 확인 안내(D16)",
+     "items": [
+      "제3자 이미지 사용 허락 확인 안내(D16)"
+     ]
+    }
+   ],
+   "data": [
+    "art_apps",
+    "guide_pages"
+   ],
+   "api": [
+    "AD04",
+    "AD03"
+   ],
+   "role": "관리자",
+   "next": [
+    "AD1"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "form",
+   "must_missing": [],
+   "should_missing": [
+    "임시 저장(긴 폼)"
+   ],
+   "states_missing": [],
+   "hash": "dd8bd9fa5fd5",
+   "wireframe": "docs/spec/wireframes/AD3.html"
+  },
+  "AD4": {
+   "id": "AD4",
+   "name": "변경 이력",
+   "type_raw": "목록",
+   "route": "/admin/audit [추정]",
+   "purpose": "누가 언제 무엇을 바꿨는지 확인",
+   "blocks": [
+    {
+     "type": "filter",
+     "label": "테이블·기간",
+     "items": [
+      "테이블",
+      "기간"
+     ]
+    },
+    {
+     "type": "search",
+     "label": "행 키 검색(AD05)",
+     "items": [
+      "행 키 검색(AD05)"
+     ]
+    },
+    {
+     "type": "table",
+     "label": "시각·관리자·테이블·행·변경 전후(최신순)",
+     "items": [
+      "시각",
+      "관리자",
+      "테이블",
+      "행",
+      "변경 전후(최신순)"
+     ]
+    },
+    {
+     "type": "pagination",
+     "label": "50행 단위(AD05 range)",
+     "items": [
+      "50행 단위(AD05 range)"
+     ]
+    },
+    {
+     "type": "back",
+     "label": "카탈로그 목록(AD1)으로",
+     "items": [
+      "카탈로그 목록(AD1)으로"
+     ]
+    }
+   ],
+   "data": [
+    "catalog_audit"
+   ],
+   "api": [
+    "AD05"
+   ],
+   "role": "관리자",
+   "next": [
+    "AD2",
+    "AD1"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "list",
+   "must_missing": [],
+   "should_missing": [
+    "새로 만들기",
+    "일괄 작업(선택·삭제·내보내기)",
+    "저장된 보기·열 설정"
+   ],
+   "states_missing": [],
+   "hash": "3aedccead5b2",
+   "wireframe": "docs/spec/wireframes/AD4.html"
+  },
+  "AD5": {
+   "id": "AD5",
+   "name": "번들 코드 발급",
+   "type_raw": "폼",
+   "route": "/admin/codes",
+   "purpose": "강의 기수별 코드 발급·폐기·사용 현황(D38, MVP-1 — AD1~AD4는 MVP-2, D41)",
+   "blocks": [
+    {
+     "type": "form",
+     "label": "이름*·개월*(1–12)·방식*(공유 코드: 사용 횟수* / 1인 1코드 일괄: 개수* 1–500)·만료일",
+     "items": [
+      "이름*",
+      "개월*(1–12)",
+      "방식*(공유 코드: 사용 횟수*",
+      "1인 1코드 일괄: 개수* 1–500)",
+      "만료일"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "발급·취소",
+     "items": [
+      "발급",
+      "취소"
+     ]
+    },
+    {
+     "type": "text",
+     "label": "평문 코드 1회 표시(일괄은 CSV 내려받기)",
+     "items": [
+      "평문 코드 1회 표시(일괄은 CSV 내려받기)"
+     ]
+    },
+    {
+     "type": "table",
+     "label": "코드별 사용 수·폐기 여부",
+     "items": [
+      "코드별 사용 수",
+      "폐기 여부"
+     ]
+    },
+    {
+     "type": "button",
+     "label": "폐기(확인 후)",
+     "items": [
+      "폐기(확인 후)"
+     ]
+    }
+   ],
+   "data": [
+    "bundle_codes"
+   ],
+   "api": [
+    "AD06",
+    "AD06b",
+    "AD07"
+   ],
+   "role": "관리자",
+   "next": [
+    "S01"
+   ],
+   "states_combined": "",
+   "source": "docs/03_SCREENS_UX.md",
+   "type": "form",
+   "must_missing": [],
+   "should_missing": [
+    "임시 저장(긴 폼)"
+   ],
+   "states_missing": [],
+   "hash": "627e0961ca9f",
+   "wireframe": "docs/spec/wireframes/AD5.html"
+  }
+ },
+ "states": {
+  "S00": {
+   "빈": "—",
+   "로딩": "[추정] 로그인 상태 확인 중 로그인 버튼 자리 유지(폭 고정)",
+   "오류": "—",
+   "성공": "메뉴 `aria-current`·좌측 3px 막대, 제목·문서 제목 갱신. 로그인 후 같은 자리에 계정 메뉴"
+  },
+  "S01": {
+   "빈": "목록이 비면 `.empty` 안내 문구",
+   "로딩": "[추정] 사용자 상태 불러오는 동안 패널 스켈레톤",
+   "오류": "입자 구 WebGL 불가 → \"이 브라우저에서는 3D 장면을 그릴 수 없습니다…\"; 로그인 중 저장 실패 → 메모리 대기열 + \"저장하지 못했습니다 · 다시 시도\"(D33), 비로그인은 localStorage",
+   "성공": "체크·토글 즉시 반영, 링·통계·GNB 진행률 갱신"
+  },
+  "S02": {
+   "빈": "—",
+   "로딩": "[추정] 카탈로그 스켈레톤",
+   "오류": "복사 실패 토스트 \"복사하지 못했습니다. 직접 선택해 주세요\"",
+   "성공": "탭 ✓, 토스트 \"복사했습니다\"·버튼 \"복사됨\" 1.4초"
+  },
+  "S03": {
+   "빈": "검색 \"일치 없음\"",
+   "로딩": "[추정] 노드·엣지 불러오는 동안 스테이지 자리 유지",
+   "오류": "WebGL 불가 → `#nogl` 안내, 모드·줌·자동·재생 비활성(패널·검색은 동작)",
+   "성공": "노드 선택 → 카메라 이동·패널 상세, \"n건 일치\""
+  },
+  "S04": {
+   "빈": "—",
+   "로딩": "[추정] 카탈로그 스켈레톤",
+   "오류": "복사 실패 토스트",
+   "성공": "탭 ✓, 복사 토스트"
+  },
+  "S05": {
+   "빈": "—",
+   "로딩": "[추정] 카탈로그 스켈레톤",
+   "오류": "복사 실패 토스트",
+   "성공": "탭 ✓, 복사 토스트"
+  },
+  "S06": {
+   "빈": "—",
+   "로딩": "—",
+   "오류": "복사 실패 토스트",
+   "성공": "HEX 복사 토스트"
+  },
+  "S07": {
+   "빈": "열이 비면 \"비어 있음\"",
+   "로딩": "[추정] 보드 스켈레톤",
+   "오류": "[추정] 저장 실패 토스트+다시 시도",
+   "성공": "새 항목 맨 앞 추가, 열 개수 갱신"
+  },
+  "S08": {
+   "빈": "\"아직 메모가 없습니다. 위에 첫 아이디어를 적어 보세요.\"",
+   "로딩": "[추정] 목록 스켈레톤",
+   "오류": "[추정] 저장 실패 토스트+다시 시도",
+   "성공": "별점순 재정렬, 복사 토스트"
+  },
+  "S09": {
+   "빈": "—",
+   "로딩": "[추정] 카드 스켈레톤",
+   "오류": "복사 실패 토스트",
+   "성공": "필터 `aria-pressed`, \"n개\""
+  },
+  "S10": {
+   "빈": "—",
+   "로딩": "[추정] 목록 스켈레톤",
+   "오류": "복사 실패 토스트",
+   "성공": "선택 앱만 펼침+스크롤"
+  },
+  "S11": {
+   "빈": "검색 \"일치 없음\"",
+   "로딩": "[추정] 쪽 이미지 자리(A4 비율) 유지",
+   "오류": "[추정] 쪽 이미지 실패 시 대체 문구",
+   "성공": "썸네일 `aria-current`, 일치 쪽 `.hit`, \"n쪽 일치\""
+  },
+  "S12": {
+   "빈": "—",
+   "로딩": "[추정] 목록 스켈레톤",
+   "오류": "[추정] 저장 실패 토스트+다시 시도",
+   "성공": "\"n/7\"·\"n/4\" 갱신"
+  },
+  "S13": {
+   "빈": "—",
+   "로딩": "—",
+   "오류": "—",
+   "성공": "구간·화면 전환, \"n% 축소\" 표시"
+  },
+  "M1": {
+   "빈": "—",
+   "로딩": "[추정] 저장 중 저장·삭제 버튼 비활성(U06)",
+   "오류": "이름 비면 제출 안 됨(As-Is). [추정] 저장 실패(U06 400) 시 모달·입력 유지 + 토스트 \"저장하지 못했습니다\" + 다시 시도",
+   "성공": "저장 → 모달 닫힘 → 홈 스킬 목록 다시 그림. [추정] 삭제는 행 즉시 제거"
+  },
+  "M2": {
+   "빈": "—",
+   "로딩": "[추정] 저장 중 버튼 비활성(U07)",
+   "오류": "루틴 이름 비면 제출 안 됨(As-Is). [추정] 실패 시 모달·입력 유지 + 토스트 + 다시 시도",
+   "성공": "저장 → 모달 닫힘 → 홈 루틴 목록·토글 다시 그림"
+  },
+  "M3": {
+   "빈": "—",
+   "로딩": "[추정] 저장 중 버튼 비활성(U08)",
+   "오류": "이름 비면 제출 안 됨(As-Is). [추정] 실패 시 모달·입력 유지 + 토스트 + 다시 시도",
+   "성공": "저장 → 모달 닫힘 → 홈 익스텐션 목록 다시 그림"
+  },
+  "M4": {
+   "빈": "—",
+   "로딩": "[추정] 저장 중 버튼 비활성(U09)",
+   "오류": "파일 이름 비면 제출 안 됨(As-Is). [추정] 없는 노드(U09 409) → \"탐색기 노드를 다시 골라 주세요\", 모달 유지",
+   "성공": "저장 → 모달 닫힘 → 최근 파일 맨 앞에 표시"
+  },
+  "M5": {
+   "빈": "—",
+   "로딩": "[추정] 저장 중 버튼 비활성(U03)",
+   "오류": "[추정] 실패 시 모달·입력 유지 + 토스트 + 다시 시도",
+   "성공": "저장 → 모달 닫힘 → S01 오늘의 목표·S12 해당 일차 갱신. \"기본값으로\" → 기본 문구 복귀"
+  },
+  "M6": {
+   "빈": "—",
+   "로딩": "[추정] 저장 중 버튼 비활성(U10·U05)",
+   "오류": "[추정] 메모·시작일 중 하나라도 실패하면 모달 유지 + 토스트 + 다시 시도",
+   "성공": "저장 → 모달 닫힘 → 캘린더 메모 점·계획일 표시, 시작일 바꾸면 S12 갱신"
+  },
+  "T1": {
+   "빈": "—",
+   "로딩": "[추정] 보내는 중 버튼 비활성",
+   "오류": "[추정] 잘못된 이메일·전송 실패 문구. 레이트 리밋 초과 → \"잠시 후 다시 시도해 주세요\"(D29)",
+   "성공": "[추정] \"메일을 확인해 주세요\""
+  },
+  "T2": {
+   "빈": "[추정] 로컬 데이터 없으면 건너뜀",
+   "로딩": "[추정] 가져오는 중 표시",
+   "오류": "[추정] 실패 시 로컬 유지+다시 시도. 409 = 이 기기는 이미 가져옴 → 모달 닫음",
+   "성공": "[추정] \"n개 항목을 합쳤습니다\" 토스트 후 S01"
+  },
+  "T3": {
+   "빈": "—",
+   "로딩": "—",
+   "오류": "—",
+   "성공": "\"로그인\" → T1 / \"예시로 계속 보기\" → 원래 동작 진행, 같은 세션에서 ①·③ 다시 묻지 않음, ②는 매번 표시(D24)"
+  },
+  "B1": {
+   "빈": "업로드 없음 → \"예시 카탈로그 표시 중\", 토큰 없음 안내",
+   "로딩": "[추정] 폴더 색인·업로드 중 진행 표시",
+   "오류": "[추정] 스키마 오류·4MB 초과·분당 6회 초과(D29·D35)·Pro 아님(402) 문구, 기존 graph 유지",
+   "성공": "[추정] 노드·링크 수 토스트, 탐색기·입자 구가 내 두뇌로. 토큰 발급 시 원문 1회 표시"
+  },
+  "AD1": {
+   "빈": "[추정] 행 없으면 \"항목이 없습니다\"",
+   "로딩": "[추정] 표 스켈레톤",
+   "오류": "비관리자 → 404",
+   "성공": "—"
+  },
+  "AD2": {
+   "빈": "—",
+   "로딩": "[추정] 저장 버튼 비활성",
+   "오류": "[추정] 검증 오류 칸 표시, 저장 실패 시 폼 유지",
+   "성공": "[추정] 토스트 후 AD1, `catalog_audit` 기록"
+  },
+  "AD3": {
+   "빈": "[추정] 이미지 없으면 안내",
+   "로딩": "[추정] 업로드 진행 표시",
+   "오류": "[추정] 형식·크기 오류 문구",
+   "성공": "[추정] 목록에 추가, 이력 기록"
+  },
+  "AD4": {
+   "빈": "[추정] \"변경 이력이 없습니다\"",
+   "로딩": "[추정] 표 스켈레톤",
+   "오류": "—",
+   "성공": "—"
+  },
+  "P1": {
+   "빈": "체험·코드 없음 → \"무료 계정\"",
+   "로딩": "[추정] 적용 중 버튼 비활성",
+   "오류": "응답 `{error, code:\"PT400\"}` → 사유 구분 없이 \"사용할 수 없는 코드입니다\"(없음·만료·소진·폐기·재사용). 429(실패 시간당 10회 초과, D38) → \"잠시 후 다시 시도해 주세요\". 계정 삭제: 재확인 입력이 맞지 않으면 삭제 버튼 비활성, 401 → T1(D42)",
+   "성공": "종료일 갱신 + 토스트. 계정 삭제 성공(204) → 로그아웃·S01 비로그인 상태 + 토스트"
+  },
+  "AD5": {
+   "빈": "\"발급한 코드가 없습니다\"",
+   "로딩": "[추정] 발급 중 비활성",
+   "오류": "비관리자 → 404, 일괄 개수 범위 밖 → \"1–500개\"",
+   "성공": "평문 코드 1회 표시 + 복사(일괄은 CSV)"
+  }
+ },
+ "flows": {
+  "F-01": {
+   "id": "F-01",
+   "name": "홈 → 탐색기",
+   "steps": [
+    "S01 입자 구·라벨 클릭(또는 \"탐색기 열기\")",
+    "S03 해당 노드 선택(agent·sb·c_dir·d_dir·f_dir)"
+   ],
+   "source": "docs/03_SCREENS_UX.md"
+  },
+  "F-02": {
+   "id": "F-02",
+   "name": "최근 파일 → 탐색기",
+   "steps": [
+    "S01 최근 파일 행 클릭",
+    "S03 연결 노드 선택·패널 상세"
+   ],
+   "source": "docs/03_SCREENS_UX.md"
+  },
+  "F-03": {
+   "id": "F-03",
+   "name": "가이드 쪽 이동",
+   "steps": [
+    "S02~S05 \"가이드 p.N 보기\"",
+    "S11 SSR+ 가이드 N쪽",
+    "썸네일·←/",
+    "·키보드 ←/",
+    "검색 Enter = 첫 일치 쪽"
+   ],
+   "source": "docs/03_SCREENS_UX.md"
+  },
+  "F-04": {
+   "id": "F-04",
+   "name": "ArtCraft 카드 → 상세",
+   "steps": [
+    "S09 분류 필터",
+    "앱 카드 클릭",
+    "S10 해당 앱만 펼침+스크롤",
+    "설치 프롬프트 복사"
+   ],
+   "source": "docs/03_SCREENS_UX.md"
+  },
+  "F-05": {
+   "id": "F-05",
+   "name": "ArtCraft 가이드",
+   "steps": [
+    "S09 \"가이드 보기\"",
+    "S11 ArtCraft 가이드 1쪽"
+   ],
+   "source": "docs/03_SCREENS_UX.md"
+  },
+  "F-06": {
+   "id": "F-06",
+   "name": "기기 미리보기",
+   "steps": [
+    "S13 구간 버튼(모바일·태블릿·데스크탑, 초기값=현재 화면 구간)",
+    "보여줄 화면 선택(12개)",
+    "iframe 해시 변경·축소 비율 표시"
+   ],
+   "source": "docs/03_SCREENS_UX.md"
+  },
+  "F-07": {
+   "id": "F-07",
+   "name": "홈 항목 편집",
+   "steps": [
+    "S01 ✎ 또는 \"+ 추가\"",
+    "M1~M4",
+    "저장/삭제",
+    "홈 다시 그림"
+   ],
+   "source": "docs/03_SCREENS_UX.md"
+  },
+  "F-08": {
+   "id": "F-08",
+   "name": "7일 계획 시작",
+   "steps": [
+    "S01 캘린더 날짜",
+    "M6 \"이 날짜부터 시작\"",
+    "캘린더 계획일 표시·S12 갱신 (또는 S12 \"시작일을 오늘로\")"
+   ],
+   "source": "docs/03_SCREENS_UX.md"
+  },
+  "F-09": {
+   "id": "F-09",
+   "name": "일차 목표",
+   "steps": [
+    "S01·S12 일차 ✎",
+    "M5",
+    "저장",
+    "S01·S12 갱신"
+   ],
+   "source": "docs/03_SCREENS_UX.md"
+  },
+  "F-10": {
+   "id": "F-10",
+   "name": "모바일 메뉴",
+   "steps": [
+    "S00 메뉴 버튼",
+    "GNB 서랍",
+    "메뉴 선택·스크림·Esc",
+    "닫힘"
+   ],
+   "source": "docs/03_SCREENS_UX.md"
+  },
+  "F-11": {
+   "id": "F-11",
+   "name": "로그인",
+   "steps": [
+    "S00 상단 바 오른쪽 끝 로그인 버튼(D23) 또는 T3 \"로그인\"",
+    "T1 이메일",
+    "메일 링크",
+    "(이 기기 처음 + 로컬 `nomad-lab-v1` 있으면) T2 항목 수 미리보기",
+    "가져오기(병합)/건너뛰기",
+    "S01"
+   ],
+   "source": "docs/03_SCREENS_UX.md"
+  },
+  "F-12": {
+   "id": "F-12",
+   "name": "권유 ① 개인 내용 클릭",
+   "steps": [
+    "비로그인",
+    "최근 파일 열기·캘린더 날짜 메모·M1~M6 저장·아이디어(S08)·콘텐츠(S07) 추가",
+    "T3",
+    "로그인(F-11) / 계속 보기(원래 동작, 세션 동안 다시 안 물음) (D24①)"
+   ],
+   "source": "docs/03_SCREENS_UX.md"
+  },
+  "F-13": {
+   "id": "F-13",
+   "name": "권유 ② 두뇌 애니메이션 클릭",
+   "steps": [
+    "비로그인",
+    "S01 입자 구·라벨·\"탐색기 열기\"·S03 탐색기 노드",
+    "T3(\"내 두뇌로 보기\")",
+    "로그인(F-11) / 계속 보기(예시 카탈로그로 원래 동작). 매번 표시 (D24②)"
+   ],
+   "source": "docs/03_SCREENS_UX.md"
+  },
+  "F-14": {
+   "id": "F-14",
+   "name": "권유 ③ 통상",
+   "steps": [
+    "비로그인",
+    "localStorage 첫 저장(1회, \"이 기기에만 저장됩니다\") · 다른 기기 사용·데이터 백업 안내(설정 메뉴) · 7일 계획 시작(M6·S12)",
+    "T3",
+    "로그인 / 계속 보기(세션 동안 다시 안 물음) (D24③)"
+   ],
+   "source": "docs/03_SCREENS_UX.md"
+  },
+  "F-15": {
+   "id": "F-15",
+   "name": "두뇌 연동 CLI",
+   "steps": [
+    "S00 계정 메뉴 \"두뇌 연동 토큰\"",
+    "B1 토큰 발급(원문 복사)",
+    "로컬 `nomad-brain sync`(graph.json 생성·업로드)",
+    "B1 상태 갱신",
+    "S03·S01이 내 두뇌 (D22)"
+   ],
+   "source": "docs/03_SCREENS_UX.md"
+  },
+  "F-16": {
+   "id": "F-16",
+   "name": "두뇌 연동 웹",
+   "steps": [
+    "B1 폴더 선택",
+    "브라우저에서 색인(본문은 기기 밖으로 안 나감)",
+    "미리보기",
+    "올리기",
+    "검증",
+    "상태 갱신",
+    "S03·S01이 내 두뇌 (D22 대체 경로, D37)"
+   ],
+   "source": "docs/03_SCREENS_UX.md"
+  },
+  "F-17": {
+   "id": "F-17",
+   "name": "카탈로그 편집",
+   "steps": [
+    "/admin AD1 테이블 선택(3테이블, D39)",
+    "AD2 편집·저장(또는 AD3 이미지)",
+    "catalog_audit 기록",
+    "AD4 확인",
+    "공개 화면 반영 (D21)"
+   ],
+   "source": "docs/03_SCREENS_UX.md"
+  }
+ },
+ "apis": {
+  "A01": {
+   "id": "A01",
+   "method": "POST (R)",
+   "path": "/api/import/nomad-v1",
+   "row": {
+    "ID": "A01",
+    "메서드": "POST (R)",
+    "경로": "/api/import/nomad-v1",
+    "입력": "body: `{st, device}` — `st` = localStorage 원문, `device` = 기기 localStorage의 무작위 UUID → rpc `import_nomad_v1(p, p_device)",
+    "출력": "200 `{device, imported_at}",
+    "권한": "로그인",
+    "오류": "400 형식 위반(zod), 409 이 기기는 이미 가져옴(`user_imports` PK 위반 23505 — 다른 기기는 각각 1회 가능, D33), 413 256KB 초과(`PT413`, DB에서 재검사)"
+   },
+   "source": "docs/04_API.md"
+  },
+  "A02": {
+   "id": "A02",
+   "method": "GET (R)",
+   "path": "/auth/callback",
+   "row": {
+    "ID": "A02",
+    "메서드": "GET (R)",
+    "경로": "/auth/callback",
+    "입력": "?code=` (매직링크)",
+    "출력": "302 → 원래 경로(허용 목록 안에서만)",
+    "권한": "공개",
+    "오류": "400 코드 만료 → 로그인 화면"
+   },
+   "source": "docs/04_API.md"
+  },
+  "A03": {
+   "id": "A03",
+   "method": "— (D)",
+   "path": "Supabase Auth `signInWithOtp({email})",
+   "row": {
+    "ID": "A03",
+    "메서드": "— (D)",
+    "경로": "Supabase Auth `signInWithOtp({email})",
+    "입력": "email",
+    "출력": "메일 발송",
+    "권한": "공개",
+    "오류": "429 발송 제한(D29: 같은 이메일 60초 1회·시간당 5회, IP당 시간당 30회) → \"잠시 후 다시\" 안내"
+   },
+   "source": "docs/04_API.md"
+  },
+  "A04": {
+   "id": "A04",
+   "method": "POST (R)",
+   "path": "/api/account/delete",
+   "row": {
+    "ID": "A04",
+    "메서드": "POST (R)",
+    "경로": "/api/account/delete",
+    "입력": "— (P1 위험 구역 재확인 입력은 화면에서)",
+    "출력": "204, 세션 쿠키 삭제",
+    "권한": "로그인(세션 필요). 서버 전용 service role 키로 `auth.admin.deleteUser(auth.uid())` → cascade로 사용자 데이터 즉시 삭제(D27·D42)",
+    "오류": "401 세션 없음"
+   },
+   "source": "docs/04_API.md"
+  },
+  "C01": {
+   "id": "C01",
+   "method": "select (D)",
+   "path": "ssr_stages`·`ssr_personas`·`ssr_levels`·`prompts",
+   "row": {
+    "ID": "C01",
+    "메서드": "select (D)",
+    "경로": "ssr_stages`·`ssr_personas`·`ssr_levels`·`prompts",
+    "입력": "stage key",
+    "출력": "단계 머리·페르소나 3·레벨 3(blocks)·프롬프트",
+    "권한": "anon",
+    "오류": "—"
+   },
+   "source": "docs/04_API.md"
+  },
+  "C02": {
+   "id": "C02",
+   "method": "select (D)",
+   "path": "art_apps` (+`prompts` key `art_*`·`ai_*`)",
+   "row": {
+    "ID": "C02",
+    "메서드": "select (D)",
+    "경로": "art_apps` (+`prompts` key `art_*`·`ai_*`)",
+    "입력": "category 필터는 클라이언트",
+    "출력": "16행 sort_order순(icon_path → Storage `art-icons` 공개 URL). `ai_*`는 무료 3개 앱(filmcraft·vectorcraft·designcraft)만, 나머지는 Pro일 때만 행이 온다(D31)",
+    "권한": "anon(`ai_*` 13개는 `my_has_pro()`)",
+    "오류": "Pro 아닌데 없는 `ai_*` → 빈 결과(화면은 \"Pro에서 열림\")"
+   },
+   "source": "docs/04_API.md"
+  },
+  "C03": {
+   "id": "C03",
+   "method": "select (D)",
+   "path": "guide_docs`·`guide_pages",
+   "row": {
+    "ID": "C03",
+    "메서드": "select (D)",
+    "경로": "guide_docs`·`guide_pages",
+    "입력": "doc_key",
+    "출력": "쪽 목록(image_path, body_text)",
+    "권한": "anon",
+    "오류": "이미지 404 → 대체 문구 [추정]"
+   },
+   "source": "docs/04_API.md"
+  },
+  "C04": {
+   "id": "C04",
+   "method": "select (D)",
+   "path": "plan_day_defaults`·`ssr_checklist_items",
+   "row": {
+    "ID": "C04",
+    "메서드": "select (D)",
+    "경로": "plan_day_defaults`·`ssr_checklist_items",
+    "입력": "—",
+    "출력": "7행·4행",
+    "권한": "anon",
+    "오류": "—"
+   },
+   "source": "docs/04_API.md"
+  },
+  "C05": {
+   "id": "C05",
+   "method": "select (D)",
+   "path": "brand_colors",
+   "row": {
+    "ID": "C05",
+    "메서드": "select (D)",
+    "경로": "brand_colors",
+    "입력": "—",
+    "출력": "5행",
+    "권한": "anon",
+    "오류": "—"
+   },
+   "source": "docs/04_API.md"
+  },
+  "C06": {
+   "id": "C06",
+   "method": "select (D)",
+   "path": "brain_nodes`·`brain_links",
+   "row": {
+    "ID": "C06",
+    "메서드": "select (D)",
+    "경로": "brain_nodes`·`brain_links",
+    "입력": "—",
+    "출력": "25노드·26링크(실제 개수). 비로그인·두뇌 미연동 사용자의 예시 그래프",
+    "권한": "anon",
+    "오류": "—"
+   },
+   "source": "docs/04_API.md"
+  },
+  "C07": {
+   "id": "C07",
+   "method": "select (D)",
+   "path": "content_seeds",
+   "row": {
+    "ID": "C07",
+    "메서드": "select (D)",
+    "경로": "content_seeds",
+    "입력": "—",
+    "출력": "8행(비로그인 보드 초기값)",
+    "권한": "anon",
+    "오류": "—"
+   },
+   "source": "docs/04_API.md"
+  },
+  "U01": {
+   "id": "U01",
+   "method": "select (D)",
+   "path": "user_settings`·`level_progress`·`plan_days`·`checklist_progress",
+   "row": {
+    "ID": "U01",
+    "메서드": "select (D)",
+    "경로": "user_settings`·`level_progress`·`plan_days`·`checklist_progress",
+    "입력": "—",
+    "출력": "진행 상태 일괄",
+    "권한": "본인",
+    "오류": "—"
+   },
+   "source": "docs/04_API.md"
+  },
+  "U02": {
+   "id": "U02",
+   "method": "upsert (D)",
+   "path": "level_progress",
+   "row": {
+    "ID": "U02",
+    "메서드": "upsert (D)",
+    "경로": "level_progress",
+    "입력": "stage_key, level_index, done",
+    "출력": "행",
+    "권한": "본인",
+    "오류": "FK 위반 409"
+   },
+   "source": "docs/04_API.md"
+  },
+  "U03": {
+   "id": "U03",
+   "method": "upsert (D)",
+   "path": "plan_days",
+   "row": {
+    "ID": "U03",
+    "메서드": "upsert (D)",
+    "경로": "plan_days",
+    "입력": "day_index, done | custom_text(null=기본값으로)",
+    "출력": "행",
+    "권한": "본인",
+    "오류": "—"
+   },
+   "source": "docs/04_API.md"
+  },
+  "U04": {
+   "id": "U04",
+   "method": "upsert (D)",
+   "path": "checklist_progress",
+   "row": {
+    "ID": "U04",
+    "메서드": "upsert (D)",
+    "경로": "checklist_progress",
+    "입력": "item_index, done",
+    "출력": "행",
+    "권한": "본인",
+    "오류": "—"
+   },
+   "source": "docs/04_API.md"
+  },
+  "U05": {
+   "id": "U05",
+   "method": "update (D)",
+   "path": "user_settings",
+   "row": {
+    "ID": "U05",
+    "메서드": "update (D)",
+    "경로": "user_settings",
+    "입력": "plan_start",
+    "출력": "행",
+    "권한": "본인",
+    "오류": "—"
+   },
+   "source": "docs/04_API.md"
+  },
+  "U06": {
+   "id": "U06",
+   "method": "select/insert/update/delete (D)",
+   "path": "skills",
+   "row": {
+    "ID": "U06",
+    "메서드": "select/insert/update/delete (D)",
+    "경로": "skills",
+    "입력": "name(필수)·command·frequency",
+    "출력": "행",
+    "권한": "본인",
+    "오류": "check 위반(이름 공백) 400"
+   },
+   "source": "docs/04_API.md"
+  },
+  "U07": {
+   "id": "U07",
+   "method": "select/insert/update/delete (D)",
+   "path": "routines",
+   "row": {
+    "ID": "U07",
+    "메서드": "select/insert/update/delete (D)",
+    "경로": "routines",
+    "입력": "name(필수)·schedule_text·skill_command·enabled",
+    "출력": "행",
+    "권한": "본인",
+    "오류": "동일"
+   },
+   "source": "docs/04_API.md"
+  },
+  "U08": {
+   "id": "U08",
+   "method": "select/insert/update/delete (D)",
+   "path": "user_extensions",
+   "row": {
+    "ID": "U08",
+    "메서드": "select/insert/update/delete (D)",
+    "경로": "user_extensions",
+    "입력": "name(필수)·kind_desc·connected",
+    "출력": "행",
+    "권한": "본인",
+    "오류": "동일"
+   },
+   "source": "docs/04_API.md"
+  },
+  "U09": {
+   "id": "U09",
+   "method": "select/insert/update/delete (D)",
+   "path": "recent_files",
+   "row": {
+    "ID": "U09",
+    "메서드": "select/insert/update/delete (D)",
+    "경로": "recent_files",
+    "입력": "name(필수)·file_type·brain_node_id·when_label, 신규 sort_order=최솟값−1",
+    "출력": "행",
+    "권한": "본인",
+    "오류": "— (`brain_node_id`는 FK 없음, 없는 노드는 화면에서 \"연결 없음\", D37)"
+   },
+   "source": "docs/04_API.md"
+  },
+  "U10": {
+   "id": "U10",
+   "method": "select/upsert/delete (D)",
+   "path": "date_notes",
+   "row": {
+    "ID": "U10",
+    "메서드": "select/upsert/delete (D)",
+    "경로": "date_notes",
+    "입력": "note_date, body(빈 값이면 delete)",
+    "출력": "행",
+    "권한": "본인",
+    "오류": "—"
+   },
+   "source": "docs/04_API.md"
+  },
+  "U11": {
+   "id": "U11",
+   "method": "select/insert/update/delete (D)",
+   "path": "ideas",
+   "row": {
+    "ID": "U11",
+    "메서드": "select/insert/update/delete (D)",
+    "경로": "ideas",
+    "입력": "body(필수)·category·score 0–3; select는 score desc",
+    "출력": "행",
+    "권한": "본인",
+    "오류": "check 위반 400"
+   },
+   "source": "docs/04_API.md"
+  },
+  "U12": {
+   "id": "U12",
+   "method": "select/insert/update/delete (D)",
+   "path": "content_items",
+   "row": {
+    "ID": "U12",
+    "메서드": "select/insert/update/delete (D)",
+    "경로": "content_items",
+    "입력": "title(필수)·channel·stage 0–3, 신규는 맨 앞",
+    "출력": "행",
+    "권한": "본인",
+    "오류": "check 위반 400"
+   },
+   "source": "docs/04_API.md"
+  },
+  "AD01": {
+   "id": "AD01",
+   "method": "select (D)",
+   "path": "admins` (본인 행)",
+   "row": {
+    "ID": "AD01",
+    "메서드": "select (D)",
+    "경로": "admins` (본인 행)",
+    "입력": "—",
+    "출력": "1행이면 관리자",
+    "권한": "로그인",
+    "오류": "0행 → `/admin` 접근 시 404 처리(미들웨어 가드, 존재를 드러내지 않음). MVP-1부터(`/admin/codes`, D41)"
+   },
+   "source": "docs/04_API.md"
+  },
+  "AD02": {
+   "id": "AD02",
+   "method": "select (D)",
+   "path": "편집 대상 3테이블(`art_apps`·`prompts`·`guide_pages`) 중 선택",
+   "row": {
+    "ID": "AD02",
+    "메서드": "select (D)",
+    "경로": "편집 대상 3테이블(`art_apps`·`prompts`·`guide_pages`) 중 선택",
+    "입력": "table, 검색어(키·이름 `ilike`, 300ms 지연), 정렬(sort_order·PK), range 50행",
+    "출력": "행 목록(AD1)",
+    "권한": "admin(읽기는 공개 RLS)",
+    "오류": "—"
+   },
+   "source": "docs/04_API.md"
+  },
+  "AD03": {
+   "id": "AD03",
+   "method": "insert/update/delete (D)",
+   "path": "편집 대상 3테이블",
+   "row": {
+    "ID": "AD03",
+    "메서드": "insert/update/delete (D)",
+    "경로": "편집 대상 3테이블",
+    "입력": "행(테이블별 zod 스키마, `ssr_levels.blocks`는 블록 타입 검증)",
+    "출력": "행",
+    "권한": "admin(`is_admin()`)",
+    "오류": "42501 비관리자, 23505 PK 중복 409, 23503 참조 중 삭제 409, 23514 check 400. 성공 시 `catalog_audit` 자동 기록"
+   },
+   "source": "docs/04_API.md"
+  },
+  "AD04": {
+   "id": "AD04",
+   "method": "upload/remove (D)",
+   "path": "Storage `art-icons`·`guide` `upload(path, file, {upsert:true})",
+   "row": {
+    "ID": "AD04",
+    "메서드": "upload/remove (D)",
+    "경로": "Storage `art-icons`·`guide` `upload(path, file, {upsert:true})",
+    "입력": "png·webp(guide는 jpeg도), 2MB 이하(재량)",
+    "출력": "경로 → AD03으로 `icon_path`·`image_path` 갱신",
+    "권한": "admin(storage 정책 `is_admin()`)",
+    "오류": "413 크기, 415 형식, 403 비관리자"
+   },
+   "source": "docs/04_API.md"
+  },
+  "AD05": {
+   "id": "AD05",
+   "method": "select (D)",
+   "path": "catalog_audit",
+   "row": {
+    "ID": "AD05",
+    "메서드": "select (D)",
+    "경로": "catalog_audit",
+    "입력": "table_name·기간 필터, 검색어(row_key `ilike`), `created_at desc`, range 50행",
+    "출력": "op·row_key·old_row/new_row(차이는 클라이언트 표시)·actor_id·시각(AD4)",
+    "권한": "admin",
+    "오류": "비관리자 = 빈 결과"
+   },
+   "source": "docs/04_API.md"
+  },
+  "AD06": {
+   "id": "AD06",
+   "method": "rpc (D)",
+   "path": "bundle_code_create(p_label, p_months, p_max_uses, p_expires_at)",
+   "row": {
+    "ID": "AD06",
+    "메서드": "rpc (D)",
+    "경로": "bundle_code_create(p_label, p_months, p_max_uses, p_expires_at)",
+    "입력": "이름·1–12개월·횟수·만료일",
+    "출력": "평문 코드 20자리 16진(80비트, 이 응답에서 1회만)",
+    "권한": "관리자",
+    "오류": "403 비관리자"
+   },
+   "source": "docs/04_API.md"
+  },
+  "AD06b": {
+   "id": "AD06b",
+   "method": "rpc (D)",
+   "path": "bundle_codes_create_batch(p_label, p_months, p_count, p_expires_at)",
+   "row": {
+    "ID": "AD06b",
+    "메서드": "rpc (D)",
+    "경로": "bundle_codes_create_batch(p_label, p_months, p_count, p_expires_at)",
+    "입력": "이름·개월·개수 1–500·만료일",
+    "출력": "평문 코드 목록(각 max_uses=1, 수강생 1인 1코드, 이 응답에서 1회만 → CSV 내려받기)",
+    "권한": "관리자",
+    "오류": "403 비관리자, 400 개수 범위 밖(`PT400`)"
+   },
+   "source": "docs/04_API.md"
+  },
+  "AD07": {
+   "id": "AD07",
+   "method": "rpc (D)",
+   "path": "bundle_code_revoke(p_id)",
+   "row": {
+    "ID": "AD07",
+    "메서드": "rpc (D)",
+    "경로": "bundle_code_revoke(p_id)",
+    "입력": "id",
+    "출력": "204(`revoked_at` 기록, 이후 사용 시 P01 \"invalid code\")",
+    "권한": "관리자",
+    "오류": "403 비관리자"
+   },
+   "source": "docs/04_API.md"
+  },
+  "B01": {
+   "id": "B01",
+   "method": "rpc (D)",
+   "path": "brain_token_create(p_name)",
+   "row": {
+    "ID": "B01",
+    "메서드": "rpc (D)",
+    "경로": "brain_token_create(p_name)",
+    "입력": "name 1–60자",
+    "출력": "평문 토큰 `nbt_…`(이 응답에서 1회만 표시, 서버는 sha256만 저장)",
+    "권한": "로그인",
+    "오류": "409 활성 토큰 5개(재량) 초과"
+   },
+   "source": "docs/04_API.md"
+  },
+  "B02": {
+   "id": "B02",
+   "method": "select (D)",
+   "path": "api_tokens",
+   "row": {
+    "ID": "B02",
+    "메서드": "select (D)",
+    "경로": "api_tokens",
+    "입력": "—",
+    "출력": "name·token_prefix·created_at·last_used_at·revoked_at",
+    "권한": "본인",
+    "오류": "—"
+   },
+   "source": "docs/04_API.md"
+  },
+  "B03": {
+   "id": "B03",
+   "method": "rpc (D)",
+   "path": "brain_token_revoke(p_id)",
+   "row": {
+    "ID": "B03",
+    "메서드": "rpc (D)",
+    "경로": "brain_token_revoke(p_id)",
+    "입력": "id",
+    "출력": "204",
+    "권한": "본인",
+    "오류": "404 없음·이미 폐기"
+   },
+   "source": "docs/04_API.md"
+  },
+  "B04": {
+   "id": "B04",
+   "method": "POST (R)",
+   "path": "/api/brain/sync",
+   "row": {
+    "ID": "B04",
+    "메서드": "POST (R)",
+    "경로": "/api/brain/sync",
+    "입력": "헤더 `Authorization: Bearer nbt_…`, body graph.json(2.3)",
+    "출력": "200 `{nodes, links, synced_at}",
+    "권한": "토큰(`brain:write`). 세션 없이 anon으로 rpc `brain_sync_by_token` 호출",
+    "오류": "401 토큰 없음·폐기·불일치(`PT401`), 400 zod 위반(본문 필드 포함 시도 포함)·DB 형식 재검사(`PT400`), 402 Pro 아님(`PT402`), 413 4MB 초과(Content-Length 선검사 + 읽기 중 상한, DB도 4MB 재검사 → `PT400`), 429 분당 6회 초과(`PT429`, `Retry-After`), 200+`{error, code}` 카운터 증가 뒤 적용 실패 → 400"
+   },
+   "source": "docs/04_API.md"
+  },
+  "B05": {
+   "id": "B05",
+   "method": "POST (R)",
+   "path": "/api/brain/upload",
+   "row": {
+    "ID": "B05",
+    "메서드": "POST (R)",
+    "경로": "/api/brain/upload",
+    "입력": "웹에서 고른 graph.json(대체 경로)",
+    "출력": "B04와 같음",
+    "권한": "로그인 세션 → rpc `brain_sync_web",
+    "오류": "B04와 같음(401은 세션 없음)"
+   },
+   "source": "docs/04_API.md"
+  },
+  "B06": {
+   "id": "B06",
+   "method": "select (D)",
+   "path": "brain_sources` + `user_brain_nodes` + `user_brain_links",
+   "row": {
+    "ID": "B06",
+    "메서드": "select (D)",
+    "경로": "brain_sources` + `user_brain_nodes` + `user_brain_links",
+    "입력": "—",
+    "출력": "상태(method·개수·last_synced_at) + 내 그래프",
+    "권한": "본인",
+    "오류": "node_count = 0` 또는 행 없음 → 예시 카탈로그 C06으로 표시"
+   },
+   "source": "docs/04_API.md"
+  },
+  "B07": {
+   "id": "B07",
+   "method": "rpc (D)",
+   "path": "brain_disconnect()",
+   "row": {
+    "ID": "B07",
+    "메서드": "rpc (D)",
+    "경로": "brain_disconnect()",
+    "입력": "—",
+    "출력": "204, 이후 C06 표시",
+    "권한": "본인",
+    "오류": "—"
+   },
+   "source": "docs/04_API.md"
+  },
+  "P01": {
+   "id": "P01",
+   "method": "rpc (D)",
+   "path": "redeem_bundle_code(p_code)",
+   "row": {
+    "ID": "P01",
+    "메서드": "rpc (D)",
+    "경로": "redeem_bundle_code(p_code)",
+    "입력": "코드 20자리(대소문자·앞뒤 공백 무시)",
+    "출력": "my_plan()` 결과",
+    "권한": "로그인",
+    "오류": "200 + `{error:\"invalid code\", code:\"PT400\"}`(없음·만료·소진·폐기·재사용 구분 안 함, 실패 횟수는 확정), 429 실패 시간당 10회 초과(`PT429`, `redeem_attempts`), 401(`PT401`)"
+   },
+   "source": "docs/04_API.md"
+  },
+  "P02": {
+   "id": "P02",
+   "method": "rpc (D)",
+   "path": "my_plan()",
+   "row": {
+    "ID": "P02",
+    "메서드": "rpc (D)",
+    "경로": "my_plan()",
+    "입력": "—",
+    "출력": "{pro, ends_at, trial_used}",
+    "권한": "로그인",
+    "오류": "—"
+   },
+   "source": "docs/04_API.md"
+  }
+ },
+ "tables": {
+  "ssr_stages": {
+   "name": "ssr_stages",
+   "row": {
+    "테이블": "ssr_stages",
+    "목적": "SSR+ 4단계 머리",
+    "주요 컬럼": "key(skill·brain·routine·ext) PK, state_key(s1–s4), part_no, letter, en_label, title, lead",
+    "RLS": "공개 읽기·admin 쓰기",
+    "As-Is 근거": "SSR` L655–728",
+    "시드 출처": "SSR 상수 4건"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "ssr_personas": {
+   "name": "ssr_personas",
+   "row": {
+    "테이블": "ssr_personas",
+    "목적": "페르소나 3카드",
+    "주요 컬럼": "(stage_key, persona) PK, persona(job_seeker·ceo·employee), body",
+    "RLS": "동일",
+    "As-Is 근거": "L656–712",
+    "시드 출처": "12건"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "ssr_levels": {
+   "name": "ssr_levels",
+   "row": {
+    "테이블": "ssr_levels",
+    "목적": "레벨 탭 본문",
+    "주요 컬럼": "(stage_key, level_index 0–2) PK, tag, title, guide_page, blocks jsonb(p·ol·tree·table·prompt·done·warn 순서 배열)",
+    "RLS": "동일",
+    "As-Is 근거": "L659–727, 블록 L751–762",
+    "시드 출처": "12건"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "prompts": {
+   "name": "prompts",
+   "row": {
+    "테이블": "prompts",
+    "목적": "복사 박스 원문",
+    "주요 컬럼": "key PK, title, body",
+    "RLS": "읽기: `ai_*`는 무료 3개 앱(filmcraft·vectorcraft·designcraft)만 공개, 나머지 `ai_*`는 `my_has_pro()`일 때만(D31) · admin 쓰기",
+    "As-Is 근거": "window.__D.prompts` L602, `ARTP` L969–974, `ai_*` L1080, `art_common`·`art_multi` L1081–1082",
+    "시드 출처": "12 + 5 + 16 = 33건(`ai_*`는 `instPrompt` 결과를 시드 시점에 문자열로 고정 [추정])"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "art_apps": {
+   "name": "art_apps",
+   "row": {
+    "테이블": "art_apps",
+    "목적": "ArtCraft 16종",
+    "주요 컬럼": "id PK, name, category(img·av·doc·dsg·tool), status, version, rust_version, mcp_code(Y·G·N·U), similar_app, tag, formats, features[], tasks[], limits, job, repo_url, page_url, icon_path, info_as_of",
+    "RLS": "동일",
+    "As-Is 근거": "ARTAPPS` L981–1062, 파생 URL L1063, 아이콘 `AICON` L1085(96×96 PNG data URI → Storage 파일로 분리 [추정])",
+    "시드 출처": "16건(2026-11-02 기준)"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "guide_docs": {
+   "name": "guide_docs",
+   "row": {
+    "테이블": "guide_docs",
+    "목적": "가이드 문서 탭",
+    "주요 컬럼": "key(ssr·art) PK, title, page_count",
+    "RLS": "동일",
+    "As-Is 근거": "DOCS` L1154",
+    "시드 출처": "2건(13쪽·4쪽)"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "guide_pages": {
+   "name": "guide_pages",
+   "row": {
+    "테이블": "guide_pages",
+    "목적": "쪽 이미지·텍스트",
+    "주요 컬럼": "(doc_key, page_no) PK, image_path, body_text",
+    "RLS": "동일",
+    "As-Is 근거": "L1156, `D.pages.ssr` L602",
+    "시드 출처": "ssr 13 + art 4. 이미지는 Storage 공개 버킷 `guide` [추정], art body_text는 null(D7 이후)"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "plan_day_defaults": {
+   "name": "plan_day_defaults",
+   "row": {
+    "테이블": "plan_day_defaults",
+    "목적": "7일 계획 기본 문구",
+    "주요 컬럼": "day_index 0–6 PK, task, tag",
+    "RLS": "동일",
+    "As-Is 근거": "DAYS` L792–800",
+    "시드 출처": "7건"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "ssr_checklist_items": {
+   "name": "ssr_checklist_items",
+   "row": {
+    "테이블": "ssr_checklist_items",
+    "목적": "SSR+ 체크리스트",
+    "주요 컬럼": "item_index 0–3 PK, letter, label, done_text",
+    "RLS": "동일",
+    "As-Is 근거": "CHECK` L801",
+    "시드 출처": "4건"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "brand_colors": {
+   "name": "brand_colors",
+   "row": {
+    "테이블": "brand_colors",
+    "목적": "팔레트 5칸",
+    "주요 컬럼": "id PK, name, hex, role",
+    "RLS": "동일",
+    "As-Is 근거": "BR` L951–957",
+    "시드 출처": "5건"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "content_seeds": {
+   "name": "content_seeds",
+   "row": {
+    "테이블": "content_seeds",
+    "목적": "콘텐츠 보드 초기값",
+    "주요 컬럼": "id PK, title, channel, stage 0–3",
+    "RLS": "동일",
+    "As-Is 근거": "CDEF` L907–910",
+    "시드 출처": "8건"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "brain_nodes": {
+   "name": "brain_nodes",
+   "row": {
+    "테이블": "brain_nodes",
+    "목적": "탐색기 노드",
+    "주요 컬럼": "id PK, kind, domain, parent_id(자기참조=포함 엣지), name, path, description, body",
+    "RLS": "동일",
+    "As-Is 근거": "NODES` L1317–1356, `CE",
+    "시드 출처": "25건"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "brain_links": {
+   "name": "brain_links",
+   "row": {
+    "테이블": "brain_links",
+    "목적": "탐색기 링크(방향)",
+    "주요 컬럼": "(source_id, target_id) PK",
+    "RLS": "동일",
+    "As-Is 근거": "LINKS` L1357–1361",
+    "시드 출처": "26건"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "user_settings": {
+   "name": "user_settings",
+   "row": {
+    "테이블": "user_settings",
+    "목적": "계획 시작일·가져오기 기록",
+    "주요 컬럼": "owner_id PK, plan_start date, imported_v1_at",
+    "RLS": "본인 4정책",
+    "As-Is 근거": "st.start` L630, L870, L1196",
+    "시드 출처(신규 가입)": "트리거, plan_start=오늘(L636)"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "level_progress": {
+   "name": "level_progress",
+   "row": {
+    "테이블": "level_progress",
+    "목적": "레벨 완료 체크",
+    "주요 컬럼": "(owner_id, stage_key, level_index) PK, done; FK → ssr_levels",
+    "RLS": "본인",
+    "As-Is 근거": "st.lv` L785",
+    "시드 출처(신규 가입)": "12행, skill·brain 초급만 done(DEF)"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "plan_days": {
+   "name": "plan_days",
+   "row": {
+    "테이블": "plan_days",
+    "텍스트 길이(23514 → 400)": "custom_text ≤500",
+    "사용자당 행 수(`PT413` → 413)": "(7행 고정)"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "checklist_progress": {
+   "name": "checklist_progress",
+   "row": {
+    "테이블": "checklist_progress",
+    "목적": "체크리스트",
+    "주요 컬럼": "(owner_id, item_index) PK, done",
+    "RLS": "본인",
+    "As-Is 근거": "st.ck` L788",
+    "시드 출처(신규 가입)": "4행 모두 false"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "ideas": {
+   "name": "ideas",
+   "row": {
+    "테이블": "ideas",
+    "텍스트 길이(23514 → 400)": "body ≤2,000",
+    "사용자당 행 수(`PT413` → 413)": "1,000"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "content_items": {
+   "name": "content_items",
+   "row": {
+    "테이블": "content_items",
+    "텍스트 길이(23514 → 400)": "title ≤200",
+    "사용자당 행 수(`PT413` → 413)": "1,000"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "skills": {
+   "name": "skills",
+   "row": {
+    "테이블": "skills",
+    "텍스트 길이(23514 → 400)": "name·command ≤100, frequency ≤50",
+    "사용자당 행 수(`PT413` → 413)": "200"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "routines": {
+   "name": "routines",
+   "row": {
+    "테이블": "routines",
+    "텍스트 길이(23514 → 400)": "name·skill_command ≤100, schedule_text ≤50",
+    "사용자당 행 수(`PT413` → 413)": "200"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "user_extensions": {
+   "name": "user_extensions",
+   "row": {
+    "테이블": "user_extensions",
+    "텍스트 길이(23514 → 400)": "name·kind_desc ≤100",
+    "사용자당 행 수(`PT413` → 413)": "200"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "recent_files": {
+   "name": "recent_files",
+   "row": {
+    "테이블": "recent_files",
+    "텍스트 길이(23514 → 400)": "name ≤200, when_label ≤30",
+    "사용자당 행 수(`PT413` → 413)": "200"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "date_notes": {
+   "name": "date_notes",
+   "row": {
+    "테이블": "date_notes",
+    "텍스트 길이(23514 → 400)": "body ≤2,000",
+    "사용자당 행 수(`PT413` → 413)": "3,660"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "catalog_audit": {
+   "name": "catalog_audit",
+   "row": {
+    "테이블": "catalog_audit",
+    "목적": "카탈로그 변경 이력(AD4)",
+    "주요 컬럼": "id, table_name, op(INSERT·UPDATE·DELETE), row_key jsonb(PK 값), old_row·new_row jsonb, actor_id(→auth.users, 탈퇴 시 null), created_at",
+    "RLS·쓰기 경로": "select admin만 / 쓰기는 13테이블 `*_audit` 트리거(`log_catalog_change(PK 컬럼…)`)만, 수정·삭제 불가",
+    "보관(D27)": "1년 → `purge_expired()"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "api_tokens": {
+   "name": "api_tokens",
+   "row": {
+    "테이블": "api_tokens",
+    "목적": "개인 액세스 토큰(`brain:write`)",
+    "주요 컬럼": "id, owner_id, name ≤60, token_prefix(앞 12자, 표시용), token_hash(sha256 hex 64자 check → 평문 저장 불가), scope = 'brain:write'만, created_at, last_used_at, revoked_at",
+    "RLS·쓰기 경로": "select 본인 / 발급 `brain_token_create(name)`(평문은 반환값으로 1회만, 활성 5개 상한) · 폐기 `brain_token_revoke(id)",
+    "보관(D27)": "폐기 후 90일 → 행 삭제, 탈퇴 즉시"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "brain_sources": {
+   "name": "brain_sources",
+   "row": {
+    "테이블": "brain_sources",
+    "목적": "사용자당 연동 상태 1행",
+    "주요 컬럼": "owner_id PK, method(cli·web), generator, node_count, link_count, last_synced_at, rate_window_start·rate_window_count(분당 6회, D29)",
+    "RLS·쓰기 경로": "select 본인 / `_brain_apply` 내부만(카운터를 사용자가 못 고치게)",
+    "보관(D27)": "연동 해제·탈퇴 즉시"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "user_brain_nodes": {
+   "name": "user_brain_nodes",
+   "row": {
+    "테이블": "user_brain_nodes",
+    "목적": "내 두뇌 노드(graph.json `nodes`)",
+    "주요 컬럼": "(owner_id, node_id) PK, kind(folder·note·agent·rule·index·source), domain ≤40, parent_id(같은 사용자 노드, 없으면 null), name ≤200, path ≤512(절대경로·`..` 금지), summary ≤200, sort_order. 본문 컬럼 없음",
+    "RLS·쓰기 경로": "select 본인 / 업로드마다 전체 교체(`brain_sync_by_token`·`brain_sync_web`)",
+    "보관(D27)": "동일"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "user_brain_links": {
+   "name": "user_brain_links",
+   "row": {
+    "테이블": "user_brain_links",
+    "목적": "내 두뇌 링크(위키링크·Markdown 링크)",
+    "주요 컬럼": "(owner_id, source_id, target_id) PK, 양끝 FK → user_brain_nodes on delete cascade",
+    "RLS·쓰기 경로": "동일. 없는 노드·자기 자신 링크는 버림",
+    "보관(D27)": "동일"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "user_plans": {
+   "name": "user_plans",
+   "row": {
+    "테이블": "user_plans",
+    "목적": "Pro 기간(체험·번들·결제)",
+    "주요 컬럼": "owner_id, source(trial·bundle·paid), starts_at, ends_at, bundle_code_id",
+    "RLS": "본인 select만, 쓰기는 가입 트리거·`redeem_bundle_code`·(이후) 결제 웹훅",
+    "보관": "탈퇴 시 삭제"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "bundle_codes": {
+   "name": "bundle_codes",
+   "row": {
+    "테이블": "bundle_codes",
+    "목적": "수강생 번들 코드",
+    "주요 컬럼": "code_hash(sha256, 평문 20자리 16진·80비트는 저장 금지), label, months, max_uses, used_count, expires_at, revoked_at, created_by",
+    "RLS": "관리자 select만. 쓰기 정책 없음 → `bundle_code_create`·`bundle_codes_create_batch`(1인 1코드, ≤500)·`bundle_code_revoke`·`redeem_bundle_code`만, 변경은 `catalog_audit` 기록(D38)",
+    "보관": "영구(사용 이력)"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  },
+  "redeem_attempts": {
+   "name": "redeem_attempts",
+   "row": {
+    "테이블": "redeem_attempts",
+    "목적": "코드 추측 방지(D38)",
+    "주요 컬럼": "owner_id PK, window_start, fail_count(시간당 10회)",
+    "RLS": "정책 없음 — `redeem_bundle_code`만",
+    "보관": "탈퇴 시 삭제"
+   },
+   "source": "docs/05_DATA_MODEL.md"
+  }
+ },
+ "issues": [
+  [
+   "🔴",
+   "S00",
+   "공통 셸(설정) 필수 빠짐: 설정 입력, 저장·저장됨 표시"
+  ],
+  [
+   "🟡",
+   "S00",
+   "공통 셸 권장: 위험 작업 구역(삭제·탈퇴) 분리·확인"
+  ],
+  [
+   "🔴",
+   "S01",
+   "홈(대시보드) 필수 빠짐: 기간 선택, 추세 차트 또는 표, 마지막 갱신 시각"
+  ],
+  [
+   "🟡",
+   "S01",
+   "홈 권장: 이전 기간 대비(증감), 내보내기(CSV·PDF), 세그먼트·담당자 필터, 할 일·알림(지표가 행동으로 이어지게)"
+  ],
+  [
+   "🟡",
+   "S02",
+   "S · 스킬 권장: 활동·변경 이력"
+  ],
+  [
+   "🟡",
+   "S03",
+   "S · 세컨드 브레인 권장: 활동·변경 이력"
+  ],
+  [
+   "🟡",
+   "S04",
+   "R · 루틴 권장: 활동·변경 이력"
+  ],
+  [
+   "🟡",
+   "S05",
+   "+ · 익스텐션 권장: 활동·변경 이력"
+  ],
+  [
+   "🟡",
+   "S06",
+   "브랜드 라이브러리 권장: 관련 항목 탭, 활동·변경 이력"
+  ],
+  [
+   "🔴",
+   "S07",
+   "콘텐츠 라이브러리(보드(칸반·파이프라인)) 필수 빠짐: 카드 → 상세"
+  ],
+  [
+   "🟡",
+   "S07",
+   "콘텐츠 라이브러리 권장: 열마다 건수·금액 합계"
+  ],
+  [
+   "🔴",
+   "S08",
+   "아이디어 패드(목록) 필수 빠짐: 검색, 필터, 페이지·더 보기, 항목 → 상세 이동"
+  ],
+  [
+   "🟡",
+   "S08",
+   "아이디어 패드 권장: 정렬, 일괄 작업(선택·삭제·내보내기), 저장된 보기·열 설정"
+  ],
+  [
+   "🔴",
+   "S09",
+   "ArtCraft 앱(목록) 필수 빠짐: 검색, 페이지·더 보기"
+  ],
+  [
+   "🟡",
+   "S09",
+   "ArtCraft 앱 권장: 새로 만들기, 일괄 작업(선택·삭제·내보내기), 저장된 보기·열 설정"
+  ],
+  [
+   "🟡",
+   "S10",
+   "ArtCraft 앱 16종 가이드 권장: 관련 항목 탭, 활동·변경 이력"
+  ],
+  [
+   "🟡",
+   "S11",
+   "사용 가이드 (PDF) 권장: 활동·변경 이력"
+  ],
+  [
+   "🟡",
+   "S12",
+   "7일 세팅 계획 권장: 관련 항목 탭, 활동·변경 이력"
+  ],
+  [
+   "🟡",
+   "S13",
+   "기획 요약 권장: 관련 항목 탭, 활동·변경 이력"
+  ],
+  [
+   "🟡",
+   "M1",
+   "스킬 추가/편집 권장: 임시 저장(긴 폼)"
+  ],
+  [
+   "🟡",
+   "M2",
+   "루틴 추가/편집 권장: 임시 저장(긴 폼)"
+  ],
+  [
+   "🟡",
+   "M3",
+   "익스텐션 추가/편집 권장: 임시 저장(긴 폼)"
+  ],
+  [
+   "🟡",
+   "M4",
+   "최근 파일 추가/편집 권장: 임시 저장(긴 폼)"
+  ],
+  [
+   "🟡",
+   "M5",
+   "n일차 목표 편집 권장: 필수 표시·도움말, 임시 저장(긴 폼)"
+  ],
+  [
+   "🟡",
+   "M6",
+   "날짜 편집 권장: 필수 표시·도움말, 임시 저장(긴 폼)"
+  ],
+  [
+   "🔴",
+   "T2",
+   "이 기기 데이터 가져오기(입력 폼) 필수 빠짐: 라벨 있는 입력"
+  ],
+  [
+   "🟡",
+   "T2",
+   "이 기기 데이터 가져오기 권장: 필수 표시·도움말, 임시 저장(긴 폼)"
+  ],
+  [
+   "🔴",
+   "T3",
+   "로그인 권유 시트(입력 폼) 필수 빠짐: 라벨 있는 입력"
+  ],
+  [
+   "🟡",
+   "T3",
+   "로그인 권유 시트 권장: 필수 표시·도움말, 임시 저장(긴 폼)"
+  ],
+  [
+   "ℹ️",
+   "B1",
+   "모르는 블록(회색 상자로 표시): d37), 본문은 기기 밖으로 나가지 않음, 업로드는 pro\"(d37)"
+  ],
+  [
+   "ℹ️",
+   "P1",
+   "모르는 블록(회색 상자로 표시): 대소문자·공백 무시)"
+  ],
+  [
+   "🟡",
+   "AD1",
+   "카탈로그 목록 권장: 일괄 작업(선택·삭제·내보내기), 저장된 보기·열 설정"
+  ],
+  [
+   "ℹ️",
+   "AD1",
+   "모르는 블록(회색 상자로 표시): ad02)"
+  ],
+  [
+   "🟡",
+   "AD2",
+   "항목 편집 권장: 임시 저장(긴 폼)"
+  ],
+  [
+   "🟡",
+   "AD3",
+   "이미지 업로드 권장: 임시 저장(긴 폼)"
+  ],
+  [
+   "🟡",
+   "AD4",
+   "변경 이력 권장: 새로 만들기, 일괄 작업(선택·삭제·내보내기), 저장된 보기·열 설정"
+  ],
+  [
+   "🟡",
+   "AD5",
+   "번들 코드 발급 권장: 임시 저장(긴 폼)"
+  ]
+ ]
+}

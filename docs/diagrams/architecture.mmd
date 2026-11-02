@@ -1,22 +1,30 @@
 flowchart LR
   user["사용자 브라우저"]
+  adminu["관리자 브라우저"]
+  subgraph local["사용자 PC"]
+    folder[("second-brain<br/>Markdown 폴더")]
+    cli["nomad-brain CLI (Node)"]
+  end
   subgraph vercel["Vercel"]
     subgraph next["Next.js 앱"]
-      auth["(auth) 로그인·콜백"]
-      app["(app) 13화면 + 모달 6종"]
+      auth["(auth) 로그인·콜백<br/>상단 바 로그인·계정 메뉴"]
+      app["(app) 13화면 + 모달 6종<br/>로그인 권유 시트"]
+      admin["/admin AD1–AD4"]
       three["3D 모듈 (홈 입자 구·탐색기)"]
       dal["데이터 접근 계층"]
+      brainrh["두뇌 업로드 Route Handler<br/>(토큰 brain:write)"]
     end
   end
   subgraph supa["Supabase"]
     sauth["Auth (매직링크)"]
-    udb[("사용자 데이터 + RLS")]
-    cdb[("카탈로그 (읽기 전용)")]
-    stor[("Storage guide 이미지")]
+    udb[("사용자 데이터 + RLS<br/>두뇌 graph·토큰 해시")]
+    cdb[("카탈로그 (읽기 공개)<br/>+ 감사 기록")]
+    stor[("Storage guide·art-icons")]
   end
   ls[("localStorage<br/>nomad-lab-v1 · nomad-theme · nomad-lbl")]
   user --> app
   user --> auth
+  adminu --> admin
   app --> three
   app --> dal
   three -.->|"nomad-lbl"| ls
@@ -27,3 +35,9 @@ flowchart LR
   auth --> sauth
   auth -->|"첫 로그인 가져오기"| udb
   app -->|"공개 URL"| stor
+  folder -->|"읽기 (본문 미전송)"| cli
+  cli -->|"graph.json + 토큰"| brainrh
+  app -->|"graph.json 직접 올리기"| brainrh
+  brainrh -->|"검증 후 교체"| udb
+  admin -->|"관리자만 쓰기 + 감사"| cdb
+  admin -->|"이미지 업로드"| stor

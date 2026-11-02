@@ -1,0 +1,13 @@
+flowchart TD
+  enter["/admin 진입"] --> isad{"로그인 + 관리자?"}
+  isad -->|"아니오"| nf["404"]
+  isad -->|"예"| ad1["AD1 카탈로그 목록<br/>테이블 선택"]
+  ad1 --> ad2["AD2 항목 편집 폼"]
+  ad2 --> img{"이미지 변경?"}
+  img -->|"예"| ad3["AD3 Storage 업로드<br/>guide · art-icons"]
+  img -->|"아니오"| val
+  ad3 --> val{"입력 검증 통과?"}
+  val -->|"아니오"| fe["폼 오류 표시"]
+  val -->|"예"| tx["한 트랜잭션: 카탈로그 쓰기 + 감사 기록<br/>(RLS 관리자만)"]
+  tx --> inv["카탈로그 캐시 무효화"]
+  inv --> ad4["AD4 변경 이력에 표시"]
