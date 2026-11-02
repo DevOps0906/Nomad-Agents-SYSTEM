@@ -418,3 +418,42 @@ a.ringbox{border-radius:10px}
 #stage[data-lbl="light"] .lbl{background:rgba(255,255,255,.94);color:#1a1210;border:1px solid var(--lc);padding:2px 8px;box-shadow:0 1px 6px rgba(0,0,0,.35)}
 #stage[data-lbl="text"] .lbl{background:transparent;color:#fff;font-weight:600;text-shadow:0 0 2px #000,0 0 5px #000,0 1px 3px #000}
 #stage[data-lsz="l"] .lbl{font-size:calc(var(--fs-label) + 3px)}
+
+/* ArtCraft 앱 16종 */
+.appfilter{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:12px}
+.appfilter .seg{flex-wrap:wrap}
+a.app-c{text-decoration:none;color:inherit;transition:border-color .2s,transform .2s}
+a.app-c:hover{border-color:var(--c,var(--accent));transform:translateY(-2px)}
+.app-c h3 small{font-weight:400;color:var(--muted);font-size:var(--fs-label)}
+.app-c .more{margin-top:6px;font-size:var(--fs-label);color:var(--label);font-family:var(--font-mono)}
+.appd-list{display:flex;flex-direction:column;gap:10px}
+details.appd{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--c,var(--accent));border-radius:12px;scroll-margin-top:80px}
+details.appd summary{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;padding:12px 16px;cursor:pointer;list-style:none}
+details.appd summary::-webkit-details-marker{display:none}
+details.appd summary .nm{font-size:var(--fs-h3);font-weight:700}
+details.appd summary .sm{font-size:var(--fs-small);color:var(--muted)}
+details.appd summary .tags{display:flex;flex-wrap:wrap;gap:6px}
+details.appd[open] summary{border-bottom:1px solid var(--line)}
+@container pg (min-width:820px){details.appd summary{grid-template-columns:200px minmax(0,1fr);align-items:center}details.appd summary .tags{grid-column:1/-1}}
+.appbody{display:flex;flex-direction:column;gap:18px;padding:16px}
+.appbody h3{margin-bottom:8px}
+.appbody .tbl td:first-child{white-space:nowrap;color:var(--muted);width:1%}
+
+.app-img{aspect-ratio:16/9;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--panel2);margin:-2px 0 4px}
+.app-img svg{display:block;width:100%;height:100%}
+.app-img.big{max-width:560px;margin:0}
+/* ArtCraft 앱 카드: 아이콘 + 넉넉한 간격 */
+#appGrid{grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:22px}
+#appGrid .app-c{padding:18px 18px 16px 22px;gap:14px;border-radius:14px}
+.ac-head{display:flex;align-items:center;gap:14px;min-width:0}
+.ac-t{min-width:0;display:flex;flex-direction:column;gap:3px}
+.ac-t h3{font-size:var(--fs-h3);line-height:1.25}
+.ac-t .use{font-size:var(--fs-small);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.aic{width:52px;height:52px;flex:none;border-radius:22%;object-fit:cover;background:#f1f0ee;border:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.aic.ds{width:36px;height:36px}
+#appGrid .app-c .vs{font-size:var(--fs-label);color:var(--muted);white-space:normal}
+#appGrid .app-c .tags{gap:8px;margin-top:0}
+#appGrid .tags span:nth-child(1),#appGrid .tags span:nth-child(3){display:none}
+#appGrid .tagx{font-size:11px;padding:2px 10px}
+#appGrid .app-c .more{display:block;margin-top:2px}
+details.appd summary .nm{display:flex;align-items:center;gap:12px}
