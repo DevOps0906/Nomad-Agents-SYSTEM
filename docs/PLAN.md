@@ -1,23 +1,19 @@
-# 기획 · 디자인 구조 — Nomad-Lab AI 업무 시스템
+# 플랫폼 기획 — Nomad-Agents-SYSTEM (목차)
 
-## 1. 목적
-SSR+ 네 단계(스킬, 세컨드 브레인, 루틴, 익스텐션)의 진행을 한 화면에서 점검하고, 세컨드 브레인 구조를 3D로 탐색한다. 사용법은 PDF 가이드 2종(SSR+ 13쪽, ArtCraft 4쪽)을 그대로 따른다.
+> 정본: Claude 아티팩트 게시본 https://claude.ai/artifact/G8CfCTcmjSZ8RE2ujJ8vAG = [`app/index.html`](../app/index.html).
+> 이 기획은 그 사이트의 구조를 거꾸로 읽어 만든 역기획이다. 화면·디자인·문구는 사이트와 1:1로 두고, 저장·인증·데이터 출처만 플랫폼으로 바꾼다.
+> 사이트에 없는 내용은 각 문서에 **[추정]**으로 표시했다.
 
-## 2. 정보 구조
-| 그룹 | 화면 |
-|---|---|
-| 홈 | 왼쪽: 캘린더·SSR+ 진행·오늘의 목표·최근 파일 / 가운데: 입자 구 3D(드래그 회전) / 오른쪽: 익스텐션·스킬·루틴. 모든 항목 클릭·편집 |
-| SSR+ | #skill, #brain(3D 탐색기 포함), #routine, #ext — 각 초·중·고급, 복사용 프롬프트, 완료 기준 |
-| 다른 대시보드 | #brand, #content(4단계 보드), #ideas(린 검증 프롬프트) |
-| 앱 | #artcraft (앱 7종, 설치·작업 프롬프트, 한계) |
-| 가이드 | #guide(PDF 뷰어·검색), #plan(7일 계획·체크리스트), #spec(기획 요약 + 기기별 미리보기) |
-
-## 3. 디자인 구조
-- 다크 기본, 라이트 전환. 좌측 GNB + 상단 바 + 본문 뷰, 해시 라우팅(ASCII).
-- 반응형 3구간: 모바일 ~767(서랍 메뉴, 본문 14px) / 태블릿 768~1199(아이콘 레일, 15px) / 데스크탑 1200~(전체 GNB, 16px). 구간별 폰트 토큰 정의.
-- 홈 그리드는 컨테이너 쿼리(3열 → 2열 → 1열).
-- 세컨드 브레인: 중앙 메인 에이전트 구 + 분야별 구조가 방사형. 노드는 홈과 같은 입자 구. 3D/2D 전환, 검색, 패널, 라벨 가독성 옵션(캡슐·밝은·글자만, 글자 크게).
-- 기획 요약: 기기(모바일·태블릿·데스크탑) 선택 시 해당 폭으로 실제 화면을 미리보기.
-
-## 4. 린 검증 순서
-예시 데이터 화면으로 반응 확인 → 랜딩페이지·사전예약 → 정부지원사업 시연 자료 → 실제 second-brain 폴더 연동(graph.json) → Next.js + Supabase 정식 개발 → 템플릿·강의·SaaS 확장.
+| 순서 | 문서 | 내용 |
+|---|---|---|
+| 0 | [`_research/SITE_FACTS.md`](_research/SITE_FACTS.md) | 사이트 사실 시트(화면·데이터·3D·토큰, 줄 근거 Lnnn) — 모든 문서의 근거 |
+| 0 | [`_research/DECISIONS.md`](_research/DECISIONS.md) | 팀장 결정 D1~D10, 미결 Q1~Q4 |
+| 1 | [`00_LEAN.md`](00_LEAN.md) | 문제·고객·가설·가장 싼 검증 |
+| 2 | [`01_PRD.md`](01_PRD.md) | 페르소나 시나리오·범위(MVP/이후)·수익·지표·보안 |
+| 3 | [`02_ARCHITECTURE.md`](02_ARCHITECTURE.md) | As-Is(단일 HTML) → To-Be(Next.js + Supabase) 구성·경계·흐름 |
+| 4 | [`03_SCREENS_UX.md`](03_SCREENS_UX.md) | 화면 S00~S13, 모달 M1~M6, 상태·흐름 |
+| 5 | [`DESIGN.md`](DESIGN.md) | 디자인 브리프(토큰 정본은 `src/style.css`) |
+| 6 | [`04_API.md`](04_API.md) | 엔드포인트·직접 조회 구분 |
+| 7 | [`05_DATA_MODEL.md`](05_DATA_MODEL.md) | 사용자·카탈로그 테이블, localStorage 이전 매핑 · [`sql/0001_init.sql`](sql/0001_init.sql) · [`diagrams/erd.mmd`](diagrams/erd.mmd) |
+| 8 | [`06_AGENT_PLAN.md`](06_AGENT_PLAN.md) | 작업 분해(웨이브·담당·완료 조건) |
+| — | [`adr/`](adr/) | 결정 기록 0001~0003 |
