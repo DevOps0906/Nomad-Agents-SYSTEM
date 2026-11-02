@@ -1,0 +1,93 @@
+<div class="app" id="app">
+  <aside class="gnb" id="gnb" aria-label="주 메뉴">
+    <a class="logo" href="#home" aria-label="Nomad-Lab 홈">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="6.5" fill="var(--accent)"/><ellipse cx="16" cy="16" rx="14" ry="5.5" fill="none" stroke="var(--accent)" stroke-width="1.6" transform="rotate(-24 16 16)"/><circle cx="27" cy="9.2" r="2.2" fill="var(--ink)"/></svg>
+      <span><b>Nomad<span>-Lab</span></b><small>AI WORK SYSTEM</small></span>
+    </a>
+    <nav id="nav" aria-label="화면 이동"></nav>
+    <div class="gnb-foot">
+      <div class="gp" title="SSR+ 전체 진행률"><span class="mono" id="gpPct">0%</span><div class="pb"><i id="gpBar"></i></div><span>SSR+ 진행</span></div>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+  <div class="main">
+    <header class="top">
+      <button type="button" class="ib" id="menu" aria-label="메뉴 열기" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <h1 id="vt">홈</h1>
+      <span class="pill hide-m" id="topPill">SSR+ 0%</span>
+      <button type="button" class="ib" id="theme" aria-label="테마 전환"><svg viewBox="0 0 24 24" aria-hidden="true" id="themeIc"></svg></button>
+    </header>
+    <div class="page" id="page">
+
+<section class="view" id="v-home" hidden>
+  <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:var(--gap)">
+    <p class="eyebrow" id="today">TODAY</p>
+    <h2 style="font-size:var(--fs-h1);letter-spacing:-.02em">오늘의 AI 업무 시스템</h2>
+    <p class="sub">스킬·세컨드 브레인·루틴·익스텐션 네 칸을 한 화면에서 점검합니다. 목록과 숫자는 예시 데이터입니다.</p>
+  </div>
+  <div class="home">
+    <div class="col col-l">
+      <div class="panelbox">
+        <div class="ringbox">
+          <div class="ring"><svg viewBox="0 0 96 96" aria-hidden="true"><circle class="track" cx="48" cy="48" r="40"/><circle class="prog" id="ring" cx="48" cy="48" r="40"/></svg><div class="pct"><span id="pct">0</span>%</div></div>
+          <div><b class="mono" id="doneTxt" style="font-size:var(--fs-stat);font-weight:500">0/12</b><p class="sub">SSR+ 단계 완료</p></div>
+        </div>
+        <div class="stats">
+          <div class="stat"><b id="stDays">0/7</b><span>7일 계획</span></div>
+          <div class="stat"><b id="stIdeas">0</b><span>아이디어</span></div>
+          <div class="stat"><b id="stLib">0</b><span>콘텐츠 항목</span></div>
+          <div class="stat"><b>25</b><span>두뇌 노드(예시)</span></div>
+        </div>
+      </div>
+      <div class="panelbox">
+        <div class="ph"><span>오늘의 목표</span><small id="goalCnt"></small></div>
+        <ul id="goals"></ul>
+        <div class="note" style="font-size:var(--fs-label)"><b>처음이라면</b> 가이드 p.3 사전 설치부터. <button type="button" class="btn sm" data-copy="node" style="margin-left:6px">Node.js 프롬프트 복사</button></div>
+      </div>
+      <div class="panelbox">
+        <div class="ph"><span id="calTitle">캘린더</span><small>색칠 = 7일 계획</small></div>
+        <div class="cal" id="cal"></div>
+      </div>
+      <div class="panelbox">
+        <div class="ph"><span>최근 파일</span><small>예시</small></div>
+        <ul class="rf" id="recent"></ul>
+      </div>
+      <div class="panelbox">
+        <div class="ph"><span>다른 대시보드</span></div>
+        <div class="dash3" id="dash3"></div>
+      </div>
+    </div>
+
+    <div class="col col-c">
+      <div class="panelbox hstage-box">
+        <div class="hbar"><div><p class="eyebrow">SECOND BRAIN</p><h3>세컨드 브레인</h3></div><a class="btn sm" href="#brain">탐색기 열기</a></div>
+        <div class="hstage" id="hstage">
+          <canvas id="hgl" role="img" aria-label="메인 에이전트와 분야별 자료 묶음을 입자 구로 표현한 3D 장면"></canvas>
+          <div id="hlabels"></div>
+          <div class="nogl" id="hnogl" hidden><p>이 브라우저에서는 3D 장면을 그릴 수 없습니다.<br>위의 탐색기 열기에서 같은 구조를 확인하세요.</p></div>
+        </div>
+        <div class="hfoot"><span><i class="sw" style="--c:var(--accent)"></i>메인 에이전트</span><span><i class="sw" style="--c:var(--c-root)"></i>규칙</span><span><i class="sw" style="--c:var(--c-content)"></i>콘텐츠</span><span><i class="sw" style="--c:var(--c-dev)"></i>개발</span><span><i class="sw" style="--c:var(--c-fin)"></i>재무</span><span class="mono" style="margin-left:auto">드래그로 회전 · 구를 눌러 탐색기로 이동</span></div>
+      </div>
+    </div>
+
+    <div class="col col-r">
+      <div class="panelbox">
+        <div class="ph"><span>S · 스킬</span><a href="#skill">전체 보기</a></div>
+        <ul class="mini" id="rSkill"></ul>
+      </div>
+      <div class="panelbox">
+        <div class="ph"><span>R · 루틴</span><a href="#routine">전체 보기</a></div>
+        <ul class="mini" id="rRoutine"></ul>
+      </div>
+      <div class="panelbox">
+        <div class="ph"><span>+ · 익스텐션</span><a href="#ext">전체 보기</a></div>
+        <ul class="mini" id="rExt"></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>

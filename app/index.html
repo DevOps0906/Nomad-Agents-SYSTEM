@@ -1,0 +1,1557 @@
+<title>Nomad-Lab AI 업무 시스템</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Nomad-Lab 대시보드: 좌측 GNB + 본문 뷰. 반응형 3구간: 모바일 ~767 / 태블릿 768~1199 / 데스크탑 1200~ */
+:root{
+  --bg:#FAF6F2; --panel:#FFFFFF; --panel2:#F4EDE6; --accent-soft:#FDEBE2; --ink:#201A17; --muted:#6B6059; --line:#E6DDD5;
+  --accent:#E8553C; --accent-ink:#B8412A; --on-accent:#FFFFFF; --label:#9C3A1E;
+  --stage:#F4EDE6; --edge:#A99A8F; --pulse:#3A2F29; --lbl-bg:rgba(255,255,255,.88);
+  --c-root:#6F68A3; --c-content:#E8553C; --c-dev:#12968F; --c-fin:#CF8A0C; --ok:#1E9E62;
+  --font-body:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
+  /* 모바일 (~767px) */
+  --fs-body:14px; --fs-small:12px; --fs-label:11px; --fs-lead:15px; --fs-h1:26px; --fs-h2:19px; --fs-h3:15px; --fs-letter:40px; --fs-stat:22px;
+  --gap:12px; --sec:28px; --stage-h:420px; --nav-w:280px; --pad:16px;
+}
+@media (min-width:768px) and (max-width:1199px){
+  :root{ --fs-body:15px; --fs-small:13px; --fs-label:12px; --fs-lead:16px; --fs-h1:32px; --fs-h2:21px; --fs-h3:16px; --fs-letter:48px; --fs-stat:26px; --gap:14px; --sec:36px; --stage-h:520px; --nav-w:72px; --pad:24px }
+}
+@media (min-width:1200px){
+  :root{ --fs-body:16px; --fs-small:13px; --fs-label:12px; --fs-lead:17px; --fs-h1:38px; --fs-h2:23px; --fs-h3:17px; --fs-letter:52px; --fs-stat:30px; --gap:16px; --sec:44px; --stage-h:600px; --nav-w:248px; --pad:32px }
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D0A09; --panel:#16100E; --panel2:#1F1713; --accent-soft:#34211B; --ink:#F4ECE6; --muted:#A99C93; --line:#2D231E;
+    --accent:#FF8D74; --accent-ink:#FF9C85; --on-accent:#1A1210; --label:#FFB39F;
+    --stage:#120D0B; --edge:#7C6D63; --pulse:#FFE3D6; --lbl-bg:rgba(13,10,9,.82);
+    --c-root:#A9A2DB; --c-content:#FF7B63; --c-dev:#3CC8C0; --c-fin:#F2B53A; --ok:#4FD08F; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D0A09; --panel:#16100E; --panel2:#1F1713; --accent-soft:#34211B; --ink:#F4ECE6; --muted:#A99C93; --line:#2D231E;
+  --accent:#FF8D74; --accent-ink:#FF9C85; --on-accent:#1A1210; --label:#FFB39F;
+  --stage:#120D0B; --edge:#7C6D63; --pulse:#FFE3D6; --lbl-bg:rgba(13,10,9,.82);
+  --c-root:#A9A2DB; --c-content:#FF7B63; --c-dev:#3CC8C0; --c-fin:#F2B53A; --ok:#4FD08F; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:var(--fs-body);line-height:1.6}
+h1,h2,h3,h4,p,ul,ol,dl,dd,pre,figure{margin:0;padding:0}
+ul,ol{list-style:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+img{display:block;max-width:100%}
+a{color:inherit}
+.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+[hidden]{display:none!important}
+h2{font-size:var(--fs-h2);line-height:1.3;font-weight:700;text-wrap:balance}
+h3{font-size:var(--fs-h3);line-height:1.35;font-weight:700}
+.sub{color:var(--muted);font-size:var(--fs-small)}
+.eyebrow{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.12em;color:var(--label)}
+
+/* 앱 셸 */
+.app{display:grid;grid-template-columns:var(--nav-w) minmax(0,1fr);min-height:100vh;min-height:100dvh}
+.gnb{position:sticky;top:0;height:100vh;height:100dvh;overflow-y:auto;overflow-x:hidden;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:16px 12px 12px;padding-left:max(12px,env(safe-area-inset-left,0px));gap:6px;z-index:40}
+.logo{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;text-decoration:none;border-bottom:1px solid var(--line);margin-bottom:8px}
+.logo svg{flex:none;width:30px;height:30px}
+.logo b{font-size:19px;font-weight:800;letter-spacing:-.02em;white-space:nowrap}
+.logo b span{color:var(--accent)}
+.logo small{display:block;font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;color:var(--muted);font-weight:400}
+.ng{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;color:var(--muted);padding:12px 10px 4px}
+.nl{display:flex;align-items:center;gap:10px;min-height:42px;padding:6px 10px;border-radius:8px;text-decoration:none;color:var(--muted);font-size:var(--fs-small);font-weight:500;border:1px solid transparent;position:relative;transition:background .15s,color .15s}
+.nl:hover{background:var(--panel2);color:var(--ink)}
+.nl[aria-current="page"]{background:var(--accent-soft);color:var(--ink);border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
+.nl[aria-current="page"]::before{content:"";position:absolute;left:-12px;top:8px;bottom:8px;width:3px;border-radius:0 3px 3px 0;background:var(--accent)}
+.nl .ic{flex:none;width:22px;height:22px;display:grid;place-items:center}
+.nl .ic svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.nl .lt{flex:none;width:24px;height:24px;border-radius:6px;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--panel2);color:var(--accent-ink)}
+.nl[aria-current="page"] .lt{background:var(--accent);color:var(--on-accent)}
+.nl .tx{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nl .tx small{display:block;font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;color:var(--muted);font-weight:400}
+.nl .ct{flex:none;font-family:var(--font-mono);font-size:var(--fs-label);color:var(--muted)}
+.gnb-foot{margin-top:auto;padding-top:12px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.gp{display:flex;align-items:center;gap:10px;font-size:var(--fs-small);color:var(--muted)}
+.gp .pb{flex:1;height:5px;border-radius:3px;background:var(--line);overflow:hidden}
+.gp .pb i{display:block;height:100%;background:var(--accent);width:0;transition:width .6s}
+.main{min-width:0;container-type:inline-size;container-name:pg;display:flex;flex-direction:column}
+.top{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:12px;min-height:56px;padding:8px var(--pad);padding-right:max(var(--pad),env(safe-area-inset-right,0px));background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top h1{font-size:var(--fs-h3);font-weight:700;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ib{flex:none;width:40px;height:40px;border-radius:8px;border:1px solid var(--line);background:var(--panel);display:grid;place-items:center}
+.ib svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ib:hover{border-color:var(--accent)}
+#menu{display:none}
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:var(--fs-label);padding:4px 10px;border-radius:999px;background:var(--accent-soft);color:var(--label);white-space:nowrap}
+.page{padding:var(--pad);padding-right:max(var(--pad),env(safe-area-inset-right,0px));padding-bottom:64px;display:flex;flex-direction:column;gap:var(--sec);width:100%;max-width:1480px}
+.scrim{display:none}
+@media (max-width:767px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .gnb{position:fixed;left:0;top:0;bottom:0;width:min(300px,86vw);transform:translateX(-102%);transition:transform .25s;box-shadow:0 0 40px rgba(0,0,0,.4)}
+  .gnb.open{transform:none}
+  #menu{display:grid}
+  .scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:35}
+  .scrim.on{display:block}
+  .pill.hide-m{display:none}
+}
+@media (min-width:768px) and (max-width:1199px){
+  .gnb{padding-inline:8px;align-items:stretch}
+  .logo{justify-content:center;padding-inline:0}
+  .logo>span,.nl .tx,.nl .ct,.ng,.gp span,.gnb-foot .btn span{display:none}
+  .nl{justify-content:center;padding-inline:0}
+  .nl[aria-current="page"]::before{left:-8px}
+  .gp{justify-content:center}.gp .pb{display:none}
+}
+.sec-head{display:flex;flex-direction:column;gap:4px;max-width:72ch}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:8px 14px;min-height:38px;font-size:var(--fs-small);font-weight:500;transition:border-color .2s,background .2s;text-decoration:none}
+.btn:hover{border-color:var(--accent)}
+.btn[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--label)}
+.btn.pri{background:var(--accent);color:var(--on-accent);border-color:var(--accent);font-weight:700}
+.btn.sm{min-height:32px;padding:4px 10px}
+.panelbox{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.panelbox>h3,.ph{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:var(--fs-small);font-weight:700;letter-spacing:.02em}
+.ph small{font-family:var(--font-mono);font-weight:400;color:var(--muted);font-size:var(--fs-label)}
+.ph a{font-size:var(--fs-label);color:var(--label);text-decoration:none}
+
+/* 체크박스 */
+input[type=checkbox].cb{position:absolute;opacity:0;width:1px;height:1px}
+.box{flex:none;width:18px;height:18px;margin-top:1px;border-radius:5px;border:1.5px solid var(--muted);display:grid;place-items:center;transition:background .2s,border-color .2s}
+.box::after{content:"";width:9px;height:5px;border-left:2px solid var(--on-accent);border-bottom:2px solid var(--on-accent);transform:rotate(-45deg) scale(0);margin-top:-2px;transition:transform .2s}
+input:checked + .box{background:var(--accent);border-color:var(--accent)}
+input:checked + .box::after{transform:rotate(-45deg) scale(1)}
+input:focus-visible + .box{outline:2px solid var(--accent);outline-offset:2px}
+.cl{position:relative;display:flex;gap:10px;align-items:flex-start;padding:8px 0;min-height:40px;font-size:var(--fs-small);line-height:1.5;cursor:pointer}
+li+li>.cl{border-top:1px solid var(--line)}
+input:checked ~ .txt{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
+
+/* 홈 (컨테이너 쿼리) */
+.home{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--gap);align-items:start}
+.col{display:flex;flex-direction:column;gap:var(--gap);min-width:0}
+.col-c{order:-1}
+@container pg (min-width:700px){
+  .home{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .col-c{grid-column:1/-1}
+}
+@container pg (min-width:940px){
+  .home{grid-template-columns:minmax(230px,280px) minmax(0,1fr) minmax(230px,280px)}
+  .col-c{grid-column:auto;order:0}
+}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.stat b{font-family:var(--font-mono);font-size:var(--fs-stat);font-weight:500;line-height:1.2}
+.stat span{font-size:var(--fs-label);color:var(--muted)}
+.ringbox{display:flex;align-items:center;gap:12px}
+.ring{position:relative;width:64px;height:64px;flex:none}
+.ring svg{display:block;width:100%;height:100%;transform:rotate(-90deg)}
+.ring .track{fill:none;stroke:var(--line);stroke-width:8}
+.ring .prog{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round;stroke-dasharray:251.33;stroke-dashoffset:251.33;transition:stroke-dashoffset .9s cubic-bezier(.2,.7,.2,1)}
+.ring .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:var(--fs-small)}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;font-size:var(--fs-small)}
+.cal .dw{font-size:var(--fs-label);color:var(--muted);padding:2px 0}
+.cal .d{aspect-ratio:1;display:grid;place-items:center;border-radius:8px;position:relative;font-variant-numeric:tabular-nums}
+.cal .d.mut{color:var(--muted);opacity:.45}
+.cal .d.plan{background:var(--accent-soft)}
+.cal .d.done::after{content:"";position:absolute;bottom:3px;width:4px;height:4px;border-radius:50%;background:var(--ok)}
+.cal .d.today{background:var(--accent);color:var(--on-accent);font-weight:700}
+.rf{display:flex;flex-direction:column}
+.rf button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:transparent;border:0;padding:8px 4px;border-radius:6px;font-size:var(--fs-small)}
+.rf button:hover{background:var(--panel2)}
+.rf li+li button{border-top:1px solid var(--line)}
+.rf .fi{flex:none;font-family:var(--font-mono);font-size:10px;padding:1px 6px;border-radius:4px;background:var(--panel2);color:var(--label)}
+.rf .fn{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rf .ft{flex:none;font-size:var(--fs-label);color:var(--muted)}
+.dash3{display:flex;flex-direction:column;gap:6px}
+.dash3 a{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;text-decoration:none;font-size:var(--fs-small);background:var(--panel2)}
+.dash3 a:hover{border-color:var(--accent)}
+.dash3 a b{font-weight:600}
+.dash3 a small{margin-left:auto;font-family:var(--font-mono);color:var(--muted);font-size:var(--fs-label)}
+.dash3 svg{width:18px;height:18px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.hstage-box{padding:0;overflow:hidden;position:relative}
+.hbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:14px 16px 0;position:absolute;left:0;right:0;top:0;z-index:2;pointer-events:none}
+.hbar>*{pointer-events:auto}
+.hstage{position:relative;height:var(--stage-h);background:radial-gradient(ellipse at 50% 45%,color-mix(in srgb,var(--accent) 9%,transparent),transparent 62%),var(--stage)}
+#hgl{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hl{position:absolute;left:0;top:0;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:2px;background:transparent;border:0;padding:6px;color:var(--ink);font-size:var(--fs-small);font-weight:600;text-shadow:0 1px 6px var(--stage),0 0 12px var(--stage);will-change:transform;white-space:nowrap}
+.hl small{font-family:var(--font-mono);font-weight:400;color:var(--muted);font-size:var(--fs-label)}
+.hl i{display:block;width:9px;height:9px;background:var(--c);box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 28%,transparent)}
+.hl i.sq{border-radius:2px}.hl i.ci{border-radius:50%}
+.hl:hover small,.hl:focus-visible small{color:var(--ink)}
+.hfoot{display:flex;flex-wrap:wrap;gap:8px 16px;padding:12px 16px;border-top:1px solid var(--line);font-size:var(--fs-small);color:var(--muted);align-items:center}
+.hfoot span{display:inline-flex;align-items:center;gap:6px}
+.hfoot .sw{width:10px;height:10px}
+.nogl{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;color:var(--muted);font-size:var(--fs-small)}
+.mini{display:flex;flex-direction:column}
+.mini li{display:flex;align-items:center;gap:10px;padding:9px 0;font-size:var(--fs-small)}
+.mini li+li{border-top:1px solid var(--line)}
+.mini .nm{flex:1;min-width:0}
+.mini .nm b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini .nm span{display:block;color:var(--muted);font-size:var(--fs-label);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.dot.on{background:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 25%,transparent)}
+.tg{flex:none;position:relative;width:34px;height:20px;border-radius:999px;border:0;background:var(--line);transition:background .2s}
+.tg::after{content:"";position:absolute;left:3px;top:3px;width:14px;height:14px;border-radius:50%;background:var(--ink);transition:transform .2s}
+.tg[aria-pressed="true"]{background:var(--accent)}
+.tg[aria-pressed="true"]::after{transform:translateX(14px);background:var(--on-accent)}
+.kbd{font-family:var(--font-mono);font-size:var(--fs-label);padding:1px 6px;border-radius:4px;background:var(--panel2);color:var(--label)}
+
+/* SSR 뷰 */
+.vhead{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+.vhead .letter{font-size:var(--fs-letter);line-height:.95;font-weight:800;color:var(--accent);letter-spacing:-.03em;min-width:.8em}
+.vhead .tt{flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:6px}
+.vhead h2{font-size:var(--fs-h1);letter-spacing:-.02em}
+.lead{font-size:var(--fs-lead);color:var(--muted);max-width:62ch;text-wrap:pretty}
+.persona{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--gap)}
+@media (min-width:768px){.persona{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.pcard{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:0 0 12px 12px;padding:14px;display:flex;flex-direction:column;gap:4px;font-size:var(--fs-small)}
+.pcard b{color:var(--label);font-size:var(--fs-label);font-family:var(--font-mono);letter-spacing:.06em}
+.pcard span{color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;min-height:40px;border-radius:8px;border:1px solid var(--line);background:var(--panel);font-size:var(--fs-small);font-weight:600}
+.tab[aria-selected="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.tab .ok{font-family:var(--font-mono);font-size:10px}
+.lvbody{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.lvbody .lt2{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.lvbody p,.lvbody li{font-size:var(--fs-body)}
+.lvbody ol{counter-reset:s;display:flex;flex-direction:column;gap:8px}
+.lvbody ol li{counter-increment:s;padding-left:34px;position:relative}
+.lvbody ol li::before{content:counter(s);position:absolute;left:0;top:1px;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--label);display:grid;place-items:center;font-size:var(--fs-label);font-family:var(--font-mono)}
+.tbl{width:100%;border-collapse:collapse;font-size:var(--fs-small)}
+.tbl th,.tbl td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl th{font-family:var(--font-mono);font-size:var(--fs-label);color:var(--label);font-weight:500;letter-spacing:.06em}
+.tw{overflow-x:auto}
+pre.tree{font-family:var(--font-mono);font-size:var(--fs-small);background:var(--panel2);border-radius:8px;padding:12px 14px;overflow-x:auto;line-height:1.7;white-space:pre}
+.prompt{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel2)}
+.prompt header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 8px 8px 14px;border-bottom:1px solid var(--line);font-size:var(--fs-small);font-weight:600}
+.prompt header span{min-width:0}
+.prompt pre{font-family:var(--font-mono);font-size:var(--fs-small);line-height:1.75;padding:14px;white-space:pre-wrap;overflow-wrap:anywhere;max-height:340px;overflow:auto}
+.callout{border-left:3px solid var(--accent);background:var(--accent-soft);padding:10px 14px;border-radius:0 8px 8px 0;font-size:var(--fs-small)}
+.callout b{color:var(--label);margin-right:6px}
+.callout.warn{border-left-color:var(--c-fin)}
+.pgref{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* 탐색기 */
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:transparent;padding:8px 16px;min-height:38px;font-size:var(--fs-small);font-weight:500}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+.zoom{display:inline-flex;gap:6px}
+.zoom .btn{min-width:38px;padding-inline:12px}
+.search{position:relative;flex:1 1 220px;min-width:0;max-width:360px;display:flex;align-items:center}
+.search input{width:100%;min-height:38px;border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:6px 70px 6px 12px;font-size:var(--fs-small)}
+.search input::placeholder{color:var(--muted)}
+.qcount{position:absolute;right:10px;font-size:var(--fs-label);color:var(--label);pointer-events:none}
+.explorer{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--gap)}
+@container pg (min-width:1000px){.explorer{grid-template-columns:minmax(0,1fr) 340px}}
+.stage-col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.stage{position:relative;height:var(--stage-h);background:var(--stage);border:1px solid var(--line);border-radius:12px;overflow:hidden;min-width:0}
+#gl{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.labels{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.lbl{position:absolute;left:0;top:0;white-space:nowrap;font-size:var(--fs-label);line-height:1.3;padding:2px 6px;border-radius:4px;background:var(--lbl-bg);color:var(--ink);opacity:0;transition:opacity .2s;will-change:transform}
+.lbl.on{opacity:1}.lbl.on.dim{opacity:.35}.lbl-f{font-weight:700}
+.hint{position:absolute;left:10px;top:10px;font-size:var(--fs-label);color:var(--muted);background:var(--lbl-bg);padding:3px 8px;border-radius:4px;pointer-events:none;max-width:calc(100% - 20px)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:var(--fs-small);color:var(--muted);align-items:center}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:11px;height:11px;border-radius:50%;background:var(--c)}
+.shape-f{width:11px;height:11px;background:var(--muted);border-radius:2px}
+.shape-d{width:11px;height:11px;background:var(--muted);border-radius:50%}
+.ln{width:24px;height:0;border-top:2px solid var(--edge)}
+.ln.dash{border-top-style:dashed}
+.legend .grp{color:var(--label);font-family:var(--font-mono);font-size:var(--fs-label)}
+.panel{border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0;overflow:auto;max-height:560px;background:var(--panel)}
+@container pg (min-width:1000px){.panel{max-height:none;height:var(--stage-h)}}
+.panel h4{font-size:var(--fs-small);font-weight:700;color:var(--label);margin-top:6px}
+.pn-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.kind{display:inline-flex;align-items:center;gap:6px;font-size:var(--fs-label);padding:2px 10px;border-radius:999px;background:var(--panel2)}
+.kind i{width:9px;height:9px;border-radius:50%;background:var(--c)}
+.x{border:1px solid var(--line);background:var(--panel);border-radius:6px;width:34px;height:34px;line-height:1}
+.path{font-size:var(--fs-small);color:var(--muted);overflow-wrap:anywhere}
+.pn-desc{font-size:var(--fs-small)}
+.rel{display:flex;flex-direction:column}
+.rel li+li{border-top:1px solid var(--line)}
+.rel button,.tn{display:flex;width:100%;text-align:left;gap:10px;align-items:baseline;background:transparent;border:0;padding:8px 4px;font-size:var(--fs-small);border-radius:4px}
+.rel button:hover,.tn:hover{background:var(--panel2)}
+.rel-k{flex:none;font-family:var(--font-mono);font-size:var(--fs-label);color:var(--label);min-width:5.4em}
+.pv{font-family:var(--font-mono);font-size:var(--fs-label);line-height:1.7;background:var(--panel2);border-radius:6px;padding:12px;white-space:pre-wrap;overflow-wrap:anywhere}
+.tree ul{padding-left:14px;border-left:1px solid var(--line);margin-left:6px}
+.tree>ul{padding-left:0;border-left:0;margin-left:0}
+.tn{align-items:flex-start;flex-wrap:wrap;row-gap:0}
+.tn .dot{flex:none;width:10px;height:10px;margin-top:6px;background:var(--c)}
+.tn .dot.folder{border-radius:2px}
+.tn .dot:not(.folder){border-radius:50%}
+.tn .nm{font-weight:500}
+.tn .ds{flex-basis:100%;padding-left:20px;font-size:var(--fs-label);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tn.hit{background:var(--accent-soft)}
+.tree .grp{font-size:var(--fs-label);font-family:var(--font-mono);color:var(--label);margin:12px 0 2px;letter-spacing:.06em}
+
+/* ArtCraft */
+.apps{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--gap)}
+@media (min-width:768px){.apps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@container pg (min-width:1000px){.apps{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.app-c{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden}
+.app-c::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c,var(--accent))}
+.app-c h3{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.app-c .vs{font-family:var(--font-mono);font-size:var(--fs-label);color:var(--muted)}
+.app-c .use{font-size:var(--fs-small);color:var(--muted)}
+.app-c .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.tagx{font-size:10px;font-family:var(--font-mono);padding:1px 8px;border-radius:999px;background:var(--panel2);color:var(--muted)}
+.tagx.mcp{background:var(--accent-soft);color:var(--label)}
+.flow{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;align-items:stretch}
+@container pg (min-width:820px){.flow{grid-template-columns:repeat(5,minmax(0,1fr))}.flow .ar{transform:none}}
+.flow .st{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:4px;font-size:var(--fs-small);position:relative}
+.flow .st b{font-size:var(--fs-label);color:var(--label);font-family:var(--font-mono)}
+.flow .st span{color:var(--muted)}
+.flow .st:not(:last-child)::after{content:"→";position:absolute;color:var(--accent);font-size:18px}
+@media (max-width:767px){.flow .st:not(:last-child)::after{content:"↓";right:14px;top:10px}}
+@container pg (min-width:820px){.flow .st:not(:last-child)::after{right:-14px;top:50%;transform:translateY(-50%);z-index:2;background:var(--bg);width:20px;text-align:center}}
+@container pg (max-width:819px) and (min-width:768px){.flow .st:not(:last-child)::after{content:"↓";right:14px;top:10px}}
+
+/* 라이브러리 */
+.sw-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--gap)}
+@media (min-width:768px){.sw-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.swc{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel);text-align:left;padding:0;display:flex;flex-direction:column}
+.swc i{display:block;height:72px;background:var(--c)}
+.swc div{padding:10px 12px;display:flex;flex-direction:column;gap:2px;font-size:var(--fs-small)}
+.swc small{font-family:var(--font-mono);color:var(--muted);font-size:var(--fs-label)}
+.two{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--gap)}
+@container pg (min-width:820px){.two{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 14px;font-size:var(--fs-small);min-height:32px}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.board{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--gap)}
+@media (min-width:768px){.board{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@container pg (min-width:1000px){.board{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.col-b{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.col-b h3{display:flex;justify-content:space-between;font-size:var(--fs-small)}
+.item{background:var(--panel2);border-radius:8px;padding:10px 12px;font-size:var(--fs-small);display:flex;flex-direction:column;gap:6px}
+.item .row{display:flex;gap:6px;align-items:center;justify-content:space-between}
+.item select{background:var(--panel);border:1px solid var(--line);border-radius:6px;font-size:var(--fs-label);padding:2px 4px}
+.form{display:flex;gap:8px;flex-wrap:wrap}
+.form input,.form select,.form textarea{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 12px;min-height:38px;font-size:var(--fs-small);min-width:0}
+.form input,.form textarea{flex:1 1 220px}
+.form textarea{min-height:84px;resize:vertical;width:100%}
+.stars{display:inline-flex;gap:2px}
+.stars button{border:0;background:transparent;font-size:16px;line-height:1;padding:2px;color:var(--line)}
+.stars button.on{color:var(--c-fin)}
+.empty{color:var(--muted);font-size:var(--fs-small);padding:12px 0}
+
+/* 가이드 뷰어 */
+.gv{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--gap)}
+@container pg (min-width:900px){.gv{grid-template-columns:132px minmax(0,1fr)}}
+.thumbs{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}
+@container pg (min-width:900px){.thumbs{flex-direction:column;overflow:auto;max-height:78vh;padding:0 4px 0 0}}
+.th{flex:none;width:96px;border:2px solid var(--line);border-radius:8px;overflow:hidden;background:#fff;padding:0;position:relative}
+.th img{width:100%;height:auto}
+.th span{position:absolute;left:4px;bottom:4px;font-family:var(--font-mono);font-size:10px;background:rgba(0,0,0,.7);color:#fff;border-radius:3px;padding:0 5px}
+.th[aria-current="true"]{border-color:var(--accent)}
+.th.hit{box-shadow:0 0 0 2px var(--c-fin)}
+.pgview{display:flex;flex-direction:column;gap:10px;min-width:0}
+.pgimg{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;justify-content:center;max-height:none}
+.pgimg img{width:auto;max-width:100%;height:auto;max-height:84vh}
+.pgnav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pgnav .grow{flex:1}
+details.txt2{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+details.txt2 summary{cursor:pointer;font-size:var(--fs-small);font-weight:600}
+details.txt2 pre{font-family:var(--font-mono);font-size:var(--fs-small);line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:10px;max-height:360px;overflow:auto}
+
+/* 기획·계획 */
+.spec{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--gap)}
+@container pg (min-width:820px){.spec{grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}}
+.spec section{display:flex;flex-direction:column;gap:8px;min-width:0}
+.spec ul,.bl{display:flex;flex-direction:column;gap:6px;font-size:var(--fs-small)}
+.spec li,.bl li{padding-left:16px;position:relative}
+.spec li::before,.bl li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.spec p{font-size:var(--fs-small);color:var(--muted)}
+.bp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+@media (max-width:767px){.bp{grid-template-columns:1fr}}
+.bp div{border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:var(--fs-small);color:var(--muted);background:var(--panel)}
+.bp b{display:block;color:var(--ink)}
+.bp span{font-family:var(--font-mono);font-size:var(--fs-label)}
+.bp div.on{border-color:var(--accent);background:var(--accent-soft)}
+.sitemap{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--gap)}
+@container pg (min-width:820px){.sitemap{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.sitemap section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.sitemap h3{font-size:var(--fs-small);color:var(--label);font-family:var(--font-mono)}
+.sitemap li{font-size:var(--fs-small)}
+.sitemap li span{color:var(--muted)}
+.note{background:var(--accent-soft);border-left:3px solid var(--accent);padding:12px 14px;font-size:var(--fs-small);border-radius:0 8px 8px 0}
+.note b{color:var(--label)}
+.foot{font-size:var(--fs-small);color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:var(--fs-small);z-index:80;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){.ring .prog,.gp .pb i,.lbl,.gnb{transition:none}}
+
+</style>
+<div class="app" id="app">
+  <aside class="gnb" id="gnb" aria-label="주 메뉴">
+    <a class="logo" href="#home" aria-label="Nomad-Lab 홈">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="6.5" fill="var(--accent)"/><ellipse cx="16" cy="16" rx="14" ry="5.5" fill="none" stroke="var(--accent)" stroke-width="1.6" transform="rotate(-24 16 16)"/><circle cx="27" cy="9.2" r="2.2" fill="var(--ink)"/></svg>
+      <span><b>Nomad<span>-Lab</span></b><small>AI WORK SYSTEM</small></span>
+    </a>
+    <nav id="nav" aria-label="화면 이동"></nav>
+    <div class="gnb-foot">
+      <div class="gp" title="SSR+ 전체 진행률"><span class="mono" id="gpPct">0%</span><div class="pb"><i id="gpBar"></i></div><span>SSR+ 진행</span></div>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+  <div class="main">
+    <header class="top">
+      <button type="button" class="ib" id="menu" aria-label="메뉴 열기" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <h1 id="vt">홈</h1>
+      <span class="pill hide-m" id="topPill">SSR+ 0%</span>
+      <button type="button" class="ib" id="theme" aria-label="테마 전환"><svg viewBox="0 0 24 24" aria-hidden="true" id="themeIc"></svg></button>
+    </header>
+    <div class="page" id="page">
+
+<section class="view" id="v-home" hidden>
+  <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:var(--gap)">
+    <p class="eyebrow" id="today">TODAY</p>
+    <h2 style="font-size:var(--fs-h1);letter-spacing:-.02em">오늘의 AI 업무 시스템</h2>
+    <p class="sub">스킬·세컨드 브레인·루틴·익스텐션 네 칸을 한 화면에서 점검합니다. 목록과 숫자는 예시 데이터입니다.</p>
+  </div>
+  <div class="home">
+    <div class="col col-l">
+      <div class="panelbox">
+        <div class="ringbox">
+          <div class="ring"><svg viewBox="0 0 96 96" aria-hidden="true"><circle class="track" cx="48" cy="48" r="40"/><circle class="prog" id="ring" cx="48" cy="48" r="40"/></svg><div class="pct"><span id="pct">0</span>%</div></div>
+          <div><b class="mono" id="doneTxt" style="font-size:var(--fs-stat);font-weight:500">0/12</b><p class="sub">SSR+ 단계 완료</p></div>
+        </div>
+        <div class="stats">
+          <div class="stat"><b id="stDays">0/7</b><span>7일 계획</span></div>
+          <div class="stat"><b id="stIdeas">0</b><span>아이디어</span></div>
+          <div class="stat"><b id="stLib">0</b><span>콘텐츠 항목</span></div>
+          <div class="stat"><b>25</b><span>두뇌 노드(예시)</span></div>
+        </div>
+      </div>
+      <div class="panelbox">
+        <div class="ph"><span>오늘의 목표</span><small id="goalCnt"></small></div>
+        <ul id="goals"></ul>
+        <div class="note" style="font-size:var(--fs-label)"><b>처음이라면</b> 가이드 p.3 사전 설치부터. <button type="button" class="btn sm" data-copy="node" style="margin-left:6px">Node.js 프롬프트 복사</button></div>
+      </div>
+      <div class="panelbox">
+        <div class="ph"><span id="calTitle">캘린더</span><small>색칠 = 7일 계획</small></div>
+        <div class="cal" id="cal"></div>
+      </div>
+      <div class="panelbox">
+        <div class="ph"><span>최근 파일</span><small>예시</small></div>
+        <ul class="rf" id="recent"></ul>
+      </div>
+      <div class="panelbox">
+        <div class="ph"><span>다른 대시보드</span></div>
+        <div class="dash3" id="dash3"></div>
+      </div>
+    </div>
+
+    <div class="col col-c">
+      <div class="panelbox hstage-box">
+        <div class="hbar"><div><p class="eyebrow">SECOND BRAIN</p><h3>세컨드 브레인</h3></div><a class="btn sm" href="#brain">탐색기 열기</a></div>
+        <div class="hstage" id="hstage">
+          <canvas id="hgl" role="img" aria-label="메인 에이전트와 분야별 자료 묶음을 입자 구로 표현한 3D 장면"></canvas>
+          <div id="hlabels"></div>
+          <div class="nogl" id="hnogl" hidden><p>이 브라우저에서는 3D 장면을 그릴 수 없습니다.<br>위의 탐색기 열기에서 같은 구조를 확인하세요.</p></div>
+        </div>
+        <div class="hfoot"><span><i class="sw" style="--c:var(--accent)"></i>메인 에이전트</span><span><i class="sw" style="--c:var(--c-root)"></i>규칙</span><span><i class="sw" style="--c:var(--c-content)"></i>콘텐츠</span><span><i class="sw" style="--c:var(--c-dev)"></i>개발</span><span><i class="sw" style="--c:var(--c-fin)"></i>재무</span><span class="mono" style="margin-left:auto">드래그로 회전 · 구를 눌러 탐색기로 이동</span></div>
+      </div>
+    </div>
+
+    <div class="col col-r">
+      <div class="panelbox">
+        <div class="ph"><span>S · 스킬</span><a href="#skill">전체 보기</a></div>
+        <ul class="mini" id="rSkill"></ul>
+      </div>
+      <div class="panelbox">
+        <div class="ph"><span>R · 루틴</span><a href="#routine">전체 보기</a></div>
+        <ul class="mini" id="rRoutine"></ul>
+      </div>
+      <div class="panelbox">
+        <div class="ph"><span>+ · 익스텐션</span><a href="#ext">전체 보기</a></div>
+        <ul class="mini" id="rExt"></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<template id="brain-tpl">
+    <div class="sec-head">
+      <p class="eyebrow">SECOND BRAIN EXPLORER</p>
+      <h3 style="font-size:var(--fs-h2)">3D 탐색기</h3>
+      <p class="sub">중앙의 큰 구가 메인 에이전트이고, 여기서 second-brain 구조가 바깥으로 퍼져 나갑니다. 노드를 누르면 길잡이와 연결된 문서를 확인할 수 있습니다. 데이터는 예시입니다.</p>
+    </div>
+    <div class="tools" role="toolbar" aria-label="탐색기 도구">
+      <div class="seg" role="group" aria-label="보기 방식"><button type="button" data-mode="3d" aria-pressed="true">3D</button><button type="button" data-mode="2d" aria-pressed="false">2D</button></div>
+      <label class="search" for="q"><span class="sr">파일 이름과 본문 검색</span><input id="q" type="search" placeholder="파일 이름·본문 검색" autocomplete="off"><span id="qcount" class="qcount" aria-live="polite"></span></label>
+      <div class="zoom" role="group" aria-label="확대와 축소"><button type="button" class="btn" id="zout" aria-label="축소">−</button><button type="button" class="btn" id="zin" aria-label="확대">+</button><button type="button" class="btn" id="zreset">전체 보기</button></div>
+      <button type="button" class="btn" id="auto" aria-pressed="true">자동 회전</button>
+      <button type="button" class="btn" id="replay">다시 재생</button>
+    </div>
+    <div class="explorer">
+      <div class="stage-col">
+        <div class="stage" id="stage">
+          <canvas id="gl" role="img" aria-label="second-brain 폴더와 문서가 노드와 선으로 연결된 3D 그래프"></canvas>
+          <div class="labels" id="labels"></div>
+          <p class="hint" id="hint">드래그 회전 · 우클릭·두 손가락 이동 · 휠·핀치 확대</p>
+          <div class="nogl" id="nogl" hidden><p>이 브라우저에서는 3D 그래프를 그릴 수 없습니다.<br>오른쪽 파일 목록에서 문서를 선택하면 같은 정보를 볼 수 있습니다.</p></div>
+        </div>
+        <div class="legend" aria-label="범례">
+          <span class="grp">분야</span>
+          <span><i class="sw" style="--c:var(--accent)"></i>메인 에이전트</span>
+          <span><i class="sw" style="--c:var(--c-root)"></i>규칙·최상위</span>
+          <span><i class="sw" style="--c:var(--c-content)"></i>콘텐츠</span>
+          <span><i class="sw" style="--c:var(--c-dev)"></i>개발</span>
+          <span><i class="sw" style="--c:var(--c-fin)"></i>재무</span>
+          <span class="grp">모양</span>
+          <span><i class="shape-f"></i>폴더</span>
+          <span><i class="shape-d"></i>문서</span>
+          <span class="grp">선</span>
+          <span><i class="ln"></i>폴더 포함</span>
+          <span><i class="ln dash"></i>문서 간 링크</span>
+        </div>
+      </div>
+      <aside class="panel" id="panel" aria-label="선택한 항목 정보" aria-live="polite"></aside>
+    </div>
+</template>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>window.__D={"prompts":{"node":"현재 PC의 운영체제와 기존 Node.js 설치 상태를 확인한 뒤, 최신 LTS 버전의 Node.js와 npm을 설치해 주세요. 기존 프로젝트와\n충돌하지 않는 방식을 사용하고, 설치 후 node -v와 npm -v로 정상 동작을 확인해 주세요. 필요한 권한은 진행 중 요청해 주세요.","skill1":"skill-creator 스킬로 내 첫 스킬을 만들려고 합니다.\n만들기 전에 아래 질문을 한 번에 묻고, 답을 모두 받은 뒤에 작업해 주세요.\n1. 지금까지 두세 번 이상 반복해서 시킨 일은 무엇인가요?\n2. 그중 하나를 고른다면, 잘된 결과와 평범한 결과를 가르는 기준은 무엇인가요?\n3. 참고할 만한 예전 결과물이 있나요? (파일 경로나 붙여 넣기)\n스킬은 [프로젝트폴더]/Skills/\u003c스킬이름>/SKILL.md 에 저장하고, 이름·언제 쓰는지·단계·좋은 결과 예시를 담아 주세요. 저장한\n경로와 호출 방법을 알려 주세요.","skill2":"[스킬이름] 스킬을 복합 스킬로 바꾸려고 합니다.\n[참고자료 경로]의 파일을 스킬 폴더 안 reference/ 에 복사하고, SKILL.md에는 어떤 작업에서 어느 파일을 읽어야 하는지만 짧게\n적어 주세요. SKILL.md 본문에 참고자료 내용을 다시 옮겨 적지는 마세요.","skill3a":"[스킬이름] 스킬이 발동될 때 [폴더 경로]에 기존 양식(스킬의 reference/template.xlsx)과 다른 새 엑셀 양식이 있으면 그 양식을\n반영해서 만들고, 없으면 기존 양식대로 만들도록 스킬을 수정해 주세요. 새 양식을 반영했다면 reference/template.xlsx도 함께\n바꾸고 무엇이 달라졌는지 알려 주세요.","skill3b":"최근 [N]일간 스킬이 발동된 대화 내역을 읽고, 각 스킬에서 사용자가 고쳐 달라고 한 부분과 다시 시킨 부분을 찾아 개선점을 제안하는\n스킬을 만들어 주세요. 제안은 스킬 / 파일 / 수정 전 / 수정 후 표로 보여 주고, 내가 승인한 줄만 반영해 주세요.","brain1":"이 프로젝트 폴더에 AI가 대화를 시작할 때마다 읽는 지침 파일 AGENTS.md를 만들려고 합니다.\n만들기 전에 아래 질문을 한 번에 묻고, 답을 모두 받은 뒤에 작업해 주세요.\n1. 나와 내 일(회사·직무·고객)에 대해 항상 알아야 할 것은 무엇인가요?\n2. 결과물은 어떤 톤·형식·길이로 받고 싶나요?\n3. 지금 진행 중인 일과 이미 확정된 결정은 무엇인가요?\n답을 바탕으로 [프로젝트폴더]/AGENTS.md를 '나와 내 일', '결과물 기준', '지금 진행 중', '확정된 결정' 섹션으로 나눠 짧게 작성해\n주세요. 이미 AGENTS.md나 CLAUDE.md가 있으면 기존 내용을 보존하면서 보완해 주세요.\n앞으로 대화 중 내가 새 결정·선호·교정을 말하면 같은 대화 안에서 AGENTS.md의 해당 섹션을 고쳐 주세요.","brain2":"업무 작업 폴더의 자료를 AI가 빠르게 찾을 수 있도록 \"세컨드 브레인\" 색인을 만들려고 합니다.\n폴더를 재정리하지 않고, 지금 있는 자료의 위치와 용도를 짧게 안내하는 것이 목적입니다.\n대상 작업 폴더 경로: [경로]\n## 1단계: 인터뷰\n아래를 하나씩 물어봐 주세요. 답을 모두 받기 전에는 파일을 만들지 마세요.\n1. 주요 업무 분야(부서·팀)는 무엇인가요? 분야마다 자료를 찾으러 올 사람(역할)은 누구인가요?\n2. 분야마다 지금 진행 중인 일과 끝난 일은 무엇인가요?\n3. 자주 쓰는 파일·폴더는 무엇이고, 버전이 여러 개라면 어느 것이 최종본인가요? 평소 그 자료를 뭐라고 부르나요?(별명·줄임말·\n영문명)\n4. 색인에서 뺄 폴더나 비공개 자료(개인정보·계약·급여 등)가 있나요?\n5. 팀이 함께 지켜야 할 기준이 있나요? 없으면 비워 둡니다.\n## 2단계: 구조\n작업 폴더 안에 second-brain/ 폴더를 만들고 아래처럼 구성하세요.\nsecond-brain/\nAGENTS.md\n최상위 라우터: 분야 표 + 찾는 법 + 규칙 문서 링크\nAGENTS--인덱스규칙.md 색인 작성·분할·갱신 규칙 (4단계 내용)\nAGENTS--확정기준.md 팀이 지킬 현재 유효한 기준 (인터뷰 5번, 없으면 제목만)\nlog.md\n변경 이력\n전체목록.md\n모든 색인을 지금 순서대로 한 장에 펼친 사본 (AI 검색용, 직접 고치지 않음)\n\u003c분야>/\u003c분야>.md\n분야 안내: 하위 인덱스 링크만\n\u003c분야>/\u003c분야>--\u003c주제>.md 하위 인덱스: 원본 파일 링크 + 한 줄 설명\n작업 폴더 맨 위의 지침 파일에 아래 줄을 넣으세요. 어느 파일에 넣을지는 다음 순서로 정합니다.\n- AGENTS.md만 있으면 AGENTS.md에 , CLAUDE.md만 있으면 CLAUDE.md에 넣습니다.\n- 둘 다 있으면 실제 지침이 적힌 파일에 넣고, 둘 다 없으면 AGENTS.md를 새로 만듭니다.\n기존 내용은 그대로 두고 끝에 추가합니다.\n\"자료·파일·원본을 찾을 때는 다른 도구를 쓰기 전에 second-brain/AGENTS.md의 찾는 법을 따른다.\"\n## 3단계: AGENTS.md 내용\n- 분야 표: 분야 이름과 한 줄 설명, 분야 안내 링크 ( 예를 들어, 주요 업무영역이 `콘텐츠, 개발운영, 재무` 라면 contents.md ,\ndev.md, financial.md와 같은 이름으로 색인을 만듭니다. )\n- 찾는 법: 첫 검색은 전체목록.md를 grep 한 번으로 한다. 사용자가 말한 이름·별명을 모두 키워드로 넣고 결과는 15줄까지만 본다.\n결과 줄의 링크만 열어 확인하고 바로 답한다. 폴더 전체 검색은 여기서 못 찾았을 때만 한다. 색인에 없던 파일을 찾으면 답한 뒤 알맞은\n색인에 한 줄 추가한다.\n- 규칙 문서 링크: AGENTS--인덱스규칙.md, AGENTS--확정기준.md\n## 4단계: 색인 규칙 (AGENTS--인덱스규칙.md에 적기)\n- 한 줄 형식: - [이름](상대경로) — 한 줄 설명. 한 줄에 링크 1개, 200자 이내.\n- 설명에는 한글·영문 이름과 사람들이 그 자료를 부르는 말을 함께 쓴다(설명 글자로 검색되므로).\n- 상대경로는 링크를 쓴 문서가 있는 폴더 기준. 경로에 공백·한글이 있으면 [이름](\u003c경로>)처럼 꺾쇠로 감싼다.\n- 분야 안내에는 하위 인덱스 링크만 두고, 원본 파일 링크는 하위 인덱스에 둔다.\n- 링크는 주제·프로젝트 단위로 묶고, \"## 진행 중\"과 지난 일(\"이전 ○○\" 하위 인덱스)을 나눈다.\n- 최종본만 링크한다. 새 버전이 생기면 이전 버전 링크는 빼고 파일은 그대로 둔다.\n- 한 자료를 여러 역할이 찾으러 온다면 각 역할이 보는 색인 모두에 링크하고, 설명은 그 역할 관점으로 쓴다.\n- 색인에는 위치와 용도만 쓴다. 상세 내용·판단 근거·가격·일정은 적지 않고 원본으로 연결한다.\n\f\n- 모든 문서는 빈 줄 포함 100줄 이내. 넘으면 \u003c분야>--\u003c주제>.md, 그것도 넘으면 \u003c분야>--\u003c주제>--\u003c소주제>.md로 나눈다. 상위\n문서에는 하위 링크와 짧은 설명만 남기고 목록을 중복해 적지 않는다.\n- 전체목록.md는 색인을 고칠 때마다 다시 만든다. 제목은 분야 > 주제 순서를 그대로 따르고, 줄마다 끝에 \"· 위치: 분야 > 주제\"를\n붙인다. 이미지 같은 에셋은 개수만 적는다. 이 파일은 100줄 규칙에서 뺀다.\n- 실제로 있는 대상만 링크한다.\n- 파일을 옮기거나 이름을 바꾸거나 새 프로젝트를 만들면, 같은 작업 안에서 관련 색인·전체목록.md·세컨브레인의\nAGENTS.md·log.md를 함께 고친다.\n- log.md는 끝에 덧붙이기만 하고 지난 기록은 고치지 않는다.\n형식: ## [YYYY-MM-DD] 종류 | 제목 / - 입력: / - 변경/반영: / - 메모:\n## 5단계: 지킬 것\n- 원본 자료·폴더는 이동·수정·삭제하지 않는다. 기존 AGENTS.md·CLAUDE.md·색인이 있으면 먼저 읽고 보존하면서 보완한다.\n- 인증 파일·키·토큰·.env는 열거나 색인하지 않는다. 인터뷰에서 뺀다고 한 폴더도 마찬가지다.\n- 소개·분야 구분·자주 쓰는 자료는 인터뷰 답과 실제 파일에서 확인한 것만 쓴다.\n- 이미지·영상 등 내용을 확인하지 못한 자료는 파일명으로 용도·버전을 추측하지 말고 \"확인 필요\" 목록으로 모아 물어본다.\n- 한글 파일명은 맥·구글 드라이브에서 자모가 분리돼 저장될 수 있으니, 파일명으로 찾을 때는 색인 글자를 기준으로 한다(ls | grep\n한글은 0건이 날 수 있음).\n- 자료가 많으면 분야 하나씩 진행하고, 분야마다 결과를 보여 준 뒤 다음으로 넘어간다.\n## 6단계: 검증·보고\n- 모든 링크가 실제 파일을 가리키는지, 100줄 넘는 문서가 없는지 확인한다.\n- 사용자가 평소 말투로 찾을 만한 요청 3개(\"○○ 어디 있어?\")로 실제로 찾아본다. 각각 도구 호출 3번 안에 정답 경로가 나오는지\n확인하고, 안 되면 설명이나 별명을 고친다.\n- 끝나면 만든 파일 목록, 확인 필요 목록, 색인하지 않은 폴더를 보고한다.","brain3":"[프로젝트폴더]/second-brain 을 시각적으로 탐색하는 웹 페이지를 만들어 주세요.\n- 폴더와 문서를 노드로, 폴더 포함 관계와 문서 간 링크를 선으로 연결해 주세요. 두 관계는 선 모양으로 구분하고, 실제로 확인된\n관계만 표시합니다.\n- 분야는 색으로, 폴더와 문서는 모양으로 구분하고 간단한 범례를 넣어 주세요.\n- 3D 보기와 2D 보기를 전환할 수 있게 해 주세요.\n- 확대·축소, 드래그 이동, 파일 이름·본문 검색을 지원해 주세요.\n- 노드를 클릭하면 오른쪽 패널에 이름·경로·연결된 항목과 문서 미리보기를 보여 주세요.\n결과물은 [프로젝트폴더]/Extensions/brain-explorer/ 에 두고, 실행 방법을 알려 주세요.\n필요한 패키지가 있으면 설치 전에 목록과 이유를 먼저 알려 주세요.","routine1":"매일 반복되는 일을 루틴으로 만들려고 합니다.\n만들기 전에 아래 질문을 한 번에 묻고, 답을 모두 받은 뒤에 작업해 주세요.\n1. 매일·매주·매월 반복하는 일은 무엇인가요?\n2. 그중 하나를 고른다면, 무엇을 읽고(입력) 무엇을 만들어(결과) 어디에 남겨야 하나요?\n3. 언제(요일·시각) 실행할까요?\n답을 바탕으로 루틴 지시문을 먼저 보여 주고, 내가 확인하면 루틴으로 등록해 주세요. 이미 만든 스킬이 있으면 루틴 안에서 그 스킬을\n호출하게 해 주세요. 지시문 원본은 [프로젝트폴더]/Routines/ 에도 저장해 주세요.","routine2":"24시간 켜 둘 [클라우드 서버 / 집에 남는 컴퓨터(운영체제: ○○)]에 Hermes 에이전트를 설치해 루틴을 돌리려고 합니다.\n1. Hermes 공식 문서를 확인해 설치 순서를 단계별로 안내해 주세요. 내가 직접 입력해야 하는 명령과 화면에서 눌러야 하는 것을\n구분해 주세요.\n2. 지금 이 컴퓨터의 [프로젝트폴더]를 Syncthing으로 새 컴퓨터와 동기화하는 방법을 안내해 주세요. 동기화에서 뺄 폴더(.env, 키\n파일 등)도 함께 설정해 주세요.\n\f\n3. 마지막으로 [프로젝트폴더]/Routines/ 의 루틴 지시문 하나를 Hermes에서 예약 실행하는 방법을 알려 주세요.\nAPI 키나 토큰 값은 대화에 적지 말고, 내가 직접 넣을 위치만 알려 주세요.","ext1":"[하고 싶은 일, 예: 건축물대장 조회]을 에이전트가 할 수 있게 연결하려고 합니다.\nMCP → CLI → API 순서로 쓸 수 있는 연결 방법을 찾아 주세요. 후보마다 제공처, 무료 여부, 설치 난이도, 필요한 키를 표로 보여\n주고, 가장 쉬운 것 하나를 추천해 주세요.\n내가 고르면 README를 읽고 연결 순서를 안내해 주세요. 설치가 필요한 패키지는 설치 전에 목록과 이유를 먼저 알려 주세요.","ext2":"[프로젝트폴더]/AGENTS.md 와 최근 작업 파일을 읽고, 내가 반복해서 불편을 겪는 작업을 찾아 주세요.\n그중 작은 도구(웹 페이지, 뷰어, 대시보드 등)를 만들면 해결되는 것 3가지를 골라, 무엇을 해결하는지·만드는 데 걸리는 시간·필요한\n준비물을 표로 제안해 주세요.\n내가 하나를 고르면 [프로젝트폴더]/Extensions/\u003c도구이름>/ 에 만들고 실행 방법을 알려 주세요."},"pages":{"ssr":["나만의 AI 에이전트 시스템 만들기\n챗대리 가이드\nSSR+ 4단계로 만드는 나만의 AI 에이전트 시스템\nS\nSkill\nS\nSecond brain\nR\nRoutine\n+\nExtension","시작하기 전에\n01 이 가이드는\n영상에서 소개한 프롬프트와 세팅 방법을 한 곳에 모은 자료입니다. 프롬프트는 복사해서 Claude 데스크톱(코드 탭) 또는\nClaude Code에 그대로 붙여 넣으면 됩니다.\n02 쓰는 방법\n1. 사전 설치(p.3)를 먼저 끝냅니다.\n2. Part 1 스킬부터 Part 4 익스텐션까지 순서대로 한 단계씩 세팅합니다. 단계마다 초급·중급·고급이 있으니, 지금 내 상황\n에 맞는 레벨부터 시작합니다.\n3. 마지막 장의 7일 계획과 체크리스트로 점검합니다.\n03 SSR+ 프레임워크\nAI 에이전트는 대화에 답만 하는 게 아니라 파일을 읽고 쓰고, 도구를 쓰고, 일을 끝까지 처리하는 AI입니다. 그런데 아무 세팅\n이 없으면 매번 새 대화에서 처음부터 설명해야 합니다. AI 에이전트 시스템은 에이전트가 매번 같은 품질로 일하도록 받쳐 주\n는 구조입니다.\n단계\nS\nS\nR\n+\n이름\nSkill (스킬)\nSecond brain (세컨드 브레인)\nRoutine (루틴)\nExtension (익스텐션)\n한 줄 정의\nAI 단축키. 두 번 이상 시킨 일을 이름 하나로 부른다\nAI가 나와 내 자료를 알고 시작하게 만드는 지침·길잡이 파일\n정해진 시간에 스킬을 알아서 실행\n지메일·브라우저·공공데이터처럼 에이전트가 쓸 수 있는 외부 기능\n04 폴더 위치\n모든 세팅은 기본적으로 작업용 프로젝트 폴더 아래에 만듭니다. 전체 채팅에 적용하고 싶을 경우 클로드 전역 폴더(윈도우의\n경우 /Users/\u003c계정명>/.claude , 맥의 경우 \u003c사용자명>/.claude )에 같은 구조로 설정합니다.\n프로젝트폴더]/\n[\nAGENTS.md\nSkills/\nSecond-brain/\nRoutines/\nExtensions/\n챗대리 · AI 에이전트 시스템 가이드\nAI가 항상 먼저 읽는 지침 파일\n내가 만든 스킬\n길잡이(색인) 파일\n루틴 지시문\n직접 만든 도구·커넥터\n2 / 13","사전 설치\nClaude 데스크톱과 Claude Code가 설치돼 있어야 합니다. 설치 방법은 영상 설명란 링크를 참고하세요.\n스킬·탐색기·대시보드처럼 AI가 만들어 주는 도구 상당수가 Node.js로 돌아갑니다. 처음 한 번만 아래 프롬프트로 설치해 둡니\n다.\n복사용 프롬프트 — Node.js 설치\n현재 PC의 운영체제와 기존 Node.js 설치 상태를 확인한 뒤, 최신 LTS 버전의 Node.js와 npm을 설치해 주세요. 기존 프로젝트와\n충돌하지 않는 방식을 사용하고, 설치 후 node -v와 npm -v로 정상 동작을 확인해 주세요. 필요한 권한은 진행 중 요청해 주세요.\n완료 기준 node -v 와 npm -v 가 버전 번호를 보여 준다.","Part 1 / 4\nS. 스킬 (Skill)\n스킬은 AI 단축키입니다. '오늘일정_보고' 스킬을 만들어 두면 /daily-report 한 줄로 오늘 일정 보고를 받습니다. 같은 일\n을 두 번 이상 시켰다면 스킬로 만들 때입니다.\n05 이런 분에게는 이런 스킬\n취업준비생\n\"공고 맞춤 자소서\": 채용 공고 링크를\n주면 내 경험 파일에서 맞는 사례를 골\n라 문항별 초안 작성\nCEO\n\"주간 경영 보고\": 매출·현금·주요 일정\n을 한 장 보고서로 정리\n직장인\n\"회의록 정리\": 회의 녹취를 결정사항·\n담당자·기한 표로 정리\n06 초급 — 기본 스킬 쓰고, 내 스킬 만들기\n1. Claude 데스크톱 사이드바 사용자 지정 → 스킬에서 'Anthropic 및 파트너 제공' 스킬을 둘러봅니다.\n2. 가장 먼저 쓸 스킬은 skill-creator입니다. 채팅창에 \"스킬 만들고 싶어\"라고 말하거나 스킬 이름으로 부르면 발동합니다.\n3. 자주 쓰는 프롬프트가 있다면 통째로 붙여 넣고 스킬로 만들어 달라고 합니다.\n복사용 프롬프트 — 첫 스킬 만들기\nskill-creator 스킬로 내 첫 스킬을 만들려고 합니다.\n만들기 전에 아래 질문을 한 번에 묻고, 답을 모두 받은 뒤에 작업해 주세요.\n1. 지금까지 두세 번 이상 반복해서 시킨 일은 무엇인가요?\n2. 그중 하나를 고른다면, 잘된 결과와 평범한 결과를 가르는 기준은 무엇인가요?\n3. 참고할 만한 예전 결과물이 있나요? (파일 경로나 붙여 넣기)\n스킬은 [프로젝트폴더]/Skills/\u003c스킬이름>/SKILL.md 에 저장하고, 이름·언제 쓰는지·단계·좋은 결과 예시를 담아 주세요. 저장한\n경로와 호출 방법을 알려 주세요.\n07 중급 — 참고자료를 담은 복합 스킬\n스킬은 프롬프트 파일 하나로 끝나지 않습니다. 스킬 폴더 안에 참고자료를 함께 넣을 수 있습니다.\n회사-ppt/\nSkills/\nSKILL.md\nstyle.md\ntemplate.html\nexamples/\n단계와 규칙 (나머지 파일을 언제 읽는지 안내)\n디자인 가이드라인 (분위기, 정렬, 색)\n그대로 가져다 쓸 코드 조각\n잘된 결과 이미지\n텍스트·이미지·HTML·코드 모두 넣을 수 있습니다. 특히 HTML이나 코드 조각을 넣어 두면 AI가 처음부터 짜지 않고 그 코드\n를 바탕으로 작업해서 더 빠르고 정확해집니다.\n복사용 프롬프트 — 스킬에 참고자료 추가\n[스킬이름] 스킬을 복합 스킬로 바꾸려고 합니다.\n[참고자료 경로]의 파일을 스킬 폴더 안 reference/ 에 복사하고, SKILL.md에는 어떤 작업에서 어느 파일을 읽어야 하는지만 짧게\n적어 주세요. SKILL.md 본문에 참고자료 내용을 다시 옮겨 적지는 마세요.","Part 1 / 4 — S. 스킬 (Skill)\n08 고급 — 스킬이 낡지 않게 개선하기\n회사 양식이 바뀌면 예전 양식으로 만든 스킬은 맞지 않는 결과를 냅니다. 두 가지 방법으로 대비합니다.\n방법 1. 스킬 자체에 업데이트 기능 넣기\n[스킬이름] 스킬이 발동될 때 [폴더 경로]에 기존 양식(스킬의 reference/template.xlsx)과 다른 새 엑셀 양식이 있으면 그 양식을\n반영해서 만들고, 없으면 기존 양식대로 만들도록 스킬을 수정해 주세요. 새 양식을 반영했다면 reference/template.xlsx도 함께\n바꾸고 무엇이 달라졌는지 알려 주세요.\n방법 2. 스킬을 개선하는 스킬 만들기\n최근 [N]일간 스킬이 발동된 대화 내역을 읽고, 각 스킬에서 사용자가 고쳐 달라고 한 부분과 다시 시킨 부분을 찾아 개선점을 제안하는\n스킬을 만들어 주세요. 제안은 스킬 / 파일 / 수정 전 / 수정 후 표로 보여 주고, 내가 승인한 줄만 반영해 주세요.\n완료 기준 한 줄 호출로 결과물이 매번 같은 품질로 나온다. 결과가 마음에 안 들면 채팅이 아니라 스킬 파일을 고친다.","Part 2 / 4\nS. 세컨드 브레인 (Second brain)\n여러 번 말하지 않아도 AI가 내 말뜻을 알고, 필요한 파일을 알아서 찾아 일하게 만드는 단계입니다.\n09 이런 분에게는 이런 세컨드 브레인\n취업준비생\n지원 회사별 폴더·경험 정리 파일·면접\n기록을 길잡이 파일 하나로 연결\nCEO\n재무·영업·인사 분야별 길잡이 파일, 팀\n원도 같은 자료를 찾아가게 공유 드라\n이브에 둠\n직장인\n담당 프로젝트·보고서 최종본·회사 양\n식 위치를 길잡이 파일에 정리\n10 초급 — AGENTS.md 지침 파일로 관리하기\n프로젝트 폴더 맨 위에 AGENTS.md (또는 CLAUDE.md )를 만들면 AI가 대화를 시작할 때 항상 이 파일을 읽습니다. 여기에\n아래 세 가지를 적어 둡니다.\n항목\n나와 내 일에 대해 항상 알아야 할 것\n원하는 결과물 형식 (톤, 형식, 길이)\n진행 중인 일과 이미 확정된 결정\n예시\n\"1인 마케팅 대행사. 고객은 지역 병원 5곳\"\n\"보고서는 1쪽, 표 먼저. 이모지 금지\"\n\"11월까지 A병원 리뉴얼 우선. 단가는 월 150만 원으로 확정\"\n복사용 프롬프트 — AGENTS.md 만들기\n이 프로젝트 폴더에 AI가 대화를 시작할 때마다 읽는 지침 파일 AGENTS.md를 만들려고 합니다.\n만들기 전에 아래 질문을 한 번에 묻고, 답을 모두 받은 뒤에 작업해 주세요.\n1. 나와 내 일(회사·직무·고객)에 대해 항상 알아야 할 것은 무엇인가요?\n2. 결과물은 어떤 톤·형식·길이로 받고 싶나요?\n3. 지금 진행 중인 일과 이미 확정된 결정은 무엇인가요?\n답을 바탕으로 [프로젝트폴더]/AGENTS.md를 '나와 내 일', '결과물 기준', '지금 진행 중', '확정된 결정' 섹션으로 나눠 짧게 작성해\n주세요. 이미 AGENTS.md나 CLAUDE.md가 있으면 기존 내용을 보존하면서 보완해 주세요.\n앞으로 대화 중 내가 새 결정·선호·교정을 말하면 같은 대화 안에서 AGENTS.md의 해당 섹션을 고쳐 주세요.\n완료 기준 새 대화에서 \"지금 내가 진행 중인 일이 뭐야?\"라고 물으면 설명 없이 바로 맞게 답한다.\n11 중급 — 길잡이(색인) 파일 만들기\n자료와 AI가 만든 파일이 많아지면 AI도 필요한 파일을 찾기 어려워집니다. 폴더를 다시 정리할 필요는 없습니다. 주제별로 파\n일 링크를 모아 둔 길잡이 파일을 만들면 됩니다. 내 지식으로 만든 나무위키라고 생각하면 쉽습니다. 대문 역할은\nAGENTS.md가 맡습니다.\nAGENTS.md\ncontents.md\n영상.md\ncontents-dev.md\n챗대리 · AI 에이전트 시스템 가이드\n대문: 분야 표 + 찾는 법\n콘텐츠 분야 길잡이\n하위 길잡이: 원본 파일 링크 + 한 줄 설명\n개발 분야 길잡이\n6 / 13","Part 2 / 4 — S. 세컨드 브레인 (Second brain)\n복사용 프롬프트 — 세컨드 브레인 길잡이 파일 만들기\n업무 작업 폴더의 자료를 AI가 빠르게 찾을 수 있도록 \"세컨드 브레인\" 색인을 만들려고 합니다.\n폴더를 재정리하지 않고, 지금 있는 자료의 위치와 용도를 짧게 안내하는 것이 목적입니다.\n대상 작업 폴더 경로: [경로]\n## 1단계: 인터뷰\n아래를 하나씩 물어봐 주세요. 답을 모두 받기 전에는 파일을 만들지 마세요.\n1. 주요 업무 분야(부서·팀)는 무엇인가요? 분야마다 자료를 찾으러 올 사람(역할)은 누구인가요?\n2. 분야마다 지금 진행 중인 일과 끝난 일은 무엇인가요?\n3. 자주 쓰는 파일·폴더는 무엇이고, 버전이 여러 개라면 어느 것이 최종본인가요? 평소 그 자료를 뭐라고 부르나요?(별명·줄임말·\n영문명)\n4. 색인에서 뺄 폴더나 비공개 자료(개인정보·계약·급여 등)가 있나요?\n5. 팀이 함께 지켜야 할 기준이 있나요? 없으면 비워 둡니다.\n## 2단계: 구조\n작업 폴더 안에 second-brain/ 폴더를 만들고 아래처럼 구성하세요.\nsecond-brain/\nAGENTS.md\n최상위 라우터: 분야 표 + 찾는 법 + 규칙 문서 링크\nAGENTS--인덱스규칙.md 색인 작성·분할·갱신 규칙 (4단계 내용)\nAGENTS--확정기준.md 팀이 지킬 현재 유효한 기준 (인터뷰 5번, 없으면 제목만)\nlog.md\n변경 이력\n전체목록.md\n모든 색인을 지금 순서대로 한 장에 펼친 사본 (AI 검색용, 직접 고치지 않음)\n\u003c분야>/\u003c분야>.md\n분야 안내: 하위 인덱스 링크만\n\u003c분야>/\u003c분야>--\u003c주제>.md 하위 인덱스: 원본 파일 링크 + 한 줄 설명\n작업 폴더 맨 위의 지침 파일에 아래 줄을 넣으세요. 어느 파일에 넣을지는 다음 순서로 정합니다.\n- AGENTS.md만 있으면 AGENTS.md에 , CLAUDE.md만 있으면 CLAUDE.md에 넣습니다.\n- 둘 다 있으면 실제 지침이 적힌 파일에 넣고, 둘 다 없으면 AGENTS.md를 새로 만듭니다.\n기존 내용은 그대로 두고 끝에 추가합니다.\n\"자료·파일·원본을 찾을 때는 다른 도구를 쓰기 전에 second-brain/AGENTS.md의 찾는 법을 따른다.\"\n## 3단계: AGENTS.md 내용\n- 분야 표: 분야 이름과 한 줄 설명, 분야 안내 링크 ( 예를 들어, 주요 업무영역이 `콘텐츠, 개발운영, 재무` 라면 contents.md ,\ndev.md, financial.md와 같은 이름으로 색인을 만듭니다. )\n- 찾는 법: 첫 검색은 전체목록.md를 grep 한 번으로 한다. 사용자가 말한 이름·별명을 모두 키워드로 넣고 결과는 15줄까지만 본다.\n결과 줄의 링크만 열어 확인하고 바로 답한다. 폴더 전체 검색은 여기서 못 찾았을 때만 한다. 색인에 없던 파일을 찾으면 답한 뒤 알맞은\n색인에 한 줄 추가한다.\n- 규칙 문서 링크: AGENTS--인덱스규칙.md, AGENTS--확정기준.md\n## 4단계: 색인 규칙 (AGENTS--인덱스규칙.md에 적기)\n- 한 줄 형식: - [이름](상대경로) — 한 줄 설명. 한 줄에 링크 1개, 200자 이내.\n- 설명에는 한글·영문 이름과 사람들이 그 자료를 부르는 말을 함께 쓴다(설명 글자로 검색되므로).\n- 상대경로는 링크를 쓴 문서가 있는 폴더 기준. 경로에 공백·한글이 있으면 [이름](\u003c경로>)처럼 꺾쇠로 감싼다.\n- 분야 안내에는 하위 인덱스 링크만 두고, 원본 파일 링크는 하위 인덱스에 둔다.\n- 링크는 주제·프로젝트 단위로 묶고, \"## 진행 중\"과 지난 일(\"이전 ○○\" 하위 인덱스)을 나눈다.\n- 최종본만 링크한다. 새 버전이 생기면 이전 버전 링크는 빼고 파일은 그대로 둔다.\n- 한 자료를 여러 역할이 찾으러 온다면 각 역할이 보는 색인 모두에 링크하고, 설명은 그 역할 관점으로 쓴다.\n- 색인에는 위치와 용도만 쓴다. 상세 내용·판단 근거·가격·일정은 적지 않고 원본으로 연결한다.","Part 2 / 4 — S. 세컨드 브레인 (Second brain)\n- 모든 문서는 빈 줄 포함 100줄 이내. 넘으면 \u003c분야>--\u003c주제>.md, 그것도 넘으면 \u003c분야>--\u003c주제>--\u003c소주제>.md로 나눈다. 상위\n문서에는 하위 링크와 짧은 설명만 남기고 목록을 중복해 적지 않는다.\n- 전체목록.md는 색인을 고칠 때마다 다시 만든다. 제목은 분야 > 주제 순서를 그대로 따르고, 줄마다 끝에 \"· 위치: 분야 > 주제\"를\n붙인다. 이미지 같은 에셋은 개수만 적는다. 이 파일은 100줄 규칙에서 뺀다.\n- 실제로 있는 대상만 링크한다.\n- 파일을 옮기거나 이름을 바꾸거나 새 프로젝트를 만들면, 같은 작업 안에서 관련 색인·전체목록.md·세컨브레인의\nAGENTS.md·log.md를 함께 고친다.\n- log.md는 끝에 덧붙이기만 하고 지난 기록은 고치지 않는다.\n형식: ## [YYYY-MM-DD] 종류 | 제목 / - 입력: / - 변경/반영: / - 메모:\n## 5단계: 지킬 것\n- 원본 자료·폴더는 이동·수정·삭제하지 않는다. 기존 AGENTS.md·CLAUDE.md·색인이 있으면 먼저 읽고 보존하면서 보완한다.\n- 인증 파일·키·토큰·.env는 열거나 색인하지 않는다. 인터뷰에서 뺀다고 한 폴더도 마찬가지다.\n- 소개·분야 구분·자주 쓰는 자료는 인터뷰 답과 실제 파일에서 확인한 것만 쓴다.\n- 이미지·영상 등 내용을 확인하지 못한 자료는 파일명으로 용도·버전을 추측하지 말고 \"확인 필요\" 목록으로 모아 물어본다.\n- 한글 파일명은 맥·구글 드라이브에서 자모가 분리돼 저장될 수 있으니, 파일명으로 찾을 때는 색인 글자를 기준으로 한다(ls | grep\n한글은 0건이 날 수 있음).\n- 자료가 많으면 분야 하나씩 진행하고, 분야마다 결과를 보여 준 뒤 다음으로 넘어간다.\n## 6단계: 검증·보고\n- 모든 링크가 실제 파일을 가리키는지, 100줄 넘는 문서가 없는지 확인한다.\n- 사용자가 평소 말투로 찾을 만한 요청 3개(\"○○ 어디 있어?\")로 실제로 찾아본다. 각각 도구 호출 3번 안에 정답 경로가 나오는지\n확인하고, 안 되면 설명이나 별명을 고친다.\n- 끝나면 만든 파일 목록, 확인 필요 목록, 색인하지 않은 폴더를 보고한다.\n완료 기준 \"작년 ○○ 보고서 최종본 찾아줘\"라고 하면 폴더 전체를 뒤지지 않고 도구 호출 3번 안에 바로 찾는다.\n12 고급 — 나만의 세컨드 브레인 탐색기 만들기\n노션·옵시디언처럼 사용법을 따로 배울 필요 없이, 내 세컨드 브레인을 내가 원하는 방식으로 보는 탐색기를 직접 만듭니다. 파\n일 연결 관계를 그래프로 보고, 클릭하면 옆에서 미리보기를 띄우는 식입니다.\n복사용 프롬프트 — 세컨드 브레인 탐색기\n[프로젝트폴더]/second-brain 을 시각적으로 탐색하는 웹 페이지를 만들어 주세요.\n- 폴더와 문서를 노드로, 폴더 포함 관계와 문서 간 링크를 선으로 연결해 주세요. 두 관계는 선 모양으로 구분하고, 실제로 확인된\n관계만 표시합니다.\n- 분야는 색으로, 폴더와 문서는 모양으로 구분하고 간단한 범례를 넣어 주세요.\n- 3D 보기와 2D 보기를 전환할 수 있게 해 주세요.\n- 확대·축소, 드래그 이동, 파일 이름·본문 검색을 지원해 주세요.\n- 노드를 클릭하면 오른쪽 패널에 이름·경로·연결된 항목과 문서 미리보기를 보여 주세요.\n결과물은 [프로젝트폴더]/Extensions/brain-explorer/ 에 두고, 실행 방법을 알려 주세요. 필요한 패키지가 있으면 설치 전에 목록과\n이유를 먼저 알려 주세요.","Part 3 / 4\nR. 루틴 (Routine)\n정해진 시간이 되면 일이 알아서 실행되게 만드는 단계입니다. 스킬이 AI 단축키라면, 루틴은 \"매일 오전 9시에 이 단축키를 눌\n러\"라고 시켜 두는 것입니다.\n13 이런 분에게는 이런 루틴\n취업준비생\nCEO\n매일 아침 8시: 관심 직무 신규 공고를\n모아 마감일 순으로 정리\n매주 월요일: 지난주 매출·지출·미수금\n요약 보고\n직장인\n매일 오전 9시: 메일함·캘린더·할 일 앱\n을 훑어 오늘 할 일 브리핑\n14 초급 — Claude 데스크톱 루틴\n1. Claude 데스크톱 왼쪽 사이드바 Routines로 갑니다.\n2. 만들고 싶은 루틴을 자연어로 설명하면 루틴이 만들어집니다.\n3. 첫 루틴은 1개만 만들고, 일주일 동안 결과를 확인한 뒤 다음 루틴을 추가합니다.\n복사용 프롬프트 — 첫 루틴 만들기\n매일 반복되는 일을 루틴으로 만들려고 합니다.\n만들기 전에 아래 질문을 한 번에 묻고, 답을 모두 받은 뒤에 작업해 주세요.\n1. 매일·매주·매월 반복하는 일은 무엇인가요?\n2. 그중 하나를 고른다면, 무엇을 읽고(입력) 무엇을 만들어(결과) 어디에 남겨야 하나요?\n3. 언제(요일·시각) 실행할까요?\n답을 바탕으로 루틴 지시문을 먼저 보여 주고, 내가 확인하면 루틴으로 등록해 주세요. 이미 만든 스킬이 있으면 루틴 안에서 그 스킬을\n호출하게 해 주세요. 지시문 원본은 [프로젝트폴더]/Routines/ 에도 저장해 주세요.\n한계 데스크톱 루틴은 컴퓨터와 앱이 켜져 있을 때만 실행됩니다.\n15 중급 — 꺼지지 않는 루틴 만들기\n컴퓨터가 꺼져 있어도 루틴이 돌게 하려면 항상 켜져 있는 다른 컴퓨터에 AI 에이전트를 하나 설치해 둡니다.\n방법\n클라우드 컴퓨터 대여\n집에 남는 컴퓨터\n설명\nHostinger 같은 서비스에서 서버를 빌려 에이전트 설치\n안 쓰는 PC에 에이전트를 설치하고 계속 켜 둠\n설치할 에이전트는 OpenClaw, Hermes 등 여러 가지가 있습니다. Hermes는 세팅이 간단하고 24시간 켜 두기 좋습니다.\n기존 컴퓨터의 스킬·세컨드 브레인 파일은 Syncthing으로 동기화합니다. 두 컴퓨터에 Syncthing을 설치하고 프로젝트 폴더\n를 공유 폴더로 지정하면 같은 파일을 양쪽에서 씁니다.\n복사용 프롬프트 — 다른 컴퓨터에 Hermes 세팅 안내\n24시간 켜 둘 [클라우드 서버 / 집에 남는 컴퓨터(운영체제: ○○)]에 Hermes 에이전트를 설치해 루틴을 돌리려고 합니다.\n1. Hermes 공식 문서를 확인해 설치 순서를 단계별로 안내해 주세요. 내가 직접 입력해야 하는 명령과 화면에서 눌러야 하는 것을\n구분해 주세요.\n2. 지금 이 컴퓨터의 [프로젝트폴더]를 Syncthing으로 새 컴퓨터와 동기화하는 방법을 안내해 주세요. 동기화에서 뺄 폴더(.env, 키\n파일 등)도 함께 설정해 주세요.","Part 3 / 4 — R. 루틴 (Routine)\n3. 마지막으로 [프로젝트폴더]/Routines/ 의 루틴 지시문 하나를 Hermes에서 예약 실행하는 방법을 알려 주세요.\nAPI 키나 토큰 값은 대화에 적지 말고, 내가 직접 넣을 위치만 알려 주세요.\n16 고급 — 매니지드 에이전트 (지켜볼 단계)\n처음부터 클라우드에 에이전트와 모든 자료를 올려 두는 방식입니다. 동기화 없이 어디서든 같은 에이전트가 일합니다.\nClaude도 매니지드 에이전트 기능으로 이 방향을 시험하고 있습니다. 아직 일반 사용자가 쓰기에는 완성 단계가 아니니, 중급\n까지 세팅해 두고 사용하시길 추천드립니다.","Part 4 / 4\n+. 익스텐션 (Extension)\n에이전트가 실제 업무를 하려면 브라우저를 조작하고, 지메일을 읽고, 외부 데이터를 가져오는 확장 기능이 필요합니다.\n17 이런 분에게는 이런 익스텐션\n취업준비생\n구글 캘린더로 면접 일정 등록, 브라우\n저로 채용 사이트 공고 수집\nCEO\n회계·결제 서비스 연결, 공공데이터\nMCP로 시장 자료 조회\n직장인\n지메일·구글 드라이브 연결로 메일 확\n인과 문서 찾기\n18 초급 — Claude 데스크톱 커넥터\n1. Claude 데스크톱 사용자 지정 → 커넥터로 갑니다.\n2. 지메일·구글 드라이브·캘린더 등은 클릭 한 번으로 연결됩니다.\n3. 연결 후 \"지메일에서 어제 온 견적 요청 찾아줘\"처럼 바로 시킬 수 있습니다.\n대부분 해외 서비스라 국내 업무에 딱 맞는 커넥터는 부족할 수 있습니다. 그때 중급으로 넘어갑니다.\n19 중급 — 커넥터 찾기 (MCP → CLI → API)\n기본 커넥터 외에 연결하는 방법은 세 가지이고, 아래로 갈수록 연결이 어렵습니다.\n종류\nMCP\nCLI\nAPI\n설명\nAI 전용 연결 규격. 설정만 추가하면 바로 씀\n터미널 명령 도구. AI가 명령을 대신 실행\n서비스가 제공하는 데이터 창구. 키 발급과 코드 필요\n난이도\n쉬움\n보통\n어려움\n예: 건축물대장을 연결하고 싶다면 \"건축물대장 MCP\"로 검색해 README를 찾고, AI에게 연결 방법을 안내해 달라고 합니다.\nMCP가 없으면 CLI나 API로 찾아 달라고 합니다.\n복사용 프롬프트 — 커넥터 찾기\n[하고 싶은 일, 예: 건축물대장 조회]을 에이전트가 할 수 있게 연결하려고 합니다.\nMCP → CLI → API 순서로 쓸 수 있는 연결 방법을 찾아 주세요. 후보마다 제공처, 무료 여부, 설치 난이도, 필요한 키를 표로 보여\n주고, 가장 쉬운 것 하나를 추천해 주세요.\n내가 고르면 README를 읽고 연결 순서를 안내해 주세요. 설치가 필요한 패키지는 설치 전에 목록과 이유를 먼저 알려 주세요.\n매번 검색하기 번거롭다면 search-connector 스킬을 설치해 두면 상황에 맞는 커넥터를 AI가 찾아 줍니다.\n20 고급 — 익스텐션 직접 만들기\n딱 맞는 도구가 없으면 직접 만듭니다. 예를 들어 노션·옵시디언 대신 쓰는 나만의 마크다운 뷰어, 자주 쓰는 이미지·영상을 모\n아 보는 에셋 대시보드 같은 것입니다. \"이런 기능을 만들고 싶어\"라고 말하면 에이전트가 준비사항과 만드는 순서를 안내합니\n다.","Part 4 / 4 — +. 익스텐션 (Extension)\n복사용 프롬프트 — 만들 익스텐션 찾기\n[프로젝트폴더]/AGENTS.md 와 최근 작업 파일을 읽고, 내가 반복해서 불편을 겪는 작업을 찾아 주세요.\n그중 작은 도구(웹 페이지, 뷰어, 대시보드 등)를 만들면 해결되는 것 3가지를 골라, 무엇을 해결하는지·만드는 데 걸리는 시간·필요한\n준비물을 표로 제안해 주세요.\n내가 하나를 고르면 [프로젝트폴더]/Extensions/\u003c도구이름>/ 에 만들고 실행 방법을 알려 주세요.\n완료 기준 매주 쓰는 외부 서비스·자료를 에이전트가 직접 읽고 쓴다.","7일 세팅 계획\n하루에 한 단계씩, 작게 시작합니다. 끝까지 완성한 작은 시스템이 하다 만 큰 시스템보다 낫습니다.\n날짜\n1일차\n2일차\n3일차\n4일차\n5일차\n6일차\n7일차\n할일\n사전 설치(p.3) + AGENTS.md 만들기(p.6 초급)\n가장 자주 시키는 일로 첫 스킬 만들기(p.4)\n세컨드 브레인 길잡이 파일 만들기(p.6 중급)\n2일차 스킬을 루틴으로 예약(p.9)\n커넥터 하나 연결(p.11)\n전체를 한 번씩 실행. 결과가 어긋나면 채팅이 아니라 파일을 고친다\n이번 주에 가장 아쉬웠던 곳에 스킬·루틴·익스텐션 하나 추가\n유지 관리 (매주 15분) AGENTS.md의 낡은 내용 지우기, 스킬 파일 하나 다듬기, 루틴 결과가 제대로 도착했는지 확인. 낡은\n지침은 없는 지침보다 위험합니다. AI는 그 내용을 믿고 그대로 일하기 때문입니다.\nSSR+ 체크리스트\n단계\nS 스킬\nS 세컨드 브레인\nR 루틴\n+ 익스텐션\n확인\n한 줄 호출로 결과물이 매번 같은 품질로 나온다\n새 대화에서 \"지금 진행 중인 일\"을 설명 없이 맞게 답한다\n시키지 않아도 정해진 시간에 결과물이 도착한다\n매주 쓰는 외부 서비스를 에이전트가 직접 다룬다\n체크\n네 칸이 모두 채워지면 나만의 AI 에이전트 시스템이 완성됩니다.\n챗대리 뉴스레터 / 챗대리 유튜브 / 챗대리 링크드인"]}};</script>
+<script>
+(function(){
+'use strict';
+var D=window.__D,P=D.prompts;
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+var G=window.gsap,reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- 아이콘 ---------- */
+var IC={
+ home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>',
+ brand:'<path d="M12 3a9 9 0 1 0 0 18c1.5 0 2-1 1.5-2-.6-1.2.2-2.5 1.6-2.5H17a4 4 0 0 0 4-4C21 6.5 17 3 12 3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/>',
+ content:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z"/>',
+ ideas:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/>',
+ artcraft:'<path d="M4 20c3 0 5-1 5-4a3 3 0 0 0-3-3c-2 0-3 2-2 7z"/><path d="M9 14L20 4l1 1-9 11"/>',
+ guide:'<path d="M4 5a2 2 0 0 1 2-2h13v17H6a2 2 0 0 0-2 2z"/><path d="M4 22V5"/>',
+ plan:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+ spec:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',
+ moon:'<path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/>',
+ sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/>'
+};
+var svg=function(n){return '<svg viewBox="0 0 24 24" aria-hidden="true">'+IC[n]+'</svg>'};
+
+/* ---------- 상태 ---------- */
+var KEY='nomad-lab-v1';
+var DEF={lv:{s1:[1,0,0],s2:[1,0,0],s3:[0,0,0],s4:[0,0,0]},days:[1,1,0,0,0,0,0],ck:[0,0,0,0],start:'',ideas:[],content:null,routines:[1,1,0]};
+var st;
+try{var raw=localStorage.getItem(KEY);if(raw){st=JSON.parse(raw)}}catch(e){}
+if(!st||!st.lv||!st.days){st=JSON.parse(JSON.stringify(DEF))}
+Object.keys(DEF).forEach(function(k){if(st[k]===undefined){st[k]=JSON.parse(JSON.stringify(DEF[k]))}});
+function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+if(!st.start){st.start=iso(new Date())}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+
+/* ---------- 유틸 ---------- */
+var toastT;
+function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('on')},1800)}
+function copy(text,btn){
+  var ok=function(){toast('복사했습니다');if(btn){var o=btn.textContent;btn.textContent='복사됨';setTimeout(function(){btn.textContent=o},1400)}};
+  var fb=function(){try{var ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;opacity:0;top:0';document.body.appendChild(ta);ta.select();var r=document.execCommand('copy');document.body.removeChild(ta);if(r){ok()}else{toast('복사하지 못했습니다. 직접 선택해 주세요')}}catch(e){toast('복사하지 못했습니다. 직접 선택해 주세요')}};
+  try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(ok,fb)}else{fb()}}catch(e){fb()}
+}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('[data-copy]');
+  if(b){var k=b.getAttribute('data-copy');copy(P[k]||k,b)}
+  var g=e.target.closest('[data-guide]');
+  if(g){var a=g.getAttribute('data-guide').split(':');openGuide(a[0],+a[1])}
+});
+
+/* ---------- 데이터: 단계 ---------- */
+var SSR={
+ skill:{key:'s1',letter:'S',name:'스킬',en:'SKILL',
+  lead:'스킬은 AI 단축키입니다. \'오늘일정_보고\' 스킬을 만들어 두면 /daily-report 한 줄로 오늘 일정 보고를 받습니다. 같은 일을 두 번 이상 시켰다면 스킬로 만들 때입니다.',
+  persona:[['취업준비생','"공고 맞춤 자소서": 채용 공고 링크를 주면 내 경험 파일에서 맞는 사례를 골라 문항별 초안 작성'],['CEO','"주간 경영 보고": 매출·현금·주요 일정을 한 장 보고서로 정리'],['직장인','"회의록 정리": 회의 녹취를 결정사항·담당자·기한 표로 정리']],
+  levels:[
+   {tag:'초급',title:'기본 스킬 쓰고, 내 스킬 만들기',pg:4,b:[
+     {ol:['Claude 데스크톱 사이드바 사용자 지정 → 스킬에서 \'Anthropic 및 파트너 제공\' 스킬을 둘러봅니다.','가장 먼저 쓸 스킬은 skill-creator입니다. 채팅창에 "스킬 만들고 싶어"라고 말하거나 스킬 이름으로 부르면 발동합니다.','자주 쓰는 프롬프트가 있다면 통째로 붙여 넣고 스킬로 만들어 달라고 합니다.']},
+     {prompt:['첫 스킬 만들기','skill1']}]},
+   {tag:'중급',title:'참고자료를 담은 복합 스킬',pg:4,b:[
+     {p:'스킬은 프롬프트 파일 하나로 끝나지 않습니다. 스킬 폴더 안에 참고자료를 함께 넣을 수 있습니다.'},
+     {tree:'회사-ppt/\n  Skills/\n    SKILL.md       단계와 규칙 (나머지 파일을 언제 읽는지 안내)\n    style.md       디자인 가이드라인 (분위기, 정렬, 색)\n    template.html  그대로 가져다 쓸 코드 조각\n    examples/      잘된 결과 이미지'},
+     {p:'텍스트·이미지·HTML·코드 모두 넣을 수 있습니다. 특히 HTML이나 코드 조각을 넣어 두면 AI가 처음부터 짜지 않고 그 코드를 바탕으로 작업해서 더 빠르고 정확해집니다.'},
+     {prompt:['스킬에 참고자료 추가','skill2']}]},
+   {tag:'고급',title:'스킬이 낡지 않게 개선하기',pg:5,b:[
+     {p:'회사 양식이 바뀌면 예전 양식으로 만든 스킬은 맞지 않는 결과를 냅니다. 두 가지 방법으로 대비합니다.'},
+     {prompt:['방법 1. 스킬 자체에 업데이트 기능 넣기','skill3a']},
+     {prompt:['방법 2. 스킬을 개선하는 스킬 만들기','skill3b']},
+     {done:'한 줄 호출로 결과물이 매번 같은 품질로 나온다. 결과가 마음에 안 들면 채팅이 아니라 스킬 파일을 고친다.'}]}
+  ]},
+ brain:{key:'s2',letter:'S',name:'세컨드 브레인',en:'SECOND BRAIN',
+  lead:'여러 번 말하지 않아도 AI가 내 말뜻을 알고, 필요한 파일을 알아서 찾아 일하게 만드는 단계입니다.',
+  persona:[['취업준비생','지원 회사별 폴더·경험 정리 파일·면접 기록을 길잡이 파일 하나로 연결'],['CEO','재무·영업·인사 분야별 길잡이 파일, 팀원도 같은 자료를 찾아가게 공유 드라이브에 둠'],['직장인','담당 프로젝트·보고서 최종본·회사 양식 위치를 길잡이 파일에 정리']],
+  levels:[
+   {tag:'초급',title:'AGENTS.md 지침 파일로 관리하기',pg:6,b:[
+     {p:'프로젝트 폴더 맨 위에 AGENTS.md(또는 CLAUDE.md)를 만들면 AI가 대화를 시작할 때 항상 이 파일을 읽습니다. 여기에 아래 세 가지를 적어 둡니다.'},
+     {table:{h:['항목','예시'],r:[['나와 내 일에 대해 항상 알아야 할 것','"1인 마케팅 대행사. 고객은 지역 병원 5곳"'],['원하는 결과물 형식 (톤, 형식, 길이)','"보고서는 1쪽, 표 먼저. 이모지 금지"'],['진행 중인 일과 이미 확정된 결정','"11월까지 A병원 리뉴얼 우선. 단가는 월 150만 원으로 확정"']]}},
+     {prompt:['AGENTS.md 만들기','brain1']},
+     {done:'새 대화에서 "지금 내가 진행 중인 일이 뭐야?"라고 물으면 설명 없이 바로 맞게 답한다.'}]},
+   {tag:'중급',title:'길잡이(색인) 파일 만들기',pg:6,b:[
+     {p:'자료와 AI가 만든 파일이 많아지면 AI도 필요한 파일을 찾기 어려워집니다. 폴더를 다시 정리할 필요는 없습니다. 주제별로 파일 링크를 모아 둔 길잡이 파일을 만들면 됩니다. 내 지식으로 만든 나무위키라고 생각하면 쉽습니다. 대문 역할은 AGENTS.md가 맡습니다.'},
+     {tree:'AGENTS.md            대문: 분야 표 + 찾는 법\n  contents.md        콘텐츠 분야 길잡이\n    contents--영상.md  하위 길잡이: 원본 파일 링크 + 한 줄 설명\n  dev.md             개발 분야 길잡이'},
+     {prompt:['세컨드 브레인 길잡이 파일 만들기','brain2']},
+     {done:'"작년 ○○ 보고서 최종본 찾아줘"라고 하면 폴더 전체를 뒤지지 않고 도구 호출 3번 안에 바로 찾는다.'}]},
+   {tag:'고급',title:'나만의 세컨드 브레인 탐색기 만들기',pg:8,b:[
+     {p:'노션·옵시디언처럼 사용법을 따로 배울 필요 없이, 내 세컨드 브레인을 내가 원하는 방식으로 보는 탐색기를 직접 만듭니다. 파일 연결 관계를 그래프로 보고, 클릭하면 옆에서 미리보기를 띄우는 식입니다. 위쪽 3D 탐색기가 이 프롬프트의 결과물 예시입니다.'},
+     {prompt:['세컨드 브레인 탐색기','brain3']}]}
+  ]},
+ routine:{key:'s3',letter:'R',name:'루틴',en:'ROUTINE',
+  lead:'정해진 시간이 되면 일이 알아서 실행되게 만드는 단계입니다. 스킬이 AI 단축키라면, 루틴은 "매일 오전 9시에 이 단축키를 눌러"라고 시켜 두는 것입니다.',
+  persona:[['취업준비생','매일 아침 8시: 관심 직무 신규 공고를 모아 마감일 순으로 정리'],['CEO','매주 월요일: 지난주 매출·지출·미수금 요약 보고'],['직장인','매일 오전 9시: 메일함·캘린더·할 일 앱을 훑어 오늘 할 일 브리핑']],
+  levels:[
+   {tag:'초급',title:'Claude 데스크톱 루틴',pg:9,b:[
+     {ol:['Claude 데스크톱 왼쪽 사이드바 Routines로 갑니다.','만들고 싶은 루틴을 자연어로 설명하면 루틴이 만들어집니다.','첫 루틴은 1개만 만들고, 일주일 동안 결과를 확인한 뒤 다음 루틴을 추가합니다.']},
+     {prompt:['첫 루틴 만들기','routine1']},
+     {warn:'데스크톱 루틴은 컴퓨터와 앱이 켜져 있을 때만 실행됩니다.'}]},
+   {tag:'중급',title:'꺼지지 않는 루틴 만들기',pg:9,b:[
+     {p:'컴퓨터가 꺼져 있어도 루틴이 돌게 하려면 항상 켜져 있는 다른 컴퓨터에 AI 에이전트를 하나 설치해 둡니다.'},
+     {table:{h:['방법','설명'],r:[['클라우드 컴퓨터 대여','Hostinger 같은 서비스에서 서버를 빌려 에이전트 설치'],['집에 남는 컴퓨터','안 쓰는 PC에 에이전트를 설치하고 계속 켜 둠']]}},
+     {p:'설치할 에이전트는 OpenClaw, Hermes 등 여러 가지가 있습니다. Hermes는 세팅이 간단하고 24시간 켜 두기 좋습니다. 기존 컴퓨터의 스킬·세컨드 브레인 파일은 Syncthing으로 동기화합니다. 두 컴퓨터에 Syncthing을 설치하고 프로젝트 폴더를 공유 폴더로 지정하면 같은 파일을 양쪽에서 씁니다.'},
+     {prompt:['다른 컴퓨터에 Hermes 세팅 안내','routine2']}]},
+   {tag:'고급',title:'매니지드 에이전트 (지켜볼 단계)',pg:10,b:[
+     {p:'처음부터 클라우드에 에이전트와 모든 자료를 올려 두는 방식입니다. 동기화 없이 어디서든 같은 에이전트가 일합니다. Claude도 매니지드 에이전트 기능으로 이 방향을 시험하고 있습니다.'},
+     {warn:'아직 일반 사용자가 쓰기에는 완성 단계가 아니므로, 중급까지 세팅해 두고 사용하시길 추천드립니다.'},
+     {done:'시키지 않아도 정해진 시간에 결과물이 도착한다.'}]}
+  ]},
+ ext:{key:'s4',letter:'+',name:'익스텐션',en:'EXTENSION',
+  lead:'에이전트가 실제 업무를 하려면 브라우저를 조작하고, 지메일을 읽고, 외부 데이터를 가져오는 확장 기능이 필요합니다.',
+  persona:[['취업준비생','구글 캘린더로 면접 일정 등록, 브라우저로 채용 사이트 공고 수집'],['CEO','회계·결제 서비스 연결, 공공데이터 MCP로 시장 자료 조회'],['직장인','지메일·구글 드라이브 연결로 메일 확인과 문서 찾기']],
+  levels:[
+   {tag:'초급',title:'Claude 데스크톱 커넥터',pg:11,b:[
+     {ol:['Claude 데스크톱 사용자 지정 → 커넥터로 갑니다.','지메일·구글 드라이브·캘린더 등은 클릭 한 번으로 연결됩니다.','연결 후 "지메일에서 어제 온 견적 요청 찾아줘"처럼 바로 시킬 수 있습니다.']},
+     {p:'대부분 해외 서비스라 국내 업무에 딱 맞는 커넥터는 부족할 수 있습니다. 그때 중급으로 넘어갑니다.'}]},
+   {tag:'중급',title:'커넥터 찾기 (MCP → CLI → API)',pg:11,b:[
+     {p:'기본 커넥터 외에 연결하는 방법은 세 가지이고, 아래로 갈수록 연결이 어렵습니다.'},
+     {table:{h:['종류','설명','난이도'],r:[['MCP','AI 전용 연결 규격. 설정만 추가하면 바로 씀','쉬움'],['CLI','터미널 명령 도구. AI가 명령을 대신 실행','보통'],['API','서비스가 제공하는 데이터 창구. 키 발급과 코드 필요','어려움']]}},
+     {p:'예: 건축물대장을 연결하고 싶다면 "건축물대장 MCP"로 검색해 README를 찾고, AI에게 연결 방법을 안내해 달라고 합니다. MCP가 없으면 CLI나 API로 찾아 달라고 합니다.'},
+     {prompt:['커넥터 찾기','ext1']},
+     {p:'매번 검색하기 번거롭다면 search-connector 스킬을 설치해 두면 상황에 맞는 커넥터를 AI가 찾아 줍니다.'}]},
+   {tag:'고급',title:'익스텐션 직접 만들기',pg:11,b:[
+     {p:'딱 맞는 도구가 없으면 직접 만듭니다. 예를 들어 노션·옵시디언 대신 쓰는 나만의 마크다운 뷰어, 자주 쓰는 이미지·영상을 모아 보는 에셋 대시보드 같은 것입니다. "이런 기능을 만들고 싶어"라고 말하면 에이전트가 준비사항과 만드는 순서를 안내합니다.'},
+     {prompt:['만들 익스텐션 찾기','ext2']},
+     {done:'매주 쓰는 외부 서비스·자료를 에이전트가 직접 읽고 쓴다.'}]}
+  ]}
+};
+var VIEWS={
+ home:{t:'홈'},
+ skill:{t:'S · 스킬',ssr:SSR.skill},brain:{t:'S · 세컨드 브레인',ssr:SSR.brain},routine:{t:'R · 루틴',ssr:SSR.routine},ext:{t:'+ · 익스텐션',ssr:SSR.ext},
+ brand:{t:'브랜드 라이브러리'},content:{t:'콘텐츠 라이브러리'},ideas:{t:'아이디어 패드'},
+ artcraft:{t:'ArtCraft 앱'},guide:{t:'사용 가이드 (PDF)'},plan:{t:'7일 세팅 계획'},spec:{t:'기획 요약'}
+};
+var NAV=[
+ {g:'',items:[{id:'home',t:'홈',ic:'home'}]},
+ {g:'SSR+ FRAMEWORK',items:[{id:'skill',t:'스킬',en:'SKILL',lt:'S',key:'s1'},{id:'brain',t:'세컨드 브레인',en:'SECOND BRAIN',lt:'S',key:'s2'},{id:'routine',t:'루틴',en:'ROUTINE',lt:'R',key:'s3'},{id:'ext',t:'익스텐션',en:'EXTENSION',lt:'+',key:'s4'}]},
+ {g:'다른 대시보드',items:[{id:'brand',t:'브랜드 라이브러리',ic:'brand'},{id:'content',t:'콘텐츠 라이브러리',ic:'content'},{id:'ideas',t:'아이디어 패드',ic:'ideas'}]},
+ {g:'앱',items:[{id:'artcraft',t:'ArtCraft',ic:'artcraft'}]},
+ {g:'가이드',items:[{id:'guide',t:'사용 가이드 (PDF)',ic:'guide'},{id:'plan',t:'7일 세팅 계획',ic:'plan'},{id:'spec',t:'기획 요약',ic:'spec'}]}
+];
+$('#nav').innerHTML=NAV.map(function(g){
+  return (g.g?'<p class="ng" aria-hidden="true">'+esc(g.g)+'</p>':'')+g.items.map(function(i){
+    var left=i.lt?'<span class="lt" aria-hidden="true">'+esc(i.lt)+'</span>':'<span class="ic">'+svg(i.ic)+'</span>';
+    return '<a class="nl" href="#'+i.id+'" data-v="'+i.id+'" title="'+esc(i.t)+'">'+left+'<span class="tx">'+esc(i.t)+(i.en?'<small>'+i.en+'</small>':'')+'</span>'+(i.key?'<span class="ct mono" data-ct="'+i.key+'"></span>':'')+'</a>';
+  }).join('');
+}).join('');
+
+/* ---------- SSR 단계 뷰 ---------- */
+var tabSel={};
+function blocks(arr){
+  return arr.map(function(b){
+    if(b.p)return '<p>'+esc(b.p)+'</p>';
+    if(b.ol)return '<ol>'+b.ol.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ol>';
+    if(b.tree)return '<pre class="tree">'+esc(b.tree)+'</pre>';
+    if(b.table)return '<div class="tw"><table class="tbl"><thead><tr>'+b.table.h.map(function(h){return '<th>'+esc(h)+'</th>'}).join('')+'</tr></thead><tbody>'+b.table.r.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+esc(c)+'</td>'}).join('')+'</tr>'}).join('')+'</tbody></table></div>';
+    if(b.prompt)return '<div class="prompt"><header><span>복사용 프롬프트 — '+esc(b.prompt[0])+'</span><button type="button" class="btn sm" data-copy="'+b.prompt[1]+'">복사</button></header><pre>'+esc(P[b.prompt[1]])+'</pre></div>';
+    if(b.done)return '<p class="callout"><b>완료 기준</b>'+esc(b.done)+'</p>';
+    if(b.warn)return '<p class="callout warn"><b>한계</b>'+esc(b.warn)+'</p>';
+    return '';
+  }).join('');
+}
+function levelHtml(vid,s,i){
+  var l=s.levels[i],on=st.lv[s.key][i];
+  return '<div class="lvbody" role="tabpanel" id="lvp-'+vid+'"><div class="lt2"><div><p class="eyebrow">'+l.tag.toUpperCase()+' · LEVEL '+(i+1)+'</p><h3>'+esc(l.title)+'</h3></div><div class="pgref"><button type="button" class="btn sm" data-guide="ssr:'+l.pg+'">가이드 p.'+l.pg+' 보기</button><label class="cl" style="padding:0;min-height:32px;border:0"><input type="checkbox" class="cb" data-lv="'+s.key+':'+i+'"'+(on?' checked':'')+'><span class="box"></span><span class="txt">이 레벨 완료</span></label></div></div>'+blocks(l.b)+'</div>';
+}
+function renderSSR(vid){
+  var v=VIEWS[vid],s=v.ssr,el=$('#v-'+vid);
+  if(tabSel[vid]===undefined){var f=st.lv[s.key].indexOf(0);tabSel[vid]=f<0?0:f}
+  var head='<div class="vhead"><span class="letter" aria-hidden="true">'+esc(s.letter)+'</span><div class="tt"><p class="eyebrow">'+s.en+' · PART '+(['skill','brain','routine','ext'].indexOf(vid)+1)+' / 4</p><h2>'+esc(s.name)+'</h2><p class="lead">'+esc(s.lead)+'</p></div></div>';
+  var per='<div style="display:flex;flex-direction:column;gap:var(--gap)"><div class="sec-head"><h3>이런 분에게는 이런 '+esc(s.name)+'</h3></div><div class="persona">'+s.persona.map(function(p){return '<div class="pcard"><b>'+esc(p[0])+'</b><span>'+esc(p[1])+'</span></div>'}).join('')+'</div></div>';
+  var tabs='<div class="tabs" role="tablist" aria-label="레벨 선택">'+s.levels.map(function(l,i){return '<button type="button" role="tab" class="tab" data-tab="'+vid+':'+i+'" aria-selected="'+(tabSel[vid]===i?'true':'false')+'">'+l.tag+' <span class="ok mono">'+(st.lv[s.key][i]?'✓':'')+'</span></button>'}).join('')+'</div>';
+  var extra=vid==='brain'?'<div style="display:flex;flex-direction:column;gap:var(--gap)">'+BRAIN_HTML+'</div>':'';
+  el.innerHTML='<div style="display:flex;flex-direction:column;gap:var(--sec)">'+head+extra+per+'<div style="display:flex;flex-direction:column;gap:var(--gap)">'+tabs+'<div id="lvmount-'+vid+'">'+levelHtml(vid,s,tabSel[vid])+'</div></div></div>';
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('[data-tab]');if(!t)return;
+  var a=t.getAttribute('data-tab').split(':'),vid=a[0],i=+a[1],s=VIEWS[vid].ssr;
+  tabSel[vid]=i;
+  $$('[data-tab^="'+vid+':"]').forEach(function(b){b.setAttribute('aria-selected',b===t?'true':'false')});
+  $('#lvmount-'+vid).innerHTML=levelHtml(vid,s,i);
+});
+document.addEventListener('change',function(e){
+  var c=e.target;
+  if(c.dataset&&c.dataset.lv){var a=c.dataset.lv.split(':');st.lv[a[0]][+a[1]]=c.checked?1:0;save();refresh();
+    $$('[data-tab]').forEach(function(b){var p=b.getAttribute('data-tab').split(':'),s=VIEWS[p[0]].ssr;var ok=b.querySelector('.ok');if(ok)ok.textContent=st.lv[s.key][+p[1]]?'✓':''})}
+  else if(c.dataset&&c.dataset.day!==undefined){st.days[+c.dataset.day]=c.checked?1:0;save();refresh()}
+  else if(c.dataset&&c.dataset.ck!==undefined){st.ck[+c.dataset.ck]=c.checked?1:0;save();refresh()}
+});
+
+/* ---------- 홈 ---------- */
+var DAYS=[
+ ['사전 설치(p.3) + AGENTS.md 만들기(p.6 초급)','세컨드 브레인'],
+ ['가장 자주 시키는 일로 첫 스킬 만들기(p.4)','스킬'],
+ ['세컨드 브레인 길잡이 파일 만들기(p.6 중급)','세컨드 브레인'],
+ ['2일차 스킬을 루틴으로 예약(p.9)','루틴'],
+ ['커넥터 하나 연결(p.11)','익스텐션'],
+ ['전체를 한 번씩 실행. 결과가 어긋나면 채팅이 아니라 파일을 고친다','전체'],
+ ['이번 주에 가장 아쉬웠던 곳에 스킬·루틴·익스텐션 하나 추가','전체']
+];
+var CHECK=[['S 스킬','한 줄 호출로 결과물이 매번 같은 품질로 나온다'],['S 세컨드 브레인','새 대화에서 "지금 진행 중인 일"을 설명 없이 맞게 답한다'],['R 루틴','시키지 않아도 정해진 시간에 결과물이 도착한다'],['+ 익스텐션','매주 쓰는 외부 서비스를 에이전트가 직접 다룬다']];
+var SKILLS=[['/daily-report','오늘일정_보고','주 12회'],['/meeting-notes','회의록 정리','주 4회'],['/ebook-outline','전자책 목차·시장성 분석','주 2회']];
+var ROUT=[['매일 09:00','오늘 할 일 브리핑','/daily-report'],['매주 월 08:30','지난주 매출·콘텐츠 요약','/weekly-review'],['매일 22:00','아이디어 패드 정리','/idea-digest']];
+var EXTS=[['지메일','커넥터 · 메일 확인',1],['구글 캘린더','커넥터 · 일정 등록',1],['구글 드라이브','커넥터 · 문서 찾기',1],['Supabase','MCP · DB 조회',0],['brain-explorer','직접 만든 도구 · Extensions/',1]];
+var RECENT=[['MD','AGENTS.md','agents','방금'],['MD','전체목록.md','all','1시간 전'],['MD','쇼츠 대본_최종.md','c_s1','어제'],['MD','프로젝트 기획서.md','d_s1','어제'],['XLS','월간 매출 정리.xlsx','f_s1','3일 전']];
+function dayIdx(){var a=new Date(st.start+'T00:00:00'),b=new Date();b.setHours(0,0,0,0);return Math.round((b-a)/864e5)}
+function renderHome(){
+  var now=new Date();
+  $('#today').textContent=now.getFullYear()+'.'+String(now.getMonth()+1).padStart(2,'0')+'.'+String(now.getDate()).padStart(2,'0')+' · '+['일','월','화','수','목','금','토'][now.getDay()]+'요일';
+  $('#rSkill').innerHTML=SKILLS.map(function(s){return '<li><span class="dot on"></span><span class="nm"><b>'+esc(s[1])+'</b><span class="mono">'+esc(s[0])+'</span></span><span class="sub mono">'+esc(s[2])+'</span></li>'}).join('');
+  $('#rRoutine').innerHTML=ROUT.map(function(r,i){return '<li><span class="nm"><b>'+esc(r[1])+'</b><span>'+esc(r[0])+' · '+esc(r[2])+'</span></span><button type="button" class="tg" data-rt="'+i+'" aria-pressed="'+(st.routines[i]?'true':'false')+'" aria-label="'+esc(r[1])+' 켜기/끄기"></button></li>'}).join('');
+  $('#rExt').innerHTML=EXTS.map(function(x){return '<li><span class="dot'+(x[2]?' on':'')+'"></span><span class="nm"><b>'+esc(x[0])+'</b><span>'+esc(x[1])+'</span></span><span class="sub">'+(x[2]?'연결됨':'대기')+'</span></li>'}).join('');
+  $('#recent').innerHTML=RECENT.map(function(r){return '<li><button type="button" data-open="'+r[2]+'"><span class="fi">'+r[0]+'</span><span class="fn">'+esc(r[1])+'</span><span class="ft">'+esc(r[3])+'</span></button></li>'}).join('');
+  $('#dash3').innerHTML=[['brand','브랜드 라이브러리','5색'],['content','콘텐츠 라이브러리','4단계'],['ideas','아이디어 패드','메모']].map(function(d){return '<a href="#'+d[0]+'">'+svg(d[0])+'<b>'+d[1]+'</b><small>'+d[2]+'</small></a>'}).join('');
+  renderGoals();renderCal();
+}
+function renderGoals(){
+  var di=Math.max(0,Math.min(6,dayIdx()));
+  var idx=[];for(var k=0;k<3;k++){if(di+k<=6)idx.push(di+k)}
+  if(idx.length<3){idx=[4,5,6]}
+  $('#goals').innerHTML=idx.map(function(i){return '<li><label class="cl"><input type="checkbox" class="cb" data-day="'+i+'"'+(st.days[i]?' checked':'')+'><span class="box"></span><span class="txt"><b class="mono" style="color:var(--label)">'+(i+1)+'일차</b> '+esc(DAYS[i][0])+'</span></label></li>'}).join('');
+}
+function renderCal(){
+  var n=new Date(),y=n.getFullYear(),m=n.getMonth(),first=new Date(y,m,1).getDay(),len=new Date(y,m+1,0).getDate(),prev=new Date(y,m,0).getDate();
+  $('#calTitle').textContent=y+'년 '+(m+1)+'월';
+  var s0=new Date(st.start+'T00:00:00'),cells=['일','월','화','수','목','금','토'].map(function(d){return '<span class="dw">'+d+'</span>'});
+  for(var i=0;i<first;i++){cells.push('<span class="d mut">'+(prev-first+1+i)+'</span>')}
+  for(var d=1;d<=len;d++){
+    var dt=new Date(y,m,d),diff=Math.round((dt-s0)/864e5),cls='d';
+    if(diff>=0&&diff<=6){cls+=' plan';if(st.days[diff])cls+=' done'}
+    if(d===n.getDate())cls+=' today';
+    cells.push('<span class="'+cls+'">'+d+'</span>');
+  }
+  var rest=(7-(cells.length-7)%7)%7;for(var j=1;j<=rest;j++){cells.push('<span class="d mut">'+j+'</span>')}
+  $('#cal').innerHTML=cells.join('');
+}
+document.addEventListener('click',function(e){
+  var o=e.target.closest('[data-open]');
+  if(o){var id=o.getAttribute('data-open');location.hash='#brain';setTimeout(function(){if(window.__brainSelect)window.__brainSelect(id)},60)}
+  var r=e.target.closest('[data-rt]');
+  if(r){var i=+r.getAttribute('data-rt');st.routines[i]=st.routines[i]?0:1;r.setAttribute('aria-pressed',st.routines[i]?'true':'false');save()}
+});
+var ringEl=$('#ring'),shown=0;
+function refresh(){
+  var done=0,tot=0;
+  ['s1','s2','s3','s4'].forEach(function(k){var n=st.lv[k].reduce(function(a,b){return a+(b?1:0)},0);done+=n;tot+=3;var c=$('[data-ct="'+k+'"]');if(c)c.textContent=n+'/3'});
+  var pct=Math.round(done/tot*100);
+  ringEl.style.strokeDashoffset=251.33*(1-pct/100);
+  $('#doneTxt').textContent=done+'/'+tot;
+  var dc=st.days.reduce(function(a,b){return a+(b?1:0)},0);
+  $('#stDays').textContent=dc+'/7';
+  $('#stIdeas').textContent=st.ideas.length;
+  $('#stLib').textContent=contentItems().length;
+  $('#gpPct').textContent=pct+'%';$('#gpBar').style.width=pct+'%';
+  $('#topPill').textContent='SSR+ '+pct+'%';
+  var gc=$('#goalCnt');if(gc)gc.textContent=dc+'/7';
+  if(G&&!reduce){var ob={v:shown};G.to(ob,{v:pct,duration:.7,ease:'power2.out',onUpdate:function(){$('#pct').textContent=Math.round(ob.v)}})}else{$('#pct').textContent=pct}
+  shown=pct;
+  renderGoals();renderCal();
+  var pl=$('#planList');if(pl){$$('[data-day]',pl).forEach(function(c){c.checked=!!st.days[+c.dataset.day]})}
+  var pc=$('#pcnt');if(pc)pc.textContent=dc+'/7';
+  var ck=$('#ckCnt');if(ck)ck.textContent=st.ck.reduce(function(a,b){return a+(b?1:0)},0)+'/4';
+}
+
+/* ---------- 콘텐츠 라이브러리 ---------- */
+var CSTAT=['아이디어','기획','제작','발행'],CCH=['유튜브','블로그','전자책','뉴스레터'];
+var CDEF=[
+ {t:'AI 업무 시스템 SSR+ 4단계 쇼츠',ch:'유튜브',s:2},{t:'클로드 스킬 만드는 법 롱폼',ch:'유튜브',s:1},{t:'바이브코딩 입문 체크리스트',ch:'블로그',s:3},
+ {t:'정부지원사업 사업계획서 작성 가이드',ch:'전자책',s:1},{t:'1인 출판사 자동화 사례',ch:'블로그',s:0},{t:'주간 AI 자동화 소식',ch:'뉴스레터',s:3},{t:'n8n 대 Make 비교',ch:'블로그',s:0},{t:'세컨드 브레인 만들기 클래스',ch:'유튜브',s:0}
+];
+function contentItems(){return st.content||CDEF}
+var cFilter='전체';
+function renderContent(){
+  var it=contentItems();
+  var chips='<div class="chips" role="group" aria-label="채널 필터">'+['전체'].concat(CCH).map(function(c){return '<button type="button" class="chip" data-cf="'+c+'" aria-pressed="'+(cFilter===c?'true':'false')+'">'+c+'</button>'}).join('')+'</div>';
+  var cols=CSTAT.map(function(sn,si){
+    var rows=it.map(function(x,i){return {x:x,i:i}}).filter(function(o){return o.x.s===si&&(cFilter==='전체'||o.x.ch===cFilter)});
+    return '<div class="col-b"><h3><span>'+sn+'</span><span class="mono sub">'+rows.length+'</span></h3>'+(rows.length?rows.map(function(o){return '<div class="item"><b>'+esc(o.x.t)+'</b><div class="row"><span class="tagx">'+esc(o.x.ch)+'</span><span><select data-cm="'+o.i+'" aria-label="상태 변경">'+CSTAT.map(function(s2,j){return '<option value="'+j+'"'+(j===o.x.s?' selected':'')+'>'+s2+'</option>'}).join('')+'</select> <button type="button" class="btn sm" data-cd="'+o.i+'" aria-label="삭제">×</button></span></div></div>'}).join(''):'<p class="empty">비어 있음</p>')+'</div>';
+  }).join('');
+  $('#v-content').innerHTML='<div style="display:flex;flex-direction:column;gap:var(--gap)"><div class="sec-head"><p class="eyebrow">CONTENT LIBRARY</p><h2>콘텐츠 라이브러리</h2><p class="sub">아이디어에서 발행까지 4단계로 콘텐츠를 관리합니다. 항목은 예시이며, 추가·이동·삭제한 내용은 이 브라우저에 저장됩니다.</p></div>'+chips+
+   '<form class="form" id="cform"><input id="cT" placeholder="새 콘텐츠 제목" aria-label="콘텐츠 제목" required><select id="cC" aria-label="채널">'+CCH.map(function(c){return '<option>'+c+'</option>'}).join('')+'</select><button type="submit" class="btn pri">추가</button></form>'+
+   '<div class="board">'+cols+'</div><p class="foot">반복 발행하는 채널은 스킬(/ebook-outline 등)과 루틴(주간 요약)으로 묶으면 제작 시간이 줄어듭니다.</p></div>';
+}
+function cmut(fn){if(!st.content)st.content=JSON.parse(JSON.stringify(CDEF));fn(st.content);save();renderContent();refresh()}
+document.addEventListener('click',function(e){
+  var f=e.target.closest('[data-cf]');if(f){cFilter=f.getAttribute('data-cf');renderContent()}
+  var d=e.target.closest('[data-cd]');if(d){var i=+d.getAttribute('data-cd');cmut(function(a){a.splice(i,1)})}
+});
+document.addEventListener('change',function(e){var s=e.target.closest('[data-cm]');if(s){var i=+s.getAttribute('data-cm'),v=+s.value;cmut(function(a){a[i].s=v})}});
+document.addEventListener('submit',function(e){
+  if(e.target.id==='cform'){e.preventDefault();var t=$('#cT').value.trim(),c=$('#cC').value;if(!t)return;cmut(function(a){a.unshift({t:t,ch:c,s:0})})}
+  if(e.target.id==='iform'){e.preventDefault();var tx=$('#iT').value.trim(),ca=$('#iC').value;if(!tx)return;st.ideas.unshift({id:Date.now(),t:tx,cat:ca,sc:0});save();renderIdeas();refresh()}
+});
+
+/* ---------- 아이디어 패드 ---------- */
+var ICAT=['SaaS','AI 에이전트','자동화','콘텐츠','전자책','정부지원사업'];
+function leanPrompt(x){return '다음 아이디어를 린(Lean) 방식으로 검증하고 싶습니다.\n아이디어: '+x.t+'\n분야: '+x.cat+'\n\n1. 개발 없이 검증할 수 있는 가장 싼 방법 3가지(랜딩페이지·사전예약·고객 인터뷰 등)를 비용·소요시간과 함께 표로 제안해 주세요.\n2. 비슷한 서비스·경쟁자를 조사해 차별점을 정리해 주세요.\n3. 첫 매출까지의 최소 실행 계획을 7일 단위로 써 주세요.\n4. 활용할 수 있는 정부지원사업이 있으면 함께 알려 주세요.'}
+function renderIdeas(){
+  var list=st.ideas.slice().sort(function(a,b){return b.sc-a.sc});
+  $('#v-ideas').innerHTML='<div style="display:flex;flex-direction:column;gap:var(--gap)"><div class="sec-head"><p class="eyebrow">IDEA PAD</p><h2>아이디어 패드</h2><p class="sub">떠오른 생각을 바로 적고, 별점으로 우선순위를 매깁니다. 검증 프롬프트 복사를 누르면 개발 전에 시장·경쟁·첫 매출을 점검하는 지시문이 만들어집니다. 이 브라우저에만 저장됩니다.</p></div>'+
+  '<form class="form" id="iform"><textarea id="iT" placeholder="예: 정부지원사업 사업계획서를 자동 초안으로 만들어 주는 AI 에이전트" aria-label="아이디어" required></textarea><select id="iC" aria-label="분야">'+ICAT.map(function(c){return '<option>'+c+'</option>'}).join('')+'</select><button type="submit" class="btn pri">추가</button></form>'+
+  (list.length?'<ul style="display:flex;flex-direction:column;gap:8px">'+list.map(function(x){return '<li class="item" style="background:var(--panel);border:1px solid var(--line)"><b>'+esc(x.t)+'</b><div class="row"><span class="tagx">'+esc(x.cat)+'</span><span class="stars" role="group" aria-label="우선순위">'+[1,2,3].map(function(n){return '<button type="button" data-st="'+x.id+':'+n+'" class="'+(x.sc>=n?'on':'')+'" aria-label="'+n+'점">★</button>'}).join('')+'</span></div><div class="row"><button type="button" class="btn sm" data-iv="'+x.id+'">검증 프롬프트 복사</button><button type="button" class="btn sm" data-id2="'+x.id+'" aria-label="삭제">삭제</button></div></li>'}).join('')+'</ul>':'<p class="empty">아직 메모가 없습니다. 위에 첫 아이디어를 적어 보세요.</p>')+'</div>';
+}
+document.addEventListener('click',function(e){
+  var s=e.target.closest('[data-st]');if(s){var a=s.getAttribute('data-st').split(':');st.ideas.forEach(function(x){if(x.id==+a[0])x.sc=(x.sc===+a[1]?0:+a[1])});save();renderIdeas()}
+  var v=e.target.closest('[data-iv]');if(v){var id=+v.getAttribute('data-iv');st.ideas.forEach(function(x){if(x.id===id)copy(leanPrompt(x))})}
+  var d=e.target.closest('[data-id2]');if(d){var id2=+d.getAttribute('data-id2');st.ideas=st.ideas.filter(function(x){return x.id!==id2});save();renderIdeas();refresh()}
+});
+
+/* ---------- 브랜드 라이브러리 ---------- */
+var BR=[['Nomad Coral','#FF8D74','CTA·강조'],['Lab Ink','#0D0A09','배경'],['Sand','#F4ECE6','본문 글자'],['Signal Teal','#3CC8C0','개발 분야'],['Amber','#F2B53A','재무·주의']];
+function renderBrand(){
+  $('#v-brand').innerHTML='<div style="display:flex;flex-direction:column;gap:var(--sec)"><div class="sec-head"><p class="eyebrow">BRAND LIBRARY</p><h2>브랜드 라이브러리</h2><p class="sub">로고, 색, 글꼴, 말투를 한곳에 모아 두고 스킬과 콘텐츠에서 같은 기준으로 불러 씁니다. 값은 예시이며 내 브랜드에 맞게 바꾸세요.</p></div>'+
+  '<div class="two"><div class="panelbox"><div class="ph"><span>로고</span><small>Nomad-Lab</small></div><div style="display:flex;align-items:center;gap:14px;padding:18px;background:var(--stage);border-radius:10px"><svg viewBox="0 0 32 32" width="56" height="56" aria-hidden="true"><circle cx="16" cy="16" r="6.5" fill="var(--accent)"/><ellipse cx="16" cy="16" rx="14" ry="5.5" fill="none" stroke="var(--accent)" stroke-width="1.6" transform="rotate(-24 16 16)"/><circle cx="27" cy="9.2" r="2.2" fill="var(--ink)"/></svg><b style="font-size:30px;letter-spacing:-.02em">Nomad<span style="color:var(--accent)">-Lab</span></b></div><ul class="bl"><li>궤도 안의 구는 메인 에이전트, 바깥 점은 연결된 도구를 뜻합니다.</li><li>로고 주변 여백은 로고 높이의 절반 이상 비웁니다.</li><li>어두운 배경이 기본이며, 밝은 배경에서는 코랄을 한 단계 진하게 씁니다.</li></ul></div>'+
+  '<div class="panelbox"><div class="ph"><span>글꼴과 말투</span></div><ul class="bl"><li>본문 Noto Sans KR 400·500, 제목 700·800</li><li>숫자와 코드 JetBrains Mono</li><li>말투: 존댓말, 짧은 문장, 결론 먼저</li><li>금지: 과장 표현, 근거 없는 수익 보장, 이모지 남발</li></ul><div class="note"><b>스킬 연결</b> 이 페이지 내용을 AGENTS.md의 결과물 기준에 옮기면 모든 결과물에 같은 톤이 적용됩니다.</div></div></div>'+
+  '<div><div class="ph" style="margin-bottom:10px"><span>색상 팔레트</span><small>눌러서 HEX 복사</small></div><div class="sw-grid">'+BR.map(function(c){return '<button type="button" class="swc" data-copy="'+c[1]+'"><i style="--c:'+c[1]+'"></i><div><b>'+esc(c[0])+'</b><small>'+c[1]+'</small><span class="sub">'+esc(c[2])+'</span></div></button>'}).join('')+'</div></div></div>';
+}
+
+/* ---------- ArtCraft ---------- */
+var ART=[
+ ['PhotoCraft','포토샵','이미지 편집(레이어·마스크·PSD)','var(--c-content)'],
+ ['VectorCraft','일러스트레이터','벡터 도안(로고·명함·아이콘)','var(--c-dev)'],
+ ['FilmCraft','프리미어 프로','영상 편집','var(--accent)'],
+ ['EffectCraft','애프터 이펙트','모션 그래픽·시각 효과','var(--c-root)'],
+ ['LightCraft','라이트룸','사진 보정(원본을 건드리지 않는 방식)','var(--c-fin)'],
+ ['PdfCraft','아크로뱃','PDF 읽기·편집','var(--c-root)'],
+ ['DesignCraft','인디자인','페이지·레이아웃 디자인','var(--c-dev)']
+];
+var ARTP={
+ install:'필름 크래프트 문서 :\nhttps://github.com/storytold/filmcraft/blob/main/AGENTS.md\n벡터크래프트 문서:\nhttps://github.com/storytold/vectorcraft/blob/main/AGENTS.md\n다음 문서를 읽어보고 AI가 필름크래프트, 벡터크래프트를 사용해 직접 영상 편집하게 해주는 CLI랑 MCP 설치해줘.\n정확히 내 컴퓨터 사양에 맞게 설치해야해. 가능하면 네가 직접하고, 권한문제상 내가 직접 해야하는 부분이 있다면 어떻게해야하는지 정확히 안내해줘.',
+ color:'현재 열려 있는 필름크래프트 시퀀스의 11초 ~ 42초 구간 영상이 너무 파란빛이 도는데, 균형잡히도록 색감 조정해봐줘.\n그리고, 2분 51초 전환 구간에 글리치 효과 적용해줘',
+ card:'현재 벡터크래프트에 열린 문서 바탕으로 vectorcraft mcp사용해 다음을 수정해 새 파일로 저장해줘. 덮어쓰기 금지\n인쇄용 규격에 맞추고, 앞면, 뒷면 색상을 바꾸고 문구도 다음과 같이 수정해줘 :\n\n- 규격: 제공한 [인쇄소] 가로형 90×50mm 앞·뒷면 가이드 적용 ([가이드 파일 폴더 경로])\n- 앞면글자: [로고]와 모든 텍스트를 흰색으로 변경\n- 앞면배경: 현재 열린 ai와 다음 ai파일 중간 정도의 진한 주황색 적용 ([참고할 ai 파일 경로])\n- 뒷면글자: 변경된 앞면 배경과 동일한 색\n- 뒷면배경: 흰색\n- 문구: [기존 주소] → [새 주소]\n- 직함: [기존 직함] → [새 직함]\n- 확인사항: [확인할 부분] 글자가 흰색으로 보이지 않는 부분 확인 및 수정 필요'
+};
+Object.keys(ARTP).forEach(function(k){P['art_'+k]=ARTP[k]});
+function pr(title,k){return '<div class="prompt"><header><span>복사용 프롬프트 — '+esc(title)+'</span><button type="button" class="btn sm" data-copy="'+k+'">복사</button></header><pre>'+esc(P[k])+'</pre></div>'}
+function renderArt(){
+  $('#v-artcraft').innerHTML='<div style="display:flex;flex-direction:column;gap:var(--sec)">'+
+  '<div class="vhead"><span class="letter" aria-hidden="true" style="font-size:var(--fs-h1)">▲</span><div class="tt"><p class="eyebrow">ARTCRAFT × CLAUDE</p><h2>ArtCraft 앱 구조</h2><p class="lead">ArtCraft는 어도비 앱과 비슷한 무료 오픈소스 앱을 만드는 팀입니다. 앱을 설치하고 MCP·CLI를 연결하면 Claude가 앱을 직접 조작해 편집을 맡아 줍니다.</p><div class="pgref"><button type="button" class="btn sm" data-guide="art:1">가이드 보기</button></div></div></div>'+
+  '<div><div class="sec-head" style="margin-bottom:10px"><h3>연결 구조</h3></div><div class="flow"><div class="st"><b>1 · 런처</b><span>공식 사이트에서 런처를 설치하고 원하는 앱을 받습니다.</span></div><div class="st"><b>2 · 앱</b><span>PhotoCraft 등 7개 앱을 열어 작업 파일을 둡니다.</span></div><div class="st"><b>3 · MCP·CLI</b><span>AI에게 앱을 조작할 손과 발을 달아 주는 도구입니다.</span></div><div class="st"><b>4 · AGENTS.md</b><span>설치 방법이 적힌 문서 주소를 AI에게 줍니다.</span></div><div class="st"><b>5 · Claude</b><span>데스크톱 코드 탭에서 설치와 편집을 맡깁니다.</span></div></div></div>'+
+  '<div><div class="sec-head" style="margin-bottom:10px"><h3>01 · 앱 7가지</h3><p class="sub">공식 사이트에는 총 13가지 앱이 있고, 이 가이드는 그중 어도비 앱과 비교되는 7가지를 다룹니다.</p></div><div class="apps">'+ART.map(function(a){return '<div class="app-c" style="--c:'+a[3]+'"><h3>'+a[0]+'</h3><p class="vs">비슷한 앱 · '+a[1]+'</p><p class="use">'+a[2]+'</p><div class="tags"><span class="tagx mcp">MCP</span><span class="tagx">CLI</span></div></div>'}).join('')+'</div></div>'+
+  '<div class="two"><div class="panelbox"><h3>02 · 쓰기 전에 알아둘 점</h3><ul class="bl"><li>앱 대부분이 아직 알파 단계입니다. FilmCraft는 스스로 기능 범위 약 86%, 실제 작업 준비도 약 56%로 추정합니다. 고객에게 나갈 최종 작업은 쓰던 도구를 함께 두세요.</li><li>코드는 MIT 또는 Apache-2.0 라이선스로 공개돼 있습니다(앱 README 기준). ArtCraft 이름과 로고는 상표라서 따로 조건이 있습니다.</li><li>Claude 데스크톱의 코드 탭은 유료 요금제에서만 지원됩니다.</li></ul></div>'+
+  '<div class="panelbox"><h3>03 · 런처 설치</h3><ol class="bl" style="counter-reset:s"><li>ArtCraft 사이트에서 런처를 내려받아 설치합니다.</li><li>런처를 열면 앱 목록이 나옵니다. 원하는 앱을 골라 내려받으면 설치가 끝납니다.</li><li>이미 설치한 앱은 업데이트 버튼으로 최신 버전을 받습니다.</li></ol></div></div>'+
+  '<div class="panelbox"><h3>04·05 · MCP와 CLI 설치를 Claude에게 맡기기</h3><p class="sub">Claude 데스크톱 앱 → 코드 탭 → 아래 설치 프롬프트 붙여넣기. 설치하고 싶은 앱의 문서 주소로 고쳐 쓰세요.</p>'+pr('FilmCraft·VectorCraft 설치','art_install')+'<p class="callout"><b>팁</b>컴퓨터에 맞게 설치하도록 요청하고, 권한 문제로 직접 해야 하는 부분은 안내받도록 마지막 문장에 넣어 둔 프롬프트입니다.</p></div>'+
+  '<div class="two"><div class="panelbox"><h3>06 · 영상 색감 보정</h3><p class="sub">푸른빛이 도는 원본 영상을 FilmCraft에 열어 두고 색감 조정을 요청했더니 따뜻한 색감으로 보정됐습니다. Claude가 이펙트로 만들어 준 것이라 원하면 이펙트 안에서 값을 세밀하게 조정할 수 있습니다.</p>'+pr('색감 보정 + 글리치','art_color')+'</div>'+
+  '<div class="panelbox"><h3>07 · 명함 인쇄 규격 리디자인</h3><p class="sub">VectorCraft에 예전 명함을 열어 두고 바뀐 직함과 홈페이지를 반영해 인쇄용 규격(90×50mm)으로 수정을 맡겼습니다. [괄호]는 내 파일과 내용에 맞게 바꿔 쓰세요.</p>'+pr('명함 리디자인','art_card')+'</div></div>'+
+  '<div class="two"><div class="panelbox"><h3>08 · 생성 AI 대신 편집 앱을 쓰는 이유</h3><p class="sub">생성 AI는 프롬프트 하나로 최종 결과물을 얻기는 쉽지만 원하는 느낌까지 다듬기는 어렵습니다. 편집 앱을 Claude가 다루면 괜찮은 초안이 나왔을 때 레이어 단위로 컨트롤할 수 있어 수정이 훨씬 쉽습니다.</p><h3 style="margin-top:6px">09 · 나머지 앱</h3><p class="sub">LightCraft, PdfCraft, EffectCraft, DesignCraft도 오픈소스 무료입니다. 런처에서 받은 뒤 앱 문서 주소로 같은 방식의 설치를 요청해 보세요. 앱마다 문서와 지원 범위는 다를 수 있습니다.</p></div>'+
+  '<div class="panelbox"><h3>10 · 아직 부족한 점</h3><div class="tw"><table class="tbl"><thead><tr><th>앱</th><th>공식 문서에 밝힌 한계</th></tr></thead><tbody><tr><td>PhotoCraft</td><td>생성형 AI 기능 없음</td></tr><tr><td>FilmCraft</td><td>.prproj 파일 열기 불가, 플러그인(VST3·OpenFX) 사용 불가, 글리치 효과가 프리미어보다 덜 세련됨</td></tr><tr><td>VectorCraft</td><td>.ai 파일 교환이 아직 안정적이지 않음</td></tr><tr><td>EffectCraft</td><td>애프터 이펙트 플러그인 사용 불가</td></tr></tbody></table></div><p class="sub">11 · 프로젝트가 100% 무료 오픈소스라 기여자들도 Claude나 Codex 같은 에이전트로 고쳐 나갈 것이고, 버전이 오를수록 에이전트가 쓰기에 더 적합해질 것으로 봅니다.</p></div></div>'+
+  '<div class="note"><b>사업 메모</b> 편집 앱 + MCP 조합은 \"Claude로 영상·명함 편집 대행\" 같은 서비스나 강의의 소재가 됩니다. 알파 단계이므로 먼저 소규모 의뢰 1~2건으로 품질을 검증한 뒤 상품화하세요.</div></div>';
+}
+
+/* ---------- 가이드 뷰어 ---------- */
+var DOCS={ssr:{name:'SSR+ 가이드',n:13,pre:'guide/ssr-',pad:true,desc:'나만의 AI 에이전트 시스템 만들기 (13쪽)'},art:{name:'ArtCraft 가이드',n:4,pre:'guide/art-',pad:false,desc:'ArtCraft 앱 Claude 활용 가이드 (4쪽)'}};
+var gs={doc:'ssr',page:1,q:'',hits:{}};
+function gimg(d,p){var o=DOCS[d];return o.pre+(o.pad?String(p).padStart(2,'0'):p)+'.jpg'}
+function renderGuide(){
+  var o=DOCS[gs.doc],txt=gs.doc==='ssr'?D.pages.ssr[gs.page-1]:'';
+  var docs='<div class="tabs" role="tablist" aria-label="가이드 문서">'+Object.keys(DOCS).map(function(k){return '<button type="button" role="tab" class="tab" data-gd="'+k+'" aria-selected="'+(gs.doc===k?'true':'false')+'">'+DOCS[k].name+'</button>'}).join('')+'</div>';
+  var thumbs='';for(var i=1;i<=o.n;i++){thumbs+='<button type="button" class="th'+(gs.hits[i]?' hit':'')+'" data-gp="'+i+'" aria-current="'+(i===gs.page?'true':'false')+'" aria-label="'+i+'쪽"><img src="'+gimg(gs.doc,i)+'" alt="" loading="lazy" width="96" height="136"><span>'+i+'</span></button>'}
+  var search=gs.doc==='ssr'?'<label class="search" style="max-width:none"><span class="sr">가이드 본문 검색</span><input id="gq" type="search" placeholder="본문 검색 (예: 루틴, Hermes, AGENTS.md)" autocomplete="off" value="'+esc(gs.q)+'"><span class="qcount" id="gqc"></span></label>':'';
+  $('#v-guide').innerHTML='<div style="display:flex;flex-direction:column;gap:var(--gap)"><div class="sec-head"><p class="eyebrow">USAGE GUIDE</p><h2>사용 가이드 (PDF)</h2><p class="sub">이 앱의 사용법은 아래 PDF 두 개를 그대로 따릅니다. 쪽을 넘기면서 읽고, SSR+ 가이드는 본문 검색과 텍스트 복사도 됩니다.</p></div>'+docs+
+   '<div class="gv"><div class="thumbs" id="thumbs">'+thumbs+'</div><div class="pgview"><div class="pgnav"><button type="button" class="btn sm" data-gn="-1" aria-label="이전 쪽">← 이전</button><span class="mono sub" id="gpn">'+gs.page+' / '+o.n+'</span><button type="button" class="btn sm" data-gn="1" aria-label="다음 쪽">다음 →</button><span class="grow"></span>'+search+'</div>'+
+   '<figure class="pgimg"><img id="gimg" src="'+gimg(gs.doc,gs.page)+'" alt="'+o.name+' '+gs.page+'쪽"></figure>'+
+   (txt?'<details class="txt2"><summary>이 쪽 텍스트 보기·복사</summary><pre id="gtxt">'+esc(txt)+'</pre><button type="button" class="btn sm" style="margin-top:8px" data-copytxt="1">텍스트 복사</button></details>':'<p class="sub">ArtCraft 가이드의 정리본과 프롬프트는 ArtCraft 앱 화면에서 확인할 수 있습니다.</p>')+
+   '</div></div></div>';
+  var q=$('#gq');if(q){q.addEventListener('input',function(){gs.q=q.value;runGSearch()});q.addEventListener('keydown',function(e){if(e.key==='Enter'){var f=Object.keys(gs.hits)[0];if(f){gs.page=+f;renderGuide()}}})}
+  runGSearch(true);
+}
+function runGSearch(skip){
+  gs.hits={};var v=gs.q.trim().toLowerCase();
+  if(v&&gs.doc==='ssr'){D.pages.ssr.forEach(function(t,i){if(t.toLowerCase().indexOf(v)>=0)gs.hits[i+1]=true})}
+  var c=$('#gqc');if(c)c.textContent=v?(Object.keys(gs.hits).length?Object.keys(gs.hits).length+'쪽 일치':'일치 없음'):'';
+  $$('.th').forEach(function(b){b.classList.toggle('hit',!!gs.hits[+b.getAttribute('data-gp')])});
+}
+function gset(p){var n=DOCS[gs.doc].n;gs.page=Math.max(1,Math.min(n,p));renderGuide();var t=$('.th[aria-current="true"]');if(t&&t.scrollIntoView){try{t.scrollIntoView({block:'nearest',inline:'nearest'})}catch(e){}}}
+function openGuide(doc,p){gs.doc=doc;gs.page=p||1;location.hash==='#guide'?renderGuide():(location.hash='#guide')}
+document.addEventListener('click',function(e){
+  var d=e.target.closest('[data-gd]');if(d){gs.doc=d.getAttribute('data-gd');gs.page=1;gs.hits={};renderGuide()}
+  var p=e.target.closest('[data-gp]');if(p){gset(+p.getAttribute('data-gp'))}
+  var n=e.target.closest('[data-gn]');if(n){gset(gs.page+ +n.getAttribute('data-gn'))}
+  var c=e.target.closest('[data-copytxt]');if(c){copy($('#gtxt').textContent,c)}
+});
+document.addEventListener('keydown',function(e){
+  if(cur!=='guide'||/input|textarea|select/i.test((e.target.tagName||'')))return;
+  if(e.key==='ArrowRight'){gset(gs.page+1)}else if(e.key==='ArrowLeft'){gset(gs.page-1)}
+});
+
+/* ---------- 7일 계획, 기획 ---------- */
+function renderPlan(){
+  $('#v-plan').innerHTML='<div style="display:flex;flex-direction:column;gap:var(--gap)"><div class="sec-head"><p class="eyebrow">7 DAYS</p><h2>7일 세팅 계획</h2><p class="sub">하루에 한 단계씩, 작게 시작합니다. 끝까지 완성한 작은 시스템이 하다 만 큰 시스템보다 낫습니다. (가이드 p.13)</p></div>'+
+  '<div class="two"><div class="panelbox"><div class="ph"><span>날짜별 할 일</span><small class="mono" id="pcnt">0/7</small></div><ul id="planList">'+DAYS.map(function(d,i){return '<li><label class="cl"><input type="checkbox" class="cb" data-day="'+i+'"><span class="box"></span><span class="txt"><b class="mono" style="color:var(--label)">'+(i+1)+'일차</b> '+esc(d[0])+' <span class="tagx">'+esc(d[1])+'</span></span></label></li>'}).join('')+'</ul><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button type="button" class="btn sm" id="startToday">시작일을 오늘로</button><span class="sub">시작일 <span class="mono" id="startTxt"></span></span></div></div>'+
+  '<div style="display:flex;flex-direction:column;gap:var(--gap)"><div class="note"><b>유지 관리 (매주 15분)</b><br>AGENTS.md의 낡은 내용 지우기, 스킬 파일 하나 다듬기, 루틴 결과가 제대로 도착했는지 확인. 낡은 지침은 없는 지침보다 위험합니다. AI는 그 내용을 믿고 그대로 일하기 때문입니다.</div>'+
+  '<div class="panelbox"><div class="ph"><span>SSR+ 체크리스트</span><small class="mono" id="ckCnt">0/4</small></div><ul>'+CHECK.map(function(c,i){return '<li><label class="cl"><input type="checkbox" class="cb" data-ck="'+i+'"'+(st.ck[i]?' checked':'')+'><span class="box"></span><span class="txt"><b>'+esc(c[0])+'</b> · '+esc(c[1])+'</span></label></li>'}).join('')+'</ul><p class="sub">네 칸이 모두 채워지면 나만의 AI 에이전트 시스템이 완성됩니다.</p></div></div></div></div>';
+  $('#startTxt').textContent=st.start;
+  $('#startToday').addEventListener('click',function(){st.start=iso(new Date());save();$('#startTxt').textContent=st.start;refresh()});
+}
+function renderSpec(){
+  $('#v-spec').innerHTML='<div style="display:flex;flex-direction:column;gap:var(--sec)"><div class="sec-head"><p class="eyebrow">PLAN</p><h2>기획 요약</h2></div>'+
+  '<div class="spec"><section><h3>무엇을 위한 화면인가</h3><p>SSR+ 네 단계의 진행 상태를 한 화면에서 점검하고, 세컨드 브레인 폴더가 어떻게 연결되어 있는지 눈으로 확인합니다. 단계마다 새 대화에서 바로 확인할 수 있는 완료 기준을 둡니다. 사용법은 PDF 가이드를 그대로 화면에 담았습니다.</p></section>'+
+  '<section><h3>탐색기 사양 (가이드 그대로)</h3><ul><li>중앙의 큰 구가 메인 에이전트이고, 그 주위로 구조가 퍼져 나감</li><li>폴더와 문서는 노드, 포함 관계는 실선, 문서 간 링크는 점선</li><li>분야는 색, 폴더와 문서는 모양, 간단한 범례</li><li>3D 보기와 2D 보기 전환, 확대·축소, 드래그 이동, 이름·본문 검색</li><li>노드를 누르면 이름, 경로, 연결 항목, 미리보기 패널</li></ul></section>'+
+  '<section><h3>단계별 확장</h3><ul><li>지금: 예시 데이터로 구조와 사용감 확인(노코드 수준 검증)</li><li>다음: Node 스크립트가 실제 second-brain/ 폴더를 읽어 graph.json을 만들고 탐색기가 표시</li><li>이후: Extensions/brain-explorer/ 로컬 도구로 정착, 수강생용 템플릿 배포</li></ul></section></div>'+
+  '<div><div class="sec-head" style="margin-bottom:10px"><h3>화면 구조(정보 구조)</h3></div><div class="sitemap">'+
+  '<section><h3>HOME</h3><ul><li>홈 <span>— 진행률·목표·캘린더·최근 파일, 세컨드 브레인 입자 구, 스킬·루틴·익스텐션</span></li></ul></section>'+
+  '<section><h3>SSR+ (좌측 GNB 4칸)</h3><ul><li>S 스킬 <span>— 초·중·고급, 프롬프트</span></li><li>S 세컨드 브레인 <span>— 3D 탐색기 포함</span></li><li>R 루틴</li><li>+ 익스텐션</li></ul></section>'+
+  '<section><h3>다른 대시보드·앱</h3><ul><li>브랜드 라이브러리</li><li>콘텐츠 라이브러리</li><li>아이디어 패드</li><li>ArtCraft 앱 구조</li></ul></section>'+
+  '<section><h3>가이드</h3><ul><li>사용 가이드(PDF 17쪽 뷰어·검색)</li><li>7일 세팅 계획·체크리스트</li><li>기획 요약</li></ul></section></div></div>'+
+  '<div class="note"><b>사업 연결 아이디어</b> 이 대시보드는 \"AI 업무 시스템 세팅\" 강의·템플릿의 데모로 쓸 수 있습니다. 순서는 (1) 이 화면과 랜딩페이지로 관심 수강생 모으기 → (2) 사전예약으로 수요 확인 → (3) 정부지원사업 신청 시 시연 자료로 활용 → (4) 반응이 있으면 Next.js + Supabase로 정식 개발해 SaaS화.</div>'+
+  '<div class="bp" id="bp" aria-label="화면 구간별 폰트 크기"><div><b>모바일</b><span>~767px · 본문 14 · 보조 12 · 제목 26 · 메뉴는 서랍</span></div><div><b>태블릿</b><span>768~1199px · 본문 15 · 보조 13 · 제목 32 · 아이콘 레일</span></div><div><b>데스크탑</b><span>1200px~ · 본문 16 · 보조 13 · 제목 38 · 전체 GNB</span></div></div>'+
+  '<p class="foot">단계 구성과 문구는 SSR+ 가이드 PDF와 ArtCraft 가이드 PDF를 따랐고, 노드·목록·숫자는 예시입니다. 체크와 메모는 이 브라우저에만 저장됩니다.</p></div>';
+  var mqs=[matchMedia('(max-width:767px)'),matchMedia('(min-width:768px) and (max-width:1199px)'),matchMedia('(min-width:1200px)')];
+  function bp(){var c=$$('#bp div');mqs.forEach(function(m,i){if(c[i])c[i].classList.toggle('on',m.matches)})}
+  mqs.forEach(function(m){if(m.addEventListener){m.addEventListener('change',bp)}else{m.addListener(bp)}});bp();
+}
+
+/* ---------- 라우터 ---------- */
+var BRAIN_HTML=document.getElementById('brain-tpl').innerHTML;
+var rendered={},cur='';
+var page=$('#page');
+Object.keys(VIEWS).forEach(function(k){if(k==='home')return;var s=document.createElement('section');s.className='view';s.id='v-'+k;s.hidden=true;page.appendChild(s)});
+var R={skill:function(){renderSSR('skill')},brain:function(){renderSSR('brain');document.dispatchEvent(new Event('brain:mounted'))},routine:function(){renderSSR('routine')},ext:function(){renderSSR('ext')},
+ brand:renderBrand,content:renderContent,ideas:renderIdeas,artcraft:renderArt,guide:renderGuide,plan:renderPlan,spec:renderSpec};
+function show(id){
+  if(!VIEWS[id])id='home';
+  if(cur===id&&rendered[id])return;
+  $$('.view').forEach(function(v){v.hidden=true});
+  var el=$('#v-'+id);
+  if(!rendered[id]){if(id==='home'){renderHome()}else if(R[id]){R[id]()}rendered[id]=true}
+  else if(id==='guide'){renderGuide()}
+  el.hidden=false;cur=id;
+  $$('.nl').forEach(function(a){if(a.getAttribute('data-v')===id){a.setAttribute('aria-current','page')}else{a.removeAttribute('aria-current')}});
+  $('#vt').textContent=VIEWS[id].t;
+  document.title=VIEWS[id].t+' · Nomad-Lab';
+  closeNav();
+  window.scrollTo(0,0);
+  window.__view=id;document.dispatchEvent(new CustomEvent('viewchange',{detail:id}));
+  refresh();
+  if(G&&!reduce){G.fromTo(el,{opacity:0,y:8},{opacity:1,y:0,duration:.35,ease:'power2.out',clearProps:'transform,opacity'})}
+}
+function route(){show(location.hash.replace(/^#/,''))}
+window.addEventListener('hashchange',route);
+
+/* 메뉴 서랍 */
+var gnb=$('#gnb'),scrim=$('#scrim'),menu=$('#menu');
+function openNav(){gnb.classList.add('open');scrim.classList.add('on');menu.setAttribute('aria-expanded','true')}
+function closeNav(){gnb.classList.remove('open');scrim.classList.remove('on');menu.setAttribute('aria-expanded','false')}
+menu.addEventListener('click',function(){gnb.classList.contains('open')?closeNav():openNav()});
+scrim.addEventListener('click',closeNav);
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNav()});
+
+/* 테마 */
+function setTheme(t){document.documentElement.setAttribute('data-theme',t);$('#themeIc').innerHTML=t==='dark'?IC.sun:IC.moon;try{localStorage.setItem('nomad-theme',t)}catch(e){}}
+var th='dark';try{th=localStorage.getItem('nomad-theme')||'dark'}catch(e){}
+setTheme(th);
+$('#theme').addEventListener('click',function(){setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark')});
+
+/* 홈 → 사전 설치 프롬프트 복사 등 data-copy 키는 위에서 처리 */
+refresh();
+route();
+})();
+
+</script>
+<script>
+document.addEventListener('brain:mounted',function(){'use strict';
+function $(s,r){return (r||document).querySelector(s)}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function css(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+var G=window.gsap,T=window.THREE;
+var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function anim(o,props,dur,ease,delay){
+  if(G&&!reduce){var v={duration:dur,ease:ease||'power2.out',delay:delay||0,overwrite:'auto'};for(var k in props){v[k]=props[k]}G.to(o,v)}
+  else{for(var k2 in props){o[k2]=props[k2]}}
+}
+/* ================= 세컨드 브레인 데이터 (예시) ================= */
+var KIND={agent:'메인 에이전트',folder:'폴더',rule:'규칙 문서',index:'길잡이(색인)',source:'원본 파일'};
+var DOM_VAR={agent:'--accent',root:'--c-root',content:'--c-content',dev:'--c-dev',fin:'--c-fin'};
+var SRC='원본 파일입니다.\n세컨드 브레인에는 위치와 용도만 적고,\n내용은 이 파일에서 직접 확인합니다.';
+var NODES=[
+ {id:'agent',kind:'agent',dom:'agent',name:'메인 에이전트',path:'Claude · 메인 에이전트',desc:'모든 일을 처리하는 중심입니다. 세컨드 브레인은 이 에이전트가 읽고 찾는 자료 구조입니다.',
+  body:'Claude 데스크톱이나 Claude Code 같은 메인 에이전트입니다.\n대화를 시작할 때 AGENTS.md를 가장 먼저 읽고,\n전체목록.md로 필요한 자료를 찾아 일합니다.\n\n스킬, 루틴, 익스텐션도 여기서 호출합니다.'},
+ {id:'sb',kind:'folder',dom:'root',name:'second-brain',path:'second-brain/',desc:'세컨드 브레인 최상위 폴더. 분야 길잡이와 규칙 문서가 들어 있습니다.'},
+ {id:'agents',kind:'rule',dom:'root',parent:'sb',name:'AGENTS.md',path:'second-brain/AGENTS.md',desc:'대문: 분야 표 + 찾는 법 + 규칙 문서 링크',
+  body:'# AGENTS.md\n\n## 분야 표\n- 콘텐츠 → contents/contents.md\n- 개발 → dev/dev.md\n- 재무 → financial/financial.md\n\n## 찾는 법\n전체목록.md를 grep 한 번으로 찾고,\n결과는 15줄까지만 본다.\n\n## 규칙 문서\n- AGENTS--인덱스규칙.md\n- AGENTS--확정기준.md'},
+ {id:'rule_idx',kind:'rule',dom:'root',parent:'sb',name:'AGENTS--인덱스규칙.md',path:'second-brain/AGENTS--인덱스규칙.md',desc:'색인 작성·분할·갱신 규칙',
+  body:'- 한 줄 형식: - [이름](상대경로) — 한 줄 설명 (200자 이내)\n- 최종본만 링크한다. 새 버전이 생기면 이전 링크는 빼고 파일은 그대로 둔다.\n- 모든 문서는 빈 줄 포함 100줄 이내.\n- 위치와 용도만 쓰고, 상세 내용은 원본으로 연결한다.'},
+ {id:'rule_std',kind:'rule',dom:'root',parent:'sb',name:'AGENTS--확정기준.md',path:'second-brain/AGENTS--확정기준.md',desc:'팀이 지킬 현재 유효한 기준',
+  body:'# 확정 기준\n- 보고서는 1쪽, 표 먼저. 이모지 금지.\n- 단가는 월 150만 원으로 확정.'},
+ {id:'log',kind:'rule',dom:'root',parent:'sb',name:'log.md',path:'second-brain/log.md',desc:'변경 이력. 끝에 덧붙이기만 합니다.',
+  body:'## [2026-11-02] 생성 | 세컨드 브레인 초기 구성\n- 입력: 업무 폴더 3개 분야\n- 변경/반영: 색인 7개 작성\n- 메모: 확인 필요 목록 없음'},
+ {id:'all',kind:'rule',dom:'root',parent:'sb',name:'전체목록.md',path:'second-brain/전체목록.md',desc:'모든 색인을 한 장에 펼친 사본. AI 검색용이며 직접 고치지 않습니다.',
+  body:'콘텐츠 > 영상 · 위치: contents/contents--영상.md\n콘텐츠 > 전자책 · 위치: contents/contents--전자책.md\n개발 > 대시보드 · 위치: dev/dev--대시보드.md\n재무 > 월별 · 위치: financial/financial--월별.md'},
+ {id:'c_dir',kind:'folder',dom:'content',parent:'sb',name:'contents',path:'second-brain/contents/',desc:'콘텐츠 분야 길잡이 폴더'},
+ {id:'d_dir',kind:'folder',dom:'dev',parent:'sb',name:'dev',path:'second-brain/dev/',desc:'개발 분야 길잡이 폴더'},
+ {id:'f_dir',kind:'folder',dom:'fin',parent:'sb',name:'financial',path:'second-brain/financial/',desc:'재무 분야 길잡이 폴더'},
+ {id:'c_main',kind:'index',dom:'content',parent:'c_dir',name:'contents.md',path:'second-brain/contents/contents.md',desc:'콘텐츠 분야 길잡이. 하위 길잡이 링크와 한 줄 설명.',
+  body:'# 콘텐츠\n- [영상](contents--영상.md) — 쇼츠·롱폼 대본과 썸네일 기준\n- [전자책](contents--전자책.md) — 원고 최종본과 출간 일정'},
+ {id:'c_video',kind:'index',dom:'content',parent:'c_dir',name:'contents--영상.md',path:'second-brain/contents/contents--영상.md',desc:'하위 길잡이: 영상 원본 파일 링크 + 한 줄 설명',
+  body:'- [쇼츠 대본_최종](업무폴더/콘텐츠/쇼츠 대본_최종.md) — 별명: 쇼츠대본, 최신 확정본\n- [썸네일 가이드](업무폴더/콘텐츠/썸네일 가이드.pdf) — 색과 문구 규칙'},
+ {id:'c_ebook',kind:'index',dom:'content',parent:'c_dir',name:'contents--전자책.md',path:'second-brain/contents/contents--전자책.md',desc:'하위 길잡이: 전자책 원고와 일정',
+  body:'- [전자책 원고_최종](업무폴더/콘텐츠/전자책 원고_최종.docx) — 출간용 최종본'},
+ {id:'d_main',kind:'index',dom:'dev',parent:'d_dir',name:'dev.md',path:'second-brain/dev/dev.md',desc:'개발 분야 길잡이',
+  body:'# 개발\n- [대시보드](dev--대시보드.md) — 기획서와 배포 체크리스트'},
+ {id:'d_dash',kind:'index',dom:'dev',parent:'d_dir',name:'dev--대시보드.md',path:'second-brain/dev/dev--대시보드.md',desc:'하위 길잡이: 대시보드 프로젝트 원본 링크',
+  body:'- [프로젝트 기획서](업무폴더/개발/프로젝트 기획서.md) — 범위와 일정\n- [배포 체크리스트](업무폴더/개발/배포 체크리스트.md) — 출시 전 확인\n- [API 연동 메모](업무폴더/개발/API 연동 메모.md) — 연동 순서'},
+ {id:'f_main',kind:'index',dom:'fin',parent:'f_dir',name:'financial.md',path:'second-brain/financial/financial.md',desc:'재무 분야 길잡이',
+  body:'# 재무\n- [월별](financial--월별.md) — 매출 정리와 세금 일정'},
+ {id:'f_month',kind:'index',dom:'fin',parent:'f_dir',name:'financial--월별.md',path:'second-brain/financial/financial--월별.md',desc:'하위 길잡이: 월별 매출·세금 원본 링크',
+  body:'- [월간 매출 정리](업무폴더/재무/월간 매출 정리.xlsx) — 최종본\n- [세금 일정표](업무폴더/재무/세금 일정표.md) — 신고 달력\n- 전자책 매출은 contents--전자책.md와 함께 본다'},
+ {id:'c_s1',kind:'source',dom:'content',name:'쇼츠 대본_최종.md',path:'업무폴더/콘텐츠/쇼츠 대본_최종.md',desc:'쇼츠 대본 최신 확정본',body:SRC},
+ {id:'c_s2',kind:'source',dom:'content',name:'썸네일 가이드.pdf',path:'업무폴더/콘텐츠/썸네일 가이드.pdf',desc:'썸네일 색과 문구 규칙',body:SRC},
+ {id:'c_s3',kind:'source',dom:'content',name:'전자책 원고_최종.docx',path:'업무폴더/콘텐츠/전자책 원고_최종.docx',desc:'출간용 전자책 원고',body:SRC},
+ {id:'d_s1',kind:'source',dom:'dev',name:'프로젝트 기획서.md',path:'업무폴더/개발/프로젝트 기획서.md',desc:'범위와 일정',body:SRC},
+ {id:'d_s2',kind:'source',dom:'dev',name:'배포 체크리스트.md',path:'업무폴더/개발/배포 체크리스트.md',desc:'출시 전 확인 항목',body:SRC},
+ {id:'d_s3',kind:'source',dom:'dev',name:'API 연동 메모.md',path:'업무폴더/개발/API 연동 메모.md',desc:'외부 API 연동 순서',body:SRC},
+ {id:'f_s1',kind:'source',dom:'fin',name:'월간 매출 정리.xlsx',path:'업무폴더/재무/월간 매출 정리.xlsx',desc:'월별 매출 최종본',body:SRC},
+ {id:'f_s2',kind:'source',dom:'fin',name:'세금 일정표.md',path:'업무폴더/재무/세금 일정표.md',desc:'세금 신고 일정',body:SRC}
+];
+var LINKS=[['agent','sb'],['agent','agents'],['agents','c_main'],['agents','d_main'],['agents','f_main'],['agents','rule_idx'],['agents','rule_std'],['agents','all'],['log','agents'],['rule_std','rule_idx'],
+ ['all','c_video'],['all','d_dash'],['all','f_month'],
+ ['c_main','c_video'],['c_main','c_ebook'],['c_video','c_s1'],['c_video','c_s2'],['c_ebook','c_s3'],
+ ['d_main','d_dash'],['d_dash','d_s1'],['d_dash','d_s2'],['d_dash','d_s3'],
+ ['f_main','f_month'],['f_month','f_s1'],['f_month','f_s2'],['f_month','c_ebook']];
+
+var N=NODES.length,byId={};
+NODES.forEach(function(n,i){n.i=i;byId[n.id]=n});
+var CE=[],LE=[];
+NODES.forEach(function(n){if(n.parent){CE.push([byId[n.parent].i,n.i])}});
+LINKS.forEach(function(l){LE.push([byId[l[0]].i,byId[l[1]].i])});
+var ALLE=CE.concat(LE);
+var nbr=NODES.map(function(){return {}});
+var rel=NODES.map(function(){return {parent:-1,children:[],out:[],inn:[]}});
+CE.forEach(function(e){rel[e[1]].parent=e[0];rel[e[0]].children.push(e[1]);nbr[e[0]][e[1]]=nbr[e[1]][e[0]]=true});
+LE.forEach(function(e){rel[e[0]].out.push(e[1]);rel[e[1]].inn.push(e[0]);nbr[e[0]][e[1]]=nbr[e[1]][e[0]]=true});
+var depth=NODES.map(function(){return -1});
+(function(){var q=[0];depth[0]=0;while(q.length){var a=q.shift();for(var b in nbr[a]){b=+b;if(depth[b]<0){depth[b]=depth[a]+1;q.push(b)}}}})();
+
+/* 레이아웃: 힘 기반 배치 (3D / 2D 각각 계산, 같은 시드라 항상 같은 모양) */
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function simulate(dim){
+  var rnd=mulberry(dim===3?11:23),X=[],V=[],i,j;
+  for(i=0;i<N;i++){X.push([(rnd()-.5)*12,(rnd()-.5)*12,dim===3?(rnd()-.5)*12:0]);V.push([0,0,0])}
+  var sp=[];CE.forEach(function(e){sp.push([e[0],e[1],4,.09])});LE.forEach(function(e){sp.push([e[0],e[1],6,.035])});
+  for(var it=0;it<700;it++){
+    var cool=1-it/700,F=[];for(i=0;i<N;i++){F.push([0,0,0])}
+    for(i=0;i<N;i++){for(j=i+1;j<N;j++){
+      var dx=X[i][0]-X[j][0],dy=X[i][1]-X[j][1],dz=X[i][2]-X[j][2];
+      var d2=dx*dx+dy*dy+dz*dz+.05,d=Math.sqrt(d2),f=Math.min(40/d2,8)*((i===0||j===0)?2.5:1);
+      var fx=dx/d*f,fy=dy/d*f,fz=dz/d*f;
+      if(NODES[i].dom===NODES[j].dom&&NODES[i].dom!=='root'){var a=.012*d;fx-=dx/d*a;fy-=dy/d*a;fz-=dz/d*a}
+      F[i][0]+=fx;F[i][1]+=fy;F[i][2]+=fz;F[j][0]-=fx;F[j][1]-=fy;F[j][2]-=fz;
+    }}
+    sp.forEach(function(s){
+      var a=s[0],b=s[1],dx=X[b][0]-X[a][0],dy=X[b][1]-X[a][1],dz=X[b][2]-X[a][2];
+      var d=Math.sqrt(dx*dx+dy*dy+dz*dz)+1e-4,f=(d-s[2])*s[3];
+      F[a][0]+=dx/d*f;F[a][1]+=dy/d*f;F[a][2]+=dz/d*f;F[b][0]-=dx/d*f;F[b][1]-=dy/d*f;F[b][2]-=dz/d*f;
+    });
+    for(i=0;i<N;i++){if(i===0){X[0]=[0,0,0];V[0]=[0,0,0];continue}for(var c=0;c<3;c++){F[i][c]-=X[i][c]*.02;V[i][c]=(V[i][c]+F[i][c]*.5)*.8;X[i][c]+=V[i][c]*(.25+.75*cool)}if(dim===2){X[i][2]=0}}
+  }
+  var m=[0,0,0];X.forEach(function(p){m[0]+=p[0]/N;m[1]+=p[1]/N;m[2]+=p[2]/N});
+  var R=0;X.forEach(function(p){R=Math.max(R,Math.hypot(p[0],p[1],p[2]))});
+  var sc=11/(R||1);X.forEach(function(p){p[0]*=sc;p[1]*=sc;p[2]*=sc});
+  X.forEach(function(p,i){if(i===0)return;var d=Math.hypot(p[0],p[1],p[2]);if(d<4.8){if(d<.001){p[0]=4.8}else{var q=4.8/d;p[0]*=q;p[1]*=q;p[2]*=q}}});
+  return X;
+}
+var L3=simulate(3),L2=simulate(2);
+
+/* ================= 상태 ================= */
+var S={mode:'3d',flat:0,sel:-1,hover:-1,match:null,auto:true};
+var panelEl=$('#panel');
+function isDim(i){
+  if(S.match){return !(S.match[i]||i===S.sel)}
+  if(S.sel>=0){return !(i===S.sel||nbr[S.sel][i])}
+  return false;
+}
+
+/* ================= 패널 ================= */
+function btnItem(i){
+  var n=NODES[i];
+  return '<button type="button" class="tn'+(S.match&&S.match[i]?' hit':'')+'" data-id="'+i+'"><i class="dot '+n.kind+'" style="--c:var('+DOM_VAR[n.dom]+')"></i><span class="nm">'+esc(n.name)+(n.kind==='folder'?'/':'')+'</span><span class="ds">'+esc(n.desc)+'</span></button>';
+}
+function treeNode(i){var ch=rel[i].children;return '<li>'+btnItem(i)+(ch.length?'<ul>'+ch.map(treeNode).join('')+'</ul>':'')+'</li>'}
+function renderTree(){
+  var src=NODES.filter(function(n){return n.kind==='source'}).map(function(n){return '<li>'+btnItem(n.i)+'</li>'}).join('');
+  panelEl.innerHTML='<h3>파일 목록</h3><p class="sub">노드를 누르거나 아래 목록에서 문서를 고르세요.</p><div class="tree"><ul><li>'+btnItem(0)+'</li>'+treeNode(1)+'</ul><p class="grp">업무 폴더의 원본 파일</p><ul>'+src+'</ul></div>';
+}
+function relRow(label,i){var n=NODES[i];return '<li><button type="button" data-id="'+i+'"><span class="rel-k">'+label+'</span><span>'+esc(n.name)+(n.kind==='folder'?'/':'')+'</span></button></li>'}
+function renderDetail(i){
+  var n=NODES[i],r=rel[i],rows='';
+  if(r.parent>=0){rows+=relRow('들어 있는 폴더',r.parent)}
+  r.children.forEach(function(c){rows+=relRow('포함',c)});
+  r.out.forEach(function(c){rows+=relRow('링크',c)});
+  r.inn.forEach(function(c){rows+=relRow('링크한 문서',c)});
+  var body=n.kind==='folder'?(r.children.map(function(c){return '- '+NODES[c].name+(NODES[c].kind==='folder'?'/':'')}).join('\n')):(n.body||'');
+  var cnt=(r.parent>=0?1:0)+r.children.length+r.out.length+r.inn.length;
+  panelEl.innerHTML='<div class="pn-top"><span class="kind"><i style="--c:var('+DOM_VAR[n.dom]+')"></i>'+KIND[n.kind]+'</span><button type="button" class="x" data-act="close" aria-label="선택 해제">×</button></div>'+
+   '<h3>'+esc(n.name)+(n.kind==='folder'?'/':'')+'</h3><p class="path mono">'+esc(n.path)+'</p><p class="pn-desc">'+esc(n.desc)+'</p>'+
+   '<h4>연결된 항목 ('+cnt+')</h4><ul class="rel">'+rows+'</ul><h4>미리보기</h4><pre class="pv">'+esc(body)+'</pre>';
+  panelEl.scrollTop=0;
+}
+function renderPanel(){if(S.sel>=0){renderDetail(S.sel)}else{renderTree()}}
+
+/* ================= 3D 장면 ================= */
+var cv=$('#gl'),stage=$('#stage'),hasGL=false,renderer,scene,camera,W=1,H=1;
+if(T){try{renderer=new T.WebGLRenderer({canvas:cv,antialias:true,alpha:true,powerPreference:'low-power'});hasGL=true}catch(e){hasGL=false}}
+var orbit={yaw:.65,pitch:.32,dist:34,tx:0,ty:0,tz:0};
+var nptr=0,idleUntil=0;
+function fitDist(){var a=Math.min(1,W/H);return clamp(11.5/(.445*Math.max(a,.4)),19,50)}
+function nodeTarget(i){var f=S.mode==='2d'?1:0;return {x:L3[i][0]+(L2[i][0]-L3[i][0])*f,y:L3[i][1]+(L2[i][1]-L3[i][1])*f,z:L3[i][2]+(L2[i][2]-L3[i][2])*f}}
+
+function select(i,focus){
+  S.sel=i;renderPanel();
+  if(!hasGL)return;
+  if(i>=0&&focus!==false){var c=nodeTarget(i);anim(orbit,{tx:c.x,ty:c.y,tz:c.z,dist:Math.min(orbit.dist,22)},.8,'power3.out')}
+  else if(i<0){anim(orbit,{tx:0,ty:0,tz:0},.8,'power3.out')}
+}
+panelEl.addEventListener('click',function(e){
+  var b=e.target.closest('[data-id],[data-act]');if(!b)return;
+  if(b.getAttribute('data-act')==='close'){select(-1);return}
+  select(+b.getAttribute('data-id'),true);
+});
+
+/* 검색 */
+var qEl=$('#q'),qc=$('#qcount');
+qEl.addEventListener('input',function(){
+  var v=qEl.value.trim().toLowerCase();
+  if(!v){S.match=null;qc.textContent=''}
+  else{var m={},c=0;NODES.forEach(function(n){var hay=(n.name+' '+n.desc+' '+(n.body||'')+' '+n.path).toLowerCase();if(hay.indexOf(v)>=0){m[n.i]=true;c++}});S.match=m;qc.textContent=c?c+'건 일치':'일치 없음'}
+  if(S.sel<0){renderTree()}
+});
+qEl.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&S.match){for(var i=0;i<N;i++){if(S.match[i]){select(i,true);break}}}
+  if(e.key==='Escape'){qEl.value='';S.match=null;qc.textContent='';if(S.sel<0){renderTree()}}
+});
+
+renderPanel();
+window.__brainSelect=function(id){var n=byId[id];if(n)select(n.i,true)};
+
+if(!hasGL){
+  $('#nogl').hidden=false;cv.hidden=true;$('#hint').hidden=true;
+  $$('.seg button,#zin,#zout,#zreset,#auto,#replay').forEach(function(b){b.disabled=true});
+  return;
+}
+
+renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+renderer.setClearColor(0x000000,0);
+scene=new T.Scene();
+camera=new T.PerspectiveCamera(48,1,.1,300);
+scene.add(camera);
+scene.add(new T.AmbientLight(0xffffff,.85));
+var dl=new T.DirectionalLight(0xffffff,.65);dl.position.set(.6,.9,1);camera.add(dl);
+scene.fog=new T.Fog(0xffffff,20,60);
+
+var geoBox=new T.BoxGeometry(1,1,1),geoSph=new T.SphereGeometry(1,22,16);
+NODES.forEach(function(n,i){
+  n.mat=new T.MeshStandardMaterial({color:0xffffff,roughness:.5,metalness:.05,transparent:true});
+  n.mesh=new T.Mesh(n.kind==='folder'?geoBox:geoSph,n.mat);
+  n.base=n.kind==='agent'?2.3:n.kind==='folder'?(n.id==='sb'?1.5:1.2):(n.kind==='source'?.42:.58);
+  n.a=0;n.h=0;n.op=1;n.cur=new T.Vector3();n.sx=0;n.sy=0;n.sr=10;n.front=false;
+  scene.add(n.mesh);
+});
+function lineObj(count,mat){
+  var g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(new Float32Array(count*6),3));
+  var l=new T.LineSegments(g,mat);l.frustumCulled=false;scene.add(l);return l;
+}
+var ceMat=new T.LineBasicMaterial({transparent:true,opacity:.6});
+var leMat=new T.LineDashedMaterial({dashSize:.45,gapSize:.3,transparent:true,opacity:.6});
+var hiMat=new T.LineBasicMaterial({transparent:true,opacity:1});
+var ceLines=lineObj(CE.length,ceMat),leLines=lineObj(LE.length,leMat),hiLines=lineObj(ALLE.length,hiMat);
+hiLines.geometry.setDrawRange(0,0);
+
+var pc=document.createElement('canvas');pc.width=pc.height=64;
+var px=pc.getContext('2d'),gr=px.createRadialGradient(32,32,0,32,32,32);
+gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.4,'rgba(255,255,255,.85)');gr.addColorStop(1,'rgba(255,255,255,0)');
+px.fillStyle=gr;px.fillRect(0,0,64,64);
+var pulseMat=new T.PointsMaterial({size:.8,map:new T.CanvasTexture(pc),transparent:true,depthWrite:false,sizeAttenuation:true});
+var pGeo=new T.BufferGeometry();pGeo.setAttribute('position',new T.BufferAttribute(new Float32Array(LE.length*3),3));
+var pulses=new T.Points(pGeo,pulseMat);pulses.frustumCulled=false;scene.add(pulses);
+var pSpd=[],pPh=[];LE.forEach(function(e,j){pSpd.push(.16+((j*37)%10)/100);pPh.push(((j*53)%100)/100)});
+var ring=new T.Mesh(new T.RingGeometry(1.15,1.35,48),new T.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.95,side:T.DoubleSide,depthTest:false}));
+ring.visible=false;ring.renderOrder=10;scene.add(ring);
+var ag=NODES[0];
+var auraMat=new T.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.16,depthWrite:false,side:T.BackSide});
+var aura=new T.Mesh(new T.SphereGeometry(1,32,24),auraMat);scene.add(aura);
+var wireMat=new T.MeshBasicMaterial({color:0xffffff,wireframe:true,transparent:true,opacity:.3,depthWrite:false});
+var wire=new T.Mesh(new T.IcosahedronGeometry(1,1),wireMat);scene.add(wire);
+var waves=[0,1,2].map(function(){var m=new T.Mesh(new T.RingGeometry(.97,1,72),new T.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0,side:T.DoubleSide,depthWrite:false}));scene.add(m);return m});
+
+function applyPalette(){
+  scene.fog.color.set(css('--stage'));
+  NODES.forEach(function(n){n.mat.color.set(css(DOM_VAR[n.dom]))});
+  ceMat.color.set(css('--edge'));leMat.color.set(css('--edge'));
+  hiMat.color.set(css('--accent'));ring.material.color.set(css('--accent'));pulseMat.color.set(css('--pulse'));
+  auraMat.color.set(css('--accent'));wireMat.color.set(css('--accent'));waves.forEach(function(w){w.material.color.set(css('--accent'))});
+}
+applyPalette();
+var dq=matchMedia('(prefers-color-scheme: dark)');
+if(dq.addEventListener){dq.addEventListener('change',applyPalette)}else{dq.addListener(applyPalette)}
+new MutationObserver(applyPalette).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+
+/* 라벨 */
+var labelsEl=$('#labels');
+NODES.forEach(function(n){
+  var s=document.createElement('span');s.className='lbl'+(n.kind==='folder'||n.kind==='agent'?' lbl-f':'');
+  s.textContent=n.name+(n.kind==='folder'?'/':'');labelsEl.appendChild(s);
+  n.lbl=s;n.lOn=false;n.lDim=false;
+});
+
+function resize(){
+  var r=stage.getBoundingClientRect();W=Math.max(1,r.width);H=Math.max(1,r.height);
+  renderer.setSize(W,H,false);camera.aspect=W/H;camera.updateProjectionMatrix();
+}
+resize();
+if(window.ResizeObserver){new ResizeObserver(resize).observe(stage)}else{window.addEventListener('resize',resize)}
+orbit.dist=fitDist();
+
+/* ================= 프레임 ================= */
+var tmp=new T.Vector3(),visible=true,last=performance.now();
+function update(dt,now){
+  var k=1-Math.exp(-dt*9);
+  if(S.mode==='3d'&&S.auto&&!reduce&&S.sel<0&&nptr===0&&now>idleUntil){orbit.yaw+=dt*.12}
+  var cp=Math.cos(orbit.pitch);
+  camera.position.set(orbit.tx+orbit.dist*Math.sin(orbit.yaw)*cp,orbit.ty+orbit.dist*Math.sin(orbit.pitch),orbit.tz+orbit.dist*Math.cos(orbit.yaw)*cp);
+  camera.lookAt(orbit.tx,orbit.ty,orbit.tz);camera.updateMatrixWorld();
+  scene.fog.near=orbit.dist*.9;scene.fog.far=orbit.dist*2;
+  var f=S.flat,rx=L3[0][0]+(L2[0][0]-L3[0][0])*f,ry=L3[0][1]+(L2[0][1]-L3[0][1])*f,rz=L3[0][2]+(L2[0][2]-L3[0][2])*f;
+  var near=orbit.dist<21,i,n;
+  for(i=0;i<N;i++){
+    n=NODES[i];
+    var bx=L3[i][0]+(L2[i][0]-L3[i][0])*f,by=L3[i][1]+(L2[i][1]-L3[i][1])*f,bz=L3[i][2]+(L2[i][2]-L3[i][2])*f,a=n.a;
+    n.cur.set(rx+(bx-rx)*a,ry+(by-ry)*a,rz+(bz-rz)*a);
+    n.mesh.position.copy(n.cur);
+    n.h+=(((S.hover===i||S.sel===i)?1:0)-n.h)*k;
+    var s=n.base*Math.max(a,.0001)*(1+.25*n.h);
+    n.mesh.scale.setScalar(s);
+    if(n.kind==='folder'&&!reduce){n.mesh.rotation.y+=dt*.35}
+    var dim=isDim(i);n.op+=((dim?.2:1)-n.op)*k;n.mat.opacity=n.op;n.mesh.visible=a>.01;
+    tmp.copy(n.cur).project(camera);
+    n.sx=(tmp.x*.5+.5)*W;n.sy=(-tmp.y*.5+.5)*H;n.front=tmp.z<1&&tmp.z>-1;
+    n.sr=s/(camera.position.distanceTo(n.cur)*.445)*(H/2);
+    var show=n.front&&a>.6&&(n.kind==='folder'||n.kind==='agent'||near||S.sel===i||S.hover===i||(S.sel>=0&&nbr[S.sel][i])||(S.match&&S.match[i]));
+    if(dim&&S.hover!==i&&n.kind!=='folder'&&n.kind!=='agent'){show=false}
+    if(show!==n.lOn){n.lOn=show;n.lbl.classList.toggle('on',show)}
+    if(dim!==n.lDim){n.lDim=dim;n.lbl.classList.toggle('dim',dim)}
+    if(show){n.lbl.style.transform='translate3d('+n.sx.toFixed(1)+'px,'+n.sy.toFixed(1)+'px,0) translate(-50%,'+(Math.round(n.sr)+6)+'px)'}
+  }
+  var as=ag.base*Math.max(ag.a,.0001)*(1+.25*ag.h)*(reduce?1:1+.035*Math.sin(now/700));
+  ag.mesh.scale.setScalar(as);
+  aura.visible=wire.visible=ag.a>.01;
+  aura.position.copy(ag.cur);aura.scale.setScalar(as*1.55);auraMat.opacity=.16*ag.op;
+  wire.position.copy(ag.cur);wire.scale.setScalar(as*1.22);wireMat.opacity=.3*ag.op;
+  if(!reduce){wire.rotation.y+=dt*.25;wire.rotation.x+=dt*.1}
+  for(var wi=0;wi<3;wi++){
+    var wv=waves[wi],wt=((now/1000)/4+wi/3)%1;
+    wv.visible=!reduce&&ag.a>.9;
+    wv.position.copy(ag.cur);wv.quaternion.copy(camera.quaternion);
+    wv.scale.setScalar(ag.base*(1.25+wt*6.5));
+    wv.material.opacity=Math.pow(1-wt,2)*.5*ag.op;
+  }
+  var cePos=ceLines.geometry.attributes.position.array,lePos=leLines.geometry.attributes.position.array,j,e,A,B;
+  for(j=0;j<CE.length;j++){e=CE[j];A=NODES[e[0]].cur;B=NODES[e[1]].cur;cePos[j*6]=A.x;cePos[j*6+1]=A.y;cePos[j*6+2]=A.z;cePos[j*6+3]=B.x;cePos[j*6+4]=B.y;cePos[j*6+5]=B.z}
+  for(j=0;j<LE.length;j++){e=LE[j];A=NODES[e[0]].cur;B=NODES[e[1]].cur;lePos[j*6]=A.x;lePos[j*6+1]=A.y;lePos[j*6+2]=A.z;lePos[j*6+3]=B.x;lePos[j*6+4]=B.y;lePos[j*6+5]=B.z}
+  ceLines.geometry.attributes.position.needsUpdate=true;leLines.geometry.attributes.position.needsUpdate=true;
+  leLines.computeLineDistances();
+  var dimE=(S.sel>=0||S.match)?.14:.6;
+  ceMat.opacity+=(dimE-ceMat.opacity)*k;leMat.opacity+=(dimE-leMat.opacity)*k;
+  var hp=hiLines.geometry.attributes.position.array,c=0;
+  if(S.sel>=0){for(j=0;j<ALLE.length;j++){e=ALLE[j];if(e[0]===S.sel||e[1]===S.sel){A=NODES[e[0]].cur;B=NODES[e[1]].cur;hp[c*6]=A.x;hp[c*6+1]=A.y;hp[c*6+2]=A.z;hp[c*6+3]=B.x;hp[c*6+4]=B.y;hp[c*6+5]=B.z;c++}}}
+  hiLines.geometry.setDrawRange(0,c*2);hiLines.geometry.attributes.position.needsUpdate=true;
+  var pp=pGeo.attributes.position.array,t0=now/1000;
+  for(j=0;j<LE.length;j++){
+    e=LE[j];A=NODES[e[0]];B=NODES[e[1]];
+    if(reduce||Math.min(A.a,B.a)<.95){pp[j*3]=0;pp[j*3+1]=-9999;pp[j*3+2]=0;continue}
+    var tt=(t0*pSpd[j]+pPh[j])%1;
+    pp[j*3]=A.cur.x+(B.cur.x-A.cur.x)*tt;pp[j*3+1]=A.cur.y+(B.cur.y-A.cur.y)*tt;pp[j*3+2]=A.cur.z+(B.cur.z-A.cur.z)*tt;
+  }
+  pGeo.attributes.position.needsUpdate=true;
+  if(S.sel>=0){var sn=NODES[S.sel];ring.visible=true;ring.position.copy(sn.cur);ring.quaternion.copy(camera.quaternion);ring.scale.setScalar(sn.base*(sn.kind==='folder'?1.25:1)*(sn.kind==='agent'?1.5:1.35)*(1+.06*Math.sin(now/260)))}
+  else{ring.visible=false}
+}
+function frame(now){
+  requestAnimationFrame(frame);
+  if(!visible||document.hidden){last=now;return}
+  var dt=Math.min(.05,(now-last)/1000);last=now;
+  update(dt,now);renderer.render(scene,camera);
+}
+
+/* 인트로 (노드가 중심에서 퍼져 나가는 등장) */
+var introDone=false;
+function playIntro(){
+  introDone=true;
+  var fd=fitDist();
+  if(reduce||!G){NODES.forEach(function(n){n.a=1});orbit.dist=fd;return}
+  NODES.forEach(function(n){G.killTweensOf(n);n.a=0;G.to(n,{a:1,duration:.95,delay:.1+depth[n.i]*.3+(n.i%5)*.03,ease:'back.out(1.5)'})});
+  G.killTweensOf(orbit);
+  G.fromTo(orbit,{yaw:orbit.yaw-1.2,dist:fd*1.3},{yaw:orbit.yaw,dist:fd,duration:2.6,ease:'power3.out'});
+}
+if('IntersectionObserver' in window){
+  new IntersectionObserver(function(es){visible=es[0].isIntersecting;if(visible&&!introDone){playIntro()}},{threshold:.2}).observe(stage);
+}else{playIntro()}
+requestAnimationFrame(frame);
+
+/* ================= 조작 ================= */
+function pick(cx,cy){
+  var r=cv.getBoundingClientRect(),x=cx-r.left,y=cy-r.top,best=-1,bd=1e9;
+  for(var i=0;i<N;i++){
+    var n=NODES[i];if(!n.front||n.a<.5)continue;
+    var d=Math.hypot(n.sx-x,n.sy-y),rad=Math.max(16,n.sr+8);
+    if(d<rad&&d<bd){bd=d;best=i}
+  }
+  return best;
+}
+function pan(dx,dy){
+  var sc=2*orbit.dist*.445/H,m=camera.matrixWorld.elements;
+  orbit.tx-=m[0]*dx*sc;orbit.ty-=m[1]*dx*sc;orbit.tz-=m[2]*dx*sc;
+  orbit.tx+=m[4]*dy*sc;orbit.ty+=m[5]*dy*sc;orbit.tz+=m[6]*dy*sc;
+  var l=Math.hypot(orbit.tx,orbit.ty,orbit.tz);if(l>14){var q=14/l;orbit.tx*=q;orbit.ty*=q;orbit.tz*=q}
+}
+function zoomBy(f){orbit.dist=clamp(orbit.dist*f,8,70)}
+var ptrs={},down=null,pinch0=0;
+function pdist(){var k=Object.keys(ptrs);if(k.length<2)return 0;var a=ptrs[k[0]],b=ptrs[k[1]];return Math.hypot(a.x-b.x,a.y-b.y)}
+cv.addEventListener('contextmenu',function(e){e.preventDefault()});
+cv.addEventListener('pointerdown',function(e){
+  try{cv.setPointerCapture(e.pointerId)}catch(_){}
+  ptrs[e.pointerId]={x:e.clientX,y:e.clientY};nptr++;
+  if(nptr===1){down={t:performance.now(),moved:0}}else if(down){down.moved=99}
+  if(nptr===2){pinch0=pdist()}
+  idleUntil=Infinity;if(G){G.killTweensOf(orbit)}
+  cv.style.cursor='grabbing';
+});
+cv.addEventListener('pointermove',function(e){
+  var p=ptrs[e.pointerId];
+  if(!p){
+    if(e.pointerType==='mouse'&&nptr===0){var h=pick(e.clientX,e.clientY);if(h!==S.hover){S.hover=h;cv.style.cursor=h>=0?'pointer':'grab'}}
+    return;
+  }
+  var dx=e.clientX-p.x,dy=e.clientY-p.y;p.x=e.clientX;p.y=e.clientY;
+  if(nptr===1){
+    down.moved+=Math.abs(dx)+Math.abs(dy);
+    if(S.mode==='3d'&&!(e.buttons&2)&&!e.shiftKey){orbit.yaw-=dx*.0065;orbit.pitch=clamp(orbit.pitch+dy*.0055,-1.35,1.35)}
+    else{pan(dx,dy)}
+  }else if(nptr===2){
+    var d=pdist();if(pinch0>0&&d>0){zoomBy(pinch0/d)}pinch0=d;pan(dx/2,dy/2);
+  }
+});
+function endPtr(e){
+  if(!ptrs[e.pointerId])return;
+  delete ptrs[e.pointerId];nptr=Math.max(0,nptr-1);
+  if(nptr===0){
+    idleUntil=performance.now()+2500;cv.style.cursor=S.hover>=0?'pointer':'grab';
+    if(down&&e.type==='pointerup'&&down.moved<6&&performance.now()-down.t<600){var h=pick(e.clientX,e.clientY);select(h,true)}
+    down=null;
+  }else if(nptr===1){pinch0=0}
+}
+cv.addEventListener('pointerup',endPtr);cv.addEventListener('pointercancel',endPtr);
+cv.addEventListener('pointerleave',function(){if(nptr===0&&S.hover>=0){S.hover=-1;cv.style.cursor='grab'}});
+cv.addEventListener('wheel',function(e){e.preventDefault();zoomBy(Math.exp(e.deltaY*.0015));idleUntil=performance.now()+2500},{passive:false});
+
+function wrapYaw(){orbit.yaw-=Math.round(orbit.yaw/(2*Math.PI))*2*Math.PI}
+function setMode(m){
+  if(m===S.mode)return;
+  S.mode=m;
+  $$('.seg button').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-mode')===m?'true':'false')});
+  $('#hint').textContent=m==='3d'?'드래그 회전 · 우클릭·두 손가락 이동 · 휠·핀치 확대':'드래그 이동 · 휠·핀치 확대';
+  wrapYaw();
+  var t=S.sel>=0?nodeTarget(S.sel):{x:0,y:0,z:0};
+  anim(S,{flat:m==='2d'?1:0},1,'power2.inOut');
+  anim(orbit,m==='2d'?{yaw:0,pitch:0,tx:t.x,ty:t.y,tz:t.z}:{yaw:.65,pitch:.32,tx:t.x,ty:t.y,tz:t.z},1,'power2.inOut');
+}
+$$('.seg button').forEach(function(b){b.addEventListener('click',function(){setMode(b.getAttribute('data-mode'))})});
+$('#zin').addEventListener('click',function(){anim(orbit,{dist:clamp(orbit.dist/1.3,8,70)},.35)});
+$('#zout').addEventListener('click',function(){anim(orbit,{dist:clamp(orbit.dist*1.3,8,70)},.35)});
+$('#zreset').addEventListener('click',function(){
+  S.sel=-1;renderPanel();wrapYaw();
+  anim(orbit,{tx:0,ty:0,tz:0,dist:fitDist(),yaw:S.mode==='2d'?0:.65,pitch:S.mode==='2d'?0:.32},.8,'power3.out');
+});
+$('#auto').addEventListener('click',function(){S.auto=!S.auto;this.setAttribute('aria-pressed',S.auto?'true':'false')});
+$('#replay').addEventListener('click',function(){S.sel=-1;renderPanel();idleUntil=performance.now()+3000;playIntro()});
+},{once:true});
+</script>
+<script>
+(function(){
+'use strict';
+var T=window.THREE,G=window.gsap;
+var cv=document.getElementById('hgl'),box=document.getElementById('hstage'),lab=document.getElementById('hlabels'),nogl=document.getElementById('hnogl');
+var css=function(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()};
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var CL=[
+ {id:'agent',name:'메인 에이전트',sub:'AGENTS.md',n:1500,r:1.6,col:'--accent',p:[0,0],sh:'ci',sel:'agent',sp:.16},
+ {id:'root',name:'규칙 문서',sub:'6개',n:520,r:.95,col:'--c-root',p:[-1,-1],sh:'sq',sel:'sb',sp:-.22},
+ {id:'content',name:'콘텐츠',sub:'7개',n:640,r:1.08,col:'--c-content',p:[1,-1],sh:'sq',sel:'c_dir',sp:.2},
+ {id:'dev',name:'개발',sub:'6개',n:580,r:1,col:'--c-dev',p:[-1,1],sh:'sq',sel:'d_dir',sp:.25},
+ {id:'fin',name:'재무',sub:'5개',n:500,r:.9,col:'--c-fin',p:[1,1],sh:'sq',sel:'f_dir',sp:-.18}
+];
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+var renderer,hasGL=false;
+if(T){try{renderer=new T.WebGLRenderer({canvas:cv,antialias:true,alpha:true,powerPreference:'low-power'});hasGL=true}catch(e){hasGL=false}}
+CL.forEach(function(c){
+  var b=document.createElement('button');b.type='button';b.className='hl';b.setAttribute('data-sel',c.sel);
+  b.innerHTML='<i class="'+c.sh+'" style="--c:var('+c.col+')"></i><span>'+c.name+'</span><small>'+c.sub+'</small>';
+  b.setAttribute('aria-label',c.name+' '+c.sub+' — 탐색기에서 열기');
+  lab.appendChild(b);c.el=b;
+});
+function go(sel){location.hash='#brain';setTimeout(function(){if(window.__brainSelect)window.__brainSelect(sel)},80)}
+lab.addEventListener('click',function(e){var b=e.target.closest('[data-sel]');if(b)go(b.getAttribute('data-sel'))});
+if(!hasGL){nogl.hidden=false;cv.hidden=true;return}
+
+var FOV=38,DIST=26;
+var scene=new T.Scene(),camera=new T.PerspectiveCamera(FOV,1,.1,100);
+camera.position.set(0,0,DIST);
+var VS='attribute float aPhase;attribute float aSize;uniform float uTime;uniform float uK;uniform float uBoost;varying float vA;'+
+ 'void main(){vec3 p=position;float tw=.62+.38*sin(uTime*1.4+aPhase*6.2831);p*=1.0+.018*sin(uTime*.8+aPhase*12.0);'+
+ 'vec4 mv=modelViewMatrix*vec4(p,1.0);gl_Position=projectionMatrix*mv;gl_PointSize=aSize*uK*(1.0+uBoost*.4)/(-mv.z)*(.8+.4*tw);vA=tw;}';
+var FS='uniform vec3 uCol;uniform float uAlpha;uniform float uBoost;varying float vA;'+
+ 'void main(){vec2 c=gl_PointCoord-.5;float d=length(c);if(d>.5)discard;float a=smoothstep(.5,.0,d);gl_FragColor=vec4(uCol*(1.0+uBoost*.35),a*uAlpha*(.5+.5*vA));}';
+var dark=function(){return document.documentElement.getAttribute('data-theme')!=='light'};
+CL.forEach(function(c,ci){
+  var r=rng(100+ci*17),pos=new Float32Array(c.n*3),ph=new Float32Array(c.n),sz=new Float32Array(c.n),i,shell=Math.round(c.n*.8);
+  for(i=0;i<c.n;i++){
+    var rad,x,y,z;
+    if(i<shell){var t=(i+.5)/shell,phi=Math.acos(1-2*t),th=Math.PI*(1+Math.sqrt(5))*i;x=Math.cos(th)*Math.sin(phi);y=Math.cos(phi);z=Math.sin(th)*Math.sin(phi);rad=.88+.12*r()}
+    else{var u=r()*2-1,a=r()*Math.PI*2,s=Math.sqrt(1-u*u);x=s*Math.cos(a);y=u;z=s*Math.sin(a);rad=.15+.7*Math.cbrt(r())}
+    pos[i*3]=x*rad;pos[i*3+1]=y*rad;pos[i*3+2]=z*rad;ph[i]=r();sz[i]=.07+r()*.11+(r()<.04?.12:0);
+  }
+  var g=new T.BufferGeometry();
+  g.setAttribute('position',new T.BufferAttribute(pos,3));g.setAttribute('aPhase',new T.BufferAttribute(ph,1));g.setAttribute('aSize',new T.BufferAttribute(sz,1));
+  var m=new T.ShaderMaterial({vertexShader:VS,fragmentShader:FS,transparent:true,depthWrite:false,blending:T.AdditiveBlending,uniforms:{uTime:{value:0},uK:{value:300},uBoost:{value:0},uCol:{value:new T.Color(0xffffff)},uAlpha:{value:.9}}});
+  c.mat=m;c.pts=new T.Points(g,m);c.pts.frustumCulled=false;c.pts.rotation.set(.35+ci*.2,ci,0);c.grp=new T.Group();c.grp.add(c.pts);scene.add(c.grp);c.boost=0;c.k=1;c.sx=0;c.sy=0;c.sr=40;
+});
+var lineGeo=new T.BufferGeometry();lineGeo.setAttribute('position',new T.BufferAttribute(new Float32Array(8*3),3));
+var lineMat=new T.LineBasicMaterial({transparent:true,opacity:.45});
+var lines=new T.LineSegments(lineGeo,lineMat);lines.frustumCulled=false;scene.add(lines);
+var pc=document.createElement('canvas');pc.width=pc.height=64;var px=pc.getContext('2d'),gr=px.createRadialGradient(32,32,0,32,32,32);
+gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.4,'rgba(255,255,255,.7)');gr.addColorStop(1,'rgba(255,255,255,0)');px.fillStyle=gr;px.fillRect(0,0,64,64);
+var tex=new T.CanvasTexture(pc);
+var pulseMat=new T.PointsMaterial({size:.5,map:tex,transparent:true,depthWrite:false,sizeAttenuation:true});
+var pGeo=new T.BufferGeometry();pGeo.setAttribute('position',new T.BufferAttribute(new Float32Array(4*3),3));
+var pulses=new T.Points(pGeo,pulseMat);pulses.frustumCulled=false;scene.add(pulses);
+var glow=new T.Sprite(new T.SpriteMaterial({map:tex,transparent:true,depthWrite:false,opacity:.35,blending:T.AdditiveBlending}));scene.add(glow);
+
+function paint(){
+  var d=dark();
+  CL.forEach(function(c){c.mat.uniforms.uCol.value.set(css(c.col));c.mat.blending=d?T.AdditiveBlending:T.NormalBlending;c.mat.uniforms.uAlpha.value=d?.9:.85;c.mat.needsUpdate=true});
+  lineMat.color.set(css('--edge'));pulseMat.color.set(css('--pulse'));glow.material.color.set(css('--accent'));glow.material.opacity=d?.3:.0;
+  draw();
+}
+var W=1,H=1,visW=1,visH=1,kk=1;
+function layout(){
+  var half=Math.tan(FOV*Math.PI/360)*DIST;visH=half*2;visW=visH*(W/H);
+  kk=Math.max(.55,Math.min(visW,visH)/12);
+  var ax=visW*.31,ay=visH*.27;
+  var lp=lineGeo.attributes.position.array,n=0;
+  CL.forEach(function(c,i){
+    c.k=kk;c.grp.position.set(c.p[0]*ax,-c.p[1]*ay*(i?1:0),[0,-2.2,2.2,2.2,-2.2][i]*kk);c.grp.scale.setScalar(c.r*kk);
+    c.mat.uniforms.uK.value=(H*renderer.getPixelRatio())/(2*Math.tan(FOV*Math.PI/360))*kk;
+    if(i>0){lp[n++]=0;lp[n++]=0;lp[n++]=0;lp[n++]=c.grp.position.x;lp[n++]=c.grp.position.y;lp[n++]=c.grp.position.z}
+  });
+  // 위성끼리도 한 줄로 연결
+  var s=CL.slice(1),pairs=[[0,1],[1,3],[3,2],[2,0]];
+  pairs.forEach(function(p){});
+  lineGeo.setDrawRange(0,8);lineGeo.attributes.position.needsUpdate=true;
+  glow.position.set(0,0,-1);glow.scale.setScalar(CL[0].r*kk*5.2);
+  pulseMat.size=.5*kk;
+}
+var tmp=new T.Vector3();
+function place(){
+  CL.forEach(function(c){
+    tmp.copy(c.grp.position).project(camera);c.sx=(tmp.x*.5+.5)*W;c.sy=(-tmp.y*.5+.5)*H;
+    c.sr=c.r*kk/(visH/2)*(H/2)*(DIST/(DIST));
+    c.el.style.transform='translate3d('+c.sx.toFixed(1)+'px,'+(c.sy+c.sr+16).toFixed(1)+'px,0) translate(-50%,-50%)';
+  });
+}
+function resize(){
+  var r=box.getBoundingClientRect();if(r.width<2||r.height<2)return;
+  W=r.width;H=r.height;renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));renderer.setSize(W,H,false);camera.aspect=W/H;camera.updateProjectionMatrix();layout();place();draw();
+}
+var yaw=0,pitch=.12,vyaw=0,drag=null,moved=0;
+var T0=performance.now(),last=T0,hover=-1,px0=0,py0=0,tx=0,ty=0;
+function draw(){if(W>1)renderer.render(scene,camera)}
+function frame(now){
+  requestAnimationFrame(frame);
+  if(!on||document.hidden){last=now;return}
+  var dt=Math.min(.05,(now-last)/1000);last=now;
+  var t=(now-T0)/1000,k=1-Math.exp(-dt*8);
+  if(!drag){yaw+=vyaw*dt*60;vyaw*=Math.pow(.92,dt*60);if(!reduce&&Math.abs(vyaw)<.002)yaw+=dt*.12}
+  var cp=Math.cos(pitch);camera.position.set(DIST*Math.sin(yaw)*cp,DIST*Math.sin(pitch),DIST*Math.cos(yaw)*cp);camera.lookAt(0,0,0);
+  CL.forEach(function(c,i){
+    c.mat.uniforms.uTime.value=reduce?0:t;
+    if(!reduce){c.pts.rotation.y+=dt*c.sp;c.pts.rotation.x+=dt*c.sp*.35}
+    c.boost+=((hover===i?1:0)-c.boost)*k;c.mat.uniforms.uBoost.value=c.boost;
+  });
+  var lp=pGeo.attributes.position.array;
+  for(var j=0;j<4;j++){
+    var s=CL[j+1].grp.position,tt=reduce?.5:((t*.12+j*.27)%1);
+    lp[j*3]=s.x*tt;lp[j*3+1]=s.y*tt;lp[j*3+2]=s.z*tt;
+  }
+  pGeo.attributes.position.needsUpdate=true;
+  place();draw();
+}
+var on=false,seen=true;
+function upd(){on=window.__view==='home'&&seen&&!reduce_off()}
+function reduce_off(){return false}
+document.addEventListener('viewchange',function(){upd();if(window.__view==='home'){setTimeout(function(){resize();intro()},30)}});
+if('IntersectionObserver' in window){new IntersectionObserver(function(es){seen=es[0].isIntersecting;upd()},{threshold:.01}).observe(box)}
+var played=false;
+function intro(){
+  if(played||reduce||!G)return;played=true;
+  CL.forEach(function(c,i){var o={s:0};c.grp.scale.setScalar(.001);G.to(o,{s:1,duration:1,delay:.1+i*.12,ease:'back.out(1.4)',onUpdate:function(){c.grp.scale.setScalar(Math.max(.001,c.r*kk*o.s))}})});
+}
+box.style.touchAction='pan-y';
+function pickAt(x,y){var best=-1,bd=1e9;CL.forEach(function(c,i){var d=Math.hypot(c.sx-x,c.sy-y);if(d<c.sr+14&&d<bd){bd=d;best=i}});return best}
+box.addEventListener('pointerdown',function(e){
+  if(e.button>0)return;drag={x:e.clientX,y:e.clientY,id:e.pointerId,touch:e.pointerType==='touch'};moved=0;vyaw=0;
+  try{box.setPointerCapture(e.pointerId)}catch(_){}
+  box.style.cursor='grabbing';
+});
+box.addEventListener('pointermove',function(e){
+  var r=box.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+  if(drag&&drag.id===e.pointerId){
+    var dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag.x=e.clientX;drag.y=e.clientY;moved+=Math.abs(dx)+Math.abs(dy);
+    yaw-=dx*.008;vyaw=-dx*.008*.6;if(!drag.touch){pitch=Math.max(-.9,Math.min(.9,pitch+dy*.006))}
+    return;
+  }
+  hover=pickAt(x,y);box.style.cursor=hover>=0?'pointer':'grab';
+});
+function endDrag(e){if(drag&&drag.id===e.pointerId){drag=null;box.style.cursor=hover>=0?'pointer':'grab'}}
+box.addEventListener('pointerup',endDrag);box.addEventListener('pointercancel',endDrag);
+box.addEventListener('pointerleave',function(){hover=-1});
+box.addEventListener('click',function(e){
+  if(moved>6){e.stopPropagation();e.preventDefault();moved=0;return}
+  if(e.target.closest('[data-sel]'))return;
+  var r=box.getBoundingClientRect(),best=pickAt(e.clientX-r.left,e.clientY-r.top);
+  if(best>=0)go(CL[best].sel);
+},true);
+box.style.cursor='grab';
+if(window.ResizeObserver){new ResizeObserver(resize).observe(box)}else{window.addEventListener('resize',resize)}
+new MutationObserver(paint).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+paint();resize();upd();requestAnimationFrame(frame);
+})();
+
+</script>
