@@ -15,7 +15,7 @@ Nomad-Lab AI 업무 시스템 — **SSR+** (Skill · Second brain · Routine · 
 | `app/guide/` | PDF 가이드 쪽 이미지 |
 | `src/style.css` | 디자인 토큰·레이아웃·반응형·라벨 스타일 |
 | `src/body.html` | GNB·상단 바·홈 화면 정적 마크업 |
-| `src/app.js` | 데이터·렌더러·편집 모달·라우터·가이드 뷰어·기기 미리보기 |
+| `src/app.js` | 데이터·렌더러·편집 모달·라우터·가이드 뷰어·기기 미리보기·ArtCraft 앱 16종 데이터와 설치 프롬프트 생성 |
 | `src/home3d.js` | 홈의 입자 구 3D 장면(드래그 회전) |
 | `src/explorer.js` | 세컨드 브레인 3D 탐색기(입자 구, 라벨 옵션) |
 | `src/prompts.json`, `src/pages.json` | PDF에서 추출한 프롬프트·페이지 텍스트 |
@@ -36,7 +36,7 @@ cd src && node build.js   # ../app/index.html 생성
 | 홈 | `#home` | 오늘의 AI 업무 시스템 대시보드 |
 | SSR+ | `#skill` `#brain` `#routine` `#ext` | 단계별 초·중·고급, 복사용 프롬프트, 완료 기준 |
 | 다른 대시보드 | `#brand` `#content` `#ideas` | 브랜드 라이브러리 · 콘텐츠 라이브러리(4단계 보드) · 아이디어 패드(린 검증 프롬프트) |
-| 앱 | `#artcraft` | ArtCraft 앱 7종, 설치·작업 프롬프트, 한계 |
+| 앱 | `#artcraft` `#artapps` | ArtCraft 앱 구조(16종 카드·분류 필터·런처/사이트 버튼) · 앱 16종 상세 가이드 |
 | 가이드 | `#guide` `#plan` `#spec` | PDF 뷰어·검색 · 7일 세팅 계획 · 기획 요약 |
 
 ### 홈 (3열)
@@ -56,6 +56,12 @@ cd src && node build.js   # ../app/index.html 생성
 
 ### 사용 가이드 (PDF)
 SSR+ 13쪽 + ArtCraft 4쪽을 이미지 뷰어로 제공합니다. 썸네일, 쪽 이동, 본문 검색, 쪽별 텍스트. 발표자 얼굴 화면은 제외했습니다.
+
+### ArtCraft 앱 (16종)
+- **`#artcraft`**: 연결 구조(런처→앱→MCP·CLI→AGENTS.md→Claude), 앱 16종 카드(4열, 모바일 1열). 이미지·사진 / 영상·사운드 / 문서·출판 / 디자인·설계 / 도구로 거르기. 카드에는 런처 아이콘, 한 줄 소개, 비슷한 앱, MCP·버전 표시. 상단에 **가이드 보기 · 앱 16종 상세 가이드 · ArtCraft 사이트 바로가기 · 런처 다운받기** 버튼.
+- **`#artapps` 앱 16종 상세 가이드**: 앱별 설명·핵심 기능·한눈에 보기(비슷한 앱, 지원 형식, 런처 버전, 개발 상태, MCP·CLI, Rust 요구 버전)·예시 요청·**CLI·MCP 설치 프롬프트(복사)**·알아둘 점·공식 링크. 설치 전 확인 사항, OS별 권한 때문에 직접 해야 하는 부분, 만능 설치 틀, 여러 앱 한 번에 설치 프롬프트 포함.
+- 앱: PhotoCraft · VectorCraft · FilmCraft · LightCraft · PdfCraft · EffectCraft · DesignCraft · FigCraft · WordCraft · SoundCraft · DeckCraft · CADCraft · GridCraft · TextureCraft · Craft Anything · SolidCraft(Tangency Labs, 외부 제작).
+- 정보 출처: getartcraft.com 앱 소개 페이지, 런처 화면(2026-11-02). "비슷한 앱"의 (추정)은 앱 설명을 보고 붙인 비교이며 공식 설명이 아닙니다. MCP는 공식 페이지에 명시된 앱만 표시하고 나머지는 "미기재"입니다.
 
 ### 기획 요약
 - 목적·탐색기 사양·단계별 확장·화면 구조·사업 연결 아이디어
@@ -84,5 +90,6 @@ SSR+ 13쪽 + ArtCraft 4쪽을 이미지 뷰어로 제공합니다. 썸네일, �
 
 ## 참고·주의
 - 노드·목록·숫자는 예시 데이터입니다.
-- 사용 가이드 이미지는 외부 PDF(챗대리 가이드)에서 가져온 것이므로 공개 저장소로 전환하기 전에 사용 허락을 확인하세요.
+- 사용 가이드 쪽 화면은 A4 세로 비율로 고정되어 있습니다. 사용 가이드 이미지는 외부 PDF(챗대리 가이드)에서 가져온 것이므로 공개 저장소로 전환하기 전에 사용 허락을 확인하세요.
+- 앱 아이콘 16개는 ArtCraft 런처 화면에서 잘라 쓴 ArtCraft의 이미지입니다(앱 로고·이름은 상표 조건이 있으므로 공개 전 사용 조건 확인). 공식 사이트 스크린샷은 사용하지 않았습니다.
 - ArtCraft 일부 프롬프트는 PDF 글자가 깨져 직접 옮겨 적었으니 원본과 대조해 확인하세요.
