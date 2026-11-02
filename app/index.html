@@ -1,3 +1,7 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Nomad-Agents-SYSTEM</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -423,6 +427,26 @@ a.ringbox{border-radius:10px}
 #stage[data-lbl="text"] .lbl{background:transparent;color:#fff;font-weight:600;text-shadow:0 0 2px #000,0 0 5px #000,0 1px 3px #000}
 #stage[data-lsz="l"] .lbl{font-size:calc(var(--fs-label) + 3px)}
 
+/* ArtCraft 앱 16종 */
+.appfilter{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:12px}
+.appfilter .seg{flex-wrap:wrap}
+a.app-c{text-decoration:none;color:inherit;transition:border-color .2s,transform .2s}
+a.app-c:hover{border-color:var(--c,var(--accent));transform:translateY(-2px)}
+.app-c h3 small{font-weight:400;color:var(--muted);font-size:var(--fs-label)}
+.app-c .more{margin-top:6px;font-size:var(--fs-label);color:var(--label);font-family:var(--font-mono)}
+.appd-list{display:flex;flex-direction:column;gap:10px}
+details.appd{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--c,var(--accent));border-radius:12px;scroll-margin-top:80px}
+details.appd summary{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;padding:12px 16px;cursor:pointer;list-style:none}
+details.appd summary::-webkit-details-marker{display:none}
+details.appd summary .nm{font-size:var(--fs-h3);font-weight:700}
+details.appd summary .sm{font-size:var(--fs-small);color:var(--muted)}
+details.appd summary .tags{display:flex;flex-wrap:wrap;gap:6px}
+details.appd[open] summary{border-bottom:1px solid var(--line)}
+@container pg (min-width:820px){details.appd summary{grid-template-columns:200px minmax(0,1fr);align-items:center}details.appd summary .tags{grid-column:1/-1}}
+.appbody{display:flex;flex-direction:column;gap:18px;padding:16px}
+.appbody h3{margin-bottom:8px}
+.appbody .tbl td:first-child{white-space:nowrap;color:var(--muted);width:1%}
+
 </style>
 <div class="app" id="app">
   <aside class="gnb" id="gnb" aria-label="주 메뉴">
@@ -691,13 +715,13 @@ var VIEWS={
  home:{t:'홈'},
  skill:{t:'S · 스킬',ssr:SSR.skill},brain:{t:'S · 세컨드 브레인',ssr:SSR.brain},routine:{t:'R · 루틴',ssr:SSR.routine},ext:{t:'+ · 익스텐션',ssr:SSR.ext},
  brand:{t:'브랜드 라이브러리'},content:{t:'콘텐츠 라이브러리'},ideas:{t:'아이디어 패드'},
- artcraft:{t:'ArtCraft 앱'},guide:{t:'사용 가이드 (PDF)'},plan:{t:'7일 세팅 계획'},spec:{t:'기획 요약'}
+ artcraft:{t:'ArtCraft 앱'},artapps:{t:'ArtCraft 앱 16종 가이드'},guide:{t:'사용 가이드 (PDF)'},plan:{t:'7일 세팅 계획'},spec:{t:'기획 요약'}
 };
 var NAV=[
  {g:'',items:[{id:'home',t:'홈',ic:'home'}]},
  {g:'SSR+ FRAMEWORK',items:[{id:'skill',t:'스킬',en:'SKILL',lt:'S',key:'s1'},{id:'brain',t:'세컨드 브레인',en:'SECOND BRAIN',lt:'S',key:'s2'},{id:'routine',t:'루틴',en:'ROUTINE',lt:'R',key:'s3'},{id:'ext',t:'익스텐션',en:'EXTENSION',lt:'+',key:'s4'}]},
  {g:'다른 대시보드',items:[{id:'brand',t:'브랜드 라이브러리',ic:'brand'},{id:'content',t:'콘텐츠 라이브러리',ic:'content'},{id:'ideas',t:'아이디어 패드',ic:'ideas'}]},
- {g:'앱',items:[{id:'artcraft',t:'ArtCraft',ic:'artcraft'}]},
+ {g:'앱',items:[{id:'artcraft',t:'ArtCraft',ic:'artcraft'},{id:'artapps',t:'앱 16종 상세 가이드',ic:'guide'}]},
  {g:'가이드',items:[{id:'guide',t:'사용 가이드 (PDF)',ic:'guide'},{id:'plan',t:'7일 세팅 계획',ic:'plan'},{id:'spec',t:'기획 요약',ic:'spec'}]}
 ];
 $('#nav').innerHTML=NAV.map(function(g){
@@ -934,19 +958,178 @@ var ARTP={
 };
 Object.keys(ARTP).forEach(function(k){P['art_'+k]=ARTP[k]});
 function pr(title,k){return '<div class="prompt"><header><span>복사용 프롬프트 — '+esc(title)+'</span><button type="button" class="btn sm" data-copy="'+k+'">복사</button></header><pre>'+esc(P[k])+'</pre></div>'}
+/* ---------- ArtCraft 앱 16종 데이터 (공식 앱 페이지·런처 화면 기준, 2026-11-02) ---------- */
+var ACAT=[['all','전체'],['img','이미지·사진'],['av','영상·사운드'],['doc','문서·출판'],['dsg','디자인·설계'],['tool','도구']];
+var ACATN={img:'이미지·사진',av:'영상·사운드',doc:'문서·출판',dsg:'디자인·설계',tool:'도구'};
+var GH='https://github.com/storytold/';
+/* mcp: Y=공식 앱 페이지에 MCP 명시, G=ArtCraft 가이드의 AGENTS.md 기준, N=앱 페이지에 미기재, U=확인 불가 */
+var ARTAPPS=[
+ {id:'photocraft',n:'PhotoCraft',cat:'img',c:'var(--c-content)',sim:'포토샵',tag:'이미지 편집',ver:'0.19.0',st:'Early alpha',rust:'1.90',mcp:'N',job:'이미지를 편집',
+  desc:'레이어·마스크·조정 레이어·레이어 스타일·문자·벡터·브러시를 갖춘 Rust 네이티브 이미지 편집기입니다. 오프라인으로 동작하고, 익숙한 메뉴·단축키·패널 구성을 목표로 합니다.',
+  feats:['레이어드 PSD·PSB 열기·저장(공식 페이지 기준 테스트 파일 135개 중 134개가 바이트 단위로 왕복 일치)','조정 레이어 16종, 실시간 미리보기 필터 70개 이상, 스마트 오브젝트·스마트 필터','기기 안에서 실행되는 피사체·객체 선택과 마스크 다듬기','8·16·32비트, RGB·CMYK·Lab·그레이스케일, ICC 색 관리와 소프트 프루핑','Metal·Vulkan·DirectX 12·WebGPU 기반 GPU 캔버스(Electron·웹뷰 없음)'],
+  fmt:'PSD, PSB',tasks:['열려 있는 PSD에서 배경 레이어를 복제하고 밝기·대비 조정 레이어를 추가해줘. 원본 레이어는 건드리지 마.','이 이미지의 피사체를 선택해 마스크로 만들고 배경을 흰색으로 바꿔 새 파일로 저장해줘.'],
+  lim:'공식 가이드: 생성형 AI 기능이 없습니다. 페이지 기준 MCP는 명시되지 않고 CLI만 안내됩니다.'},
+ {id:'vectorcraft',n:'VectorCraft',cat:'dsg',c:'var(--c-dev)',sim:'일러스트레이터',tag:'벡터 일러스트',ver:'0.20.0',st:'In development',rust:'1.90',mcp:'Y',job:'벡터 도안을 편집',agents:GH+'vectorcraft/blob/main/AGENTS.md',
+  desc:'펜·직접 선택·도형 불리언·스냅 가이드·모양 패널을 갖춘 순수 Rust 벡터 일러스트 앱입니다. 네이티브 앱과 브라우저에서 모두 실행됩니다.',
+  feats:['정확한 곡선 불리언, 무제한 실행 취소','블렌드·엔벨로프 왜곡·그라디언트 메시·방사/격자/거울 반복·글로우·그림자 등 편집 가능한 라이브 효과','이미지 추적 프리셋 12종','3D 회전체, 치수, 원근 격자','모든 메뉴·도구·패널·대화상자가 명령으로 노출되어 AI가 그림을 그리고 고칠 수 있음(MCP)'],
+  fmt:'네이티브 JSON, SVG·PDF 가져오기/내보내기, PNG·JPEG·WebP 출력',tasks:['열린 문서를 명함 인쇄 규격(90×50mm)으로 맞추고 앞면·뒷면을 나눠 새 파일로 저장해줘. 덮어쓰기 금지.','이 로고를 SVG로 내보내고 색을 CMYK에 맞게 정리해줘.'],
+  lim:'공식 가이드: .ai 파일 교환이 아직 안정적이지 않습니다.'},
+ {id:'filmcraft',n:'FilmCraft',cat:'av',c:'var(--accent)',sim:'프리미어 프로',tag:'영상 편집·색·사운드',ver:'0.16.0',st:'In development',rust:'1.95',mcp:'G',job:'영상을 편집',agents:GH+'filmcraft/blob/main/AGENTS.md',
+  desc:'소스·프로그램 모니터, 실제 타임라인, 모든 트림 모드와 자체 코덱을 갖춘 순수 Rust 영상 편집기입니다.',
+  feats:['소스·프로그램 모니터, 3점 편집, 모든 트림 모드, J/K/L 다이내믹 트리밍','정수 타임베이스로 23.976·29.97 드롭 프레임을 정확히 처리','H.264·HEVC·ProRes·VP9·AAC·Opus 자체 디코더(FFmpeg 미사용)','커브·컬러 휠·HSL 보조 보정·LUT·HDR·로그·스코프','영상 효과 약 55종, 전환 30종, 키프레임과 값·속도 그래프, 선형광 GPU 합성','EBU R128 라우드니스 미터, 자동화 믹서, 네이티브 DSP 효과'],
+  fmt:'H.264, HEVC, ProRes, VP9, AAC, Opus 등',tasks:['열린 시퀀스의 11초~42초 구간이 너무 푸르니 균형 잡히게 색감을 조정해줘.','2분 51초 전환 구간에 글리치 효과를 추가해줘.'],
+  lim:'공식 가이드: .prproj 파일 열기 불가, 플러그인(VST3·OpenFX) 사용 불가, 글리치 효과가 프리미어보다 덜 세련됨.'},
+ {id:'lightcraft',n:'LightCraft',cat:'img',c:'var(--c-fin)',sim:'라이트룸',tag:'사진 라이브러리·RAW 현상',ver:'0.17.0',st:'In development',rust:'1.90',mcp:'N',job:'사진을 보정',
+  desc:'계정·클라우드·텔레메트리·구독이 없는 순수 Rust 사진 라이브러리 겸 RAW 현상 앱입니다. 원본은 수정하지 않는 비파괴 방식입니다.',
+  feats:['장면 기준·광색역·32비트 부동소수점 비파괴 파이프라인','밝기·색·효과·톤 커브·8밴드 컬러 믹서·3방향 컬러 그레이딩 휠, 내장 프리셋 18종','브러시·선형/방사 그라디언트·휘도/색상 범위·하늘/피사체/배경 마스크','DNG·CR2·ARW·NEF·RAF(X-Trans 포함)·RW2·PEF·ORF 순수 Rust 디코더','앨범·별점·플래그·필드 검색 라이브러리, GPU 현상(24MP RAW 슬라이더 이동당 약 4ms)'],
+  fmt:'RAW(DNG·CR2·ARW·NEF·RAF·RW2·PEF·ORF)',tasks:['이 폴더의 사진 중 별점 4 이상만 골라 앨범으로 묶어줘.','선택한 RAW 사진에 따뜻한 톤 프리셋을 적용하고 노출을 조금 낮춰줘.'],
+  lim:'페이지 기준 MCP는 명시되지 않고 CLI만 안내됩니다.'},
+ {id:'pdfcraft',n:'PdfCraft',cat:'doc',c:'var(--c-root)',sim:'아크로뱃',tag:'PDF 읽기·정리·보호',ver:'0.17.0',st:'Early alpha',rust:'1.90',mcp:'N',job:'PDF를 편집',
+  desc:'PDF를 읽고 정리·병합·분할·보안 설정까지 하는 오픈소스 PDF 작업대입니다. 계정·텔레메트리·클라우드가 없습니다.',
+  feats:['세계 문자·세로쓰기 일본어·컬러 이모지·투명도 렌더링(공식 페이지: 983개 파일 테스트에서 크래시 0건)','입력하는 즉시 찾는 검색, 읽기 순서를 따르는 텍스트 선택','페이지 회전·삭제·삽입·순서 변경과 깊은 실행 취소','병합·추출·분할 시 링크·양식·레이어·북마크 유지','증분·원자적 저장, 자동 저장과 충돌 복구','RC4부터 AES-256 암호화 파일 열기, 작성자 권한 존중'],
+  fmt:'PDF',tasks:['이 PDF에서 3~7쪽만 추출해 새 파일로 저장해줘.','PDF 두 개를 하나로 합치고 북마크를 유지해줘.'],
+  lim:'공식 페이지: Early alpha. MCP는 명시되지 않습니다.'},
+ {id:'effectcraft',n:'EffectCraft',cat:'av',c:'var(--c-root)',sim:'애프터 이펙트',tag:'모션 그래픽·시각 효과',ver:'0.20.0',st:'In development',rust:'1.95',mcp:'N',job:'모션 그래픽을 편집',
+  desc:'컴포지션·레이어·키프레임 기반의 순수 Rust 모션 그래픽·VFX 합성 앱입니다. 젊지만 이미 쓸 만하다고 소개합니다.',
+  feats:['선형·베지어·홀드·이징·로빙 키프레임과 그래프 에디터','솔리드·셰이프·텍스트·푸티지·중첩 컴포지션·널·조정 레이어·카메라·조명, 부모 지정, 트랙 매트, 블렌드 모드 38종','블러·색 보정·키잉·파티클·시간 등 효과 259종','3D 레이어, 카메라, 피사계 심도, 부드러운 레이 트레이싱 그림자','JavaScript 표현식(wiggle·루프·레이어 참조), 렌더 큐','H.264·ProRes(알파 포함)·PNG·TIFF·32비트 EXR 시퀀스·GIF 내보내기, Lottie 가져오기/내보내기'],
+  fmt:'H.264, ProRes, PNG, TIFF, EXR, GIF, Lottie',tasks:['텍스트 레이어에 위로 떠오르며 나타나는 키프레임 애니메이션을 만들어줘.','이 컴포지션을 알파 포함 ProRes로 렌더 큐에 넣어줘.'],
+  lim:'공식 가이드: 애프터 이펙트 플러그인 사용 불가. 페이지 기준 MCP는 명시되지 않습니다.'},
+ {id:'designcraft',n:'DesignCraft',cat:'doc',c:'var(--c-dev)',sim:'인디자인',tag:'페이지 레이아웃·출판',ver:'0.16.0',st:'In development',rust:'1.90',mcp:'Y',job:'페이지 레이아웃을 편집',
+  desc:'스프레드·마스터 페이지·연결된 스토리·스타일·스와치·텍스트 감싸기·단락 조판기를 갖춘 오픈소스 페이지 레이아웃·출판 앱입니다. 구독·라이선스 서버·텔레메트리가 없습니다.',
+  feats:['스프레드, 마스터 페이지, 프레임과 연결 스토리, 단락·문자 스타일, 스와치, 텍스트 감싸기','Knuth–Plass 단락 조판기, 사전 하이픈, 옵티컬 마진, 기준선 격자','선택 가능한 텍스트와 임베디드 폰트, CMYK·별색, 블리드·재단선, PDF/A 내보내기','멀티스레드 SIMD 렌더링, 즉시 실행 취소','모든 메뉴·도구·패널·대화상자를 JSON 제어 채널과 MCP 서버로 제어(designcraft-cli 포함)'],
+  fmt:'네이티브 형식, PNG 내보내기, 레이아웃 교환 형식, PDF/A',tasks:['이 원고를 A5 2단 레이아웃으로 배치하고 장 제목 스타일을 적용해줘.','블리드 3mm와 재단선을 넣어 인쇄용 PDF/A로 내보내줘.'],
+  lim:'공식 페이지: In development.'},
+ {id:'figcraft',n:'FigCraft',cat:'dsg',c:'var(--c-content)',sim:'피그마(추정)',tag:'인터페이스 디자인·프로토타이핑',ver:'0.14.0',st:'Early alpha',rust:'1.95',mcp:'Y',job:'화면 디자인을 편집',
+  desc:'열자마자 실행되고 오프라인으로 동작하는 순수 Rust 인터페이스 디자인·프로토타이핑 앱입니다. 계정·텔레메트리·구독이 없습니다.',
+  feats:['프레임, 양방향 오토 레이아웃(랩·그리드), Hug/Fill/Fixed 크기, 제약, 레이아웃 격자','컴포넌트 인스턴스와 오버라이드, 변형이 있는 컴포넌트 세트, 라이트/다크 모드 스타일·변수','펜·연필·셰이프 빌더·편집 가능한 불리언','연결·트리거·애니메이션 전환·프레젠테이션 보기','Dev Mode: 측정, 주석, CSS·HTML·React·SwiftUI·Compose 코드 생성','실시간 공동 편집, 400개 이상의 명령을 CLI·JSON 제어 채널·MCP 서버로 제어'],
+  fmt:'네이티브 형식',tasks:['로그인 화면 프레임을 오토 레이아웃으로 만들고 버튼을 컴포넌트로 묶어줘.','선택한 화면의 Dev Mode 코드를 React로 뽑아줘.'],
+  lim:'공식 페이지: Early alpha.'},
+ {id:'wordcraft',n:'WordCraft',cat:'doc',c:'var(--c-fin)',sim:'워드(추정)',tag:'글쓰기·문서 디자인',ver:'0.14.0',st:'In development',rust:'1.90',mcp:'Y',job:'문서를 편집',
+  desc:'리본 인터페이스와 스타일 갤러리를 갖춘 빠른 오픈소스 워드 프로세서입니다.',
+  feats:['.docx 네이티브 읽기·쓰기, .odt·.rtf·.html·.md·.txt 가져오기/내보내기','선택 가능한 텍스트의 PDF 내보내기','단락 레이아웃 캐시(공식 페이지: 188쪽 문서 재배치 약 1.4ms)','변경 내용 추적, 여백 메모, 수락·거부, 문서 비교, 오프라인 맞춤법·문법 검사','목차·각주·인용·참고문헌(APA·MLA·Chicago·IEEE)·색인·캡션, 메일 머지','389개 명령을 리본·단축키·CLI·JSON 제어 채널·MCP 서버로 제어(wordcraft-cli)'],
+  fmt:'DOCX, ODT, RTF, HTML, MD, TXT, PDF',tasks:['이 원고의 제목 스타일을 통일하고 목차를 삽입해줘.','변경 내용 추적을 켜고 오탈자를 고쳐줘.'],
+  lim:'공식 페이지: In development.'},
+ {id:'soundcraft',n:'SoundCraft',cat:'av',c:'var(--c-dev)',sim:'오디오 워크스테이션(DAW)',tag:'녹음·편집·믹싱',ver:'0.16.0',st:'In development',rust:'1.90',mcp:'N',job:'오디오를 편집',
+  desc:'편집 창과 믹스 창을 따로 둔 순수 Rust 디지털 오디오 워크스테이션입니다. 멀티트랙 오디오·MIDI와 오프라인 처리를 지원합니다.',
+  feats:['Shuffle·Slip·Spot·Grid 편집 모드, 컴핑 플레이리스트, 메모리 위치','트랙당 인서트 10개·센드 10개, 버스·AUX·VCA, 플러그인 지연 자동 보정','Write·Touch·Latch·Trim 오토메이션','내장 EQ·다이내믹스·리버브·딜레이·모듈레이션·신스, 외부 CLAP 플러그인','피아노 롤, 악보 편집, 오디오→MIDI 피치 감지','9.1.6 서라운드 패닝, 영상 동기 픽처 트랙'],
+  fmt:'오디오·MIDI, CLAP 플러그인',tasks:['이 녹음의 앞뒤 무음을 잘라내고 라우드니스를 맞춰줘.','보컬 트랙에 리버브를 센드로 추가해줘.'],
+  lim:'페이지 기준 MCP는 명시되지 않고 CLI만 안내됩니다.'},
+ {id:'deckcraft',n:'DeckCraft',cat:'doc',c:'var(--accent)',sim:'파워포인트(추정)',tag:'프레젠테이션·슬라이드',ver:'0.14.1',st:'In development',rust:'1.90',mcp:'Y',job:'슬라이드를 편집',
+  desc:'네이티브 데스크톱으로 실행되는 빠르고 동적인 오픈소스 프레젠테이션 앱입니다. 구독과 클라우드 의존이 없습니다.',
+  feats:['슬라이드 마스터, 11개 레이아웃, 내장 테마 8종, 섹션, 발표자 노트','150개 이상의 프리셋 벡터 도형, 스티키 커넥터, 곡선 불리언, 그라디언트','모프 등 전환, 진입·강조·퇴장·모션 경로 애니메이션, 단락별 빌드','발표자 뷰: 노트·다음 슬라이드·타이머·리허설 타이밍·펜','.pptx 열기·저장, 벡터 PDF 슬라이드·유인물 내보내기','200개 이상의 명령을 CLI·JSON 제어 채널·MCP 서버로 제어'],
+  fmt:'PPTX, PDF',tasks:['이 원고를 10장짜리 슬라이드로 나누고 발표자 노트를 달아줘.','모든 슬라이드의 제목 폰트를 통일하고 PDF 유인물로 내보내줘.'],
+  lim:'공식 페이지: In development.'},
+ {id:'cadcraft',n:'CADCraft',cat:'dsg',c:'var(--c-root)',sim:'오토캐드(추정)',tag:'컴퓨터 지원 설계·제도',ver:'0.16.0',st:'In development',rust:'-',mcp:'N',job:'도면을 편집',
+  desc:'명령줄·객체 스냅·레이어·치수·해치·블록 같은 익숙한 제도 흐름을 유지한 오픈소스 CAD입니다. 사람과 AI 에이전트 모두를 위해 만들었다고 소개합니다.',
+  feats:['명령 기반 제도, 객체 스냅, 극좌표 추적, 직교, 그립','DXF 읽기·쓰기(R12~2018), DWG 열기(R13~2018), PDF·SVG·PNG 내보내기','페이퍼 스페이스 레이아웃, 뷰포트별 레이어 설정, 축척 정확 플로팅','연관 치수(선형·정렬·각도·반지름), 다중 지시선, 표','해치와 속성이 있는 중첩 블록','기하·치수 구속과 수식 매개변수'],
+  fmt:'DXF, DWG(열기), PDF, SVG, PNG',tasks:['이 DXF의 치수 레이어를 정리하고 A3 레이아웃으로 PDF 출력해줘.','선택한 영역에 해치를 채우고 블록으로 저장해줘.'],
+  lim:'페이지 기준 MCP는 명시되지 않고 CLI만 안내됩니다.'},
+ {id:'gridcraft',n:'GridCraft',cat:'doc',c:'var(--c-fin)',sim:'엑셀(추정)',tag:'스프레드시트·데이터',ver:'0.15.0',st:'In development',rust:'1.90',mcp:'Y',job:'스프레드시트를 편집',
+  desc:'리본·수식 입력줄·500개 이상의 함수·동적 배열·피벗 테이블·차트를 갖춘 네이티브 스프레드시트·데이터 분석 앱입니다.',
+  feats:['수식 입력줄, 이름 상자, 시트 탭, 채우기 핸들, 조건부 서식','.xlsx 호환: 스타일·테마·수식·동적 배열·표·유효성·메모·스파크라인·피벗 테이블 왕복','LET·LAMBDA·MAP·REDUCE·표 참조를 포함한 의존성 그래프 계산 엔진','차트 17종, 필터·필드 목록·날짜 그룹이 있는 피벗 테이블','복사 시 쓰기(copy-on-write) 통합 문서와 증분 재계산','모든 리본 버튼·메뉴·수식을 AI 에이전트가 제어(MCP·CLI·JSON 제어 채널)'],
+  fmt:'XLSX',tasks:['매출 시트로 월별 피벗 테이블과 막대 차트를 만들어줘.','수식 오류가 난 셀을 찾아 고치고 목록으로 알려줘.'],
+  lim:'공식 페이지: In development.'},
+ {id:'texturecraft',n:'TextureCraft',cat:'dsg',c:'var(--c-content)',sim:'3D 텍스처 페인팅 앱(추정)',tag:'3D 텍스처 페인팅',ver:'0.2.0',st:'In development',rust:'1.95',mcp:'Y',job:'3D 텍스처를 작업',
+  desc:'모델 위에 PBR 소재를 레이어와 마스크로 직접 그리고, 메시 맵을 베이크하고, 어떤 엔진용으로든 텍스처를 내보내는 오프라인 앱입니다.',
+  feats:['텍스처 세트, 채널별 블렌딩 레이어 스택, 마스크, 제너레이터, 스마트 머티리얼','UV 이음새를 넘는 브러시, 카메라 가시성으로 뒷면 오염 방지','AO·곡률·두께 등 GPU 베이킹(공식 페이지: CPU 대비 약 12배 빠름)','8K 텍스처 세트용 타일형 copy-on-write 엔진','가져오기: glTF·FBX·COLLADA·USD·Alembic·OBJ·PLY·STL','내보내기: PNG·JPEG·TGA·TIFF·EXR 등 8·16·32비트, UDIM 타일, 엔진 프리셋'],
+  fmt:'glTF, FBX, OBJ, USD 등 → PNG, TGA, TIFF, EXR',tasks:['이 모델에 낡은 금속 머티리얼을 칠하고 AO를 베이크해줘.','엔진용 프리셋으로 텍스처를 내보내줘.'],
+  lim:'공식 페이지: 모든 메뉴·도구가 명령이라 CLI·JSON 제어 채널·MCP로 칠하기·베이크·내보내기가 가능하다고 하지만 MCP 설정 상세는 제공되지 않습니다. 버전 0.2.0으로 초기 단계입니다.'},
+ {id:'craftanything',n:'Craft Anything',cat:'tool',c:'var(--accent)',sim:'해당 없음(메타 앱)',tag:'소프트웨어 원리 분석·제작',ver:'0.2.0',st:'Early alpha',rust:'1.97',mcp:'Y',job:'소프트웨어를 분석하고 만들',repo:GH+'craft-anything',
+  desc:'웹사이트·앱·게임·파일이 어떻게 작동하는지 근거를 기록하는 도구로 살펴본 뒤, 코딩 에이전트와 함께 나만의 버전을 만들고 검증하는 앱입니다.',
+  feats:['연구: 증거를 기록하는 도구로 소프트웨어를 조사(클린룸 도구 또는 더 깊은 조사 선택)','제작: 원하는 것을 설명하면 코딩 에이전트가 새 프로젝트를 만듦','검증: 원본과 비교해 차이를 검토하고 수정 요청','통제: 내가 정한 규칙 밖의 행동은 실행 전에 확인','데스크톱 앱·명령줄·MCP 서버가 같은 엔진을 사용'],
+  fmt:'웹사이트·앱·게임·파일',tasks:['이 웹페이지가 어떤 요청을 보내는지 기록으로 정리해줘.','정리한 내용을 바탕으로 같은 기능의 내 버전을 만들어줘.'],
+  lim:'원본 소프트웨어의 약관·저작권을 지켜야 합니다. 클린룸 방식 사용을 권장합니다.'},
+ {id:'solidcraft',n:'SolidCraft',cat:'dsg',c:'var(--c-dev)',sim:'솔리드웍스(추정)',tag:'파라메트릭 3D CAD',ver:'0.30.0',st:'확인 필요',rust:'-',mcp:'U',job:'3D CAD 모델을 편집',ext:true,
+  desc:'런처에는 "Parametric 3D CAD"로 표시되고, 제작자는 ArtCraft가 아니라 Tangency Labs입니다. 공식 ArtCraft 사이트의 앱 목록에는 없어서 상세 정보를 확인하지 못했습니다.',
+  feats:['런처 표기: 파라메트릭 3D CAD(Parametric 3D CAD)','버전 0.30.0, 2026-11-02 런처 기준','제작: Tangency Labs(외부 제작 앱)'],
+  fmt:'확인 필요',tasks:['(MCP·CLI 지원 여부 확인 후) 이 스케치를 파라메트릭 모델로 만들어줘.'],
+  lim:'외부 제작 앱이라 라이선스·지원 범위·MCP/CLI 여부를 직접 확인해야 합니다. 이 가이드는 공개된 정보만 적었습니다.'}
+];
+ARTAPPS.forEach(function(a){a.repo=a.repo||GH+a.id;a.page=a.ext?'':'https://getartcraft.com/apps/'+(a.id==='craftanything'?'craft-anything':a.id)});
+var MCPL={Y:'MCP',G:'MCP(가이드)',N:'MCP 미기재',U:'MCP 확인불가'};
+function appById(id){for(var i=0;i<ARTAPPS.length;i++){if(ARTAPPS[i].id===id)return ARTAPPS[i]}return null}
+
+/* 설치 프롬프트 (가이드의 예시 형식 그대로, 앱별로 생성) */
+function instPrompt(a){
+  var doc;
+  if(a.ext){doc=a.n+'(제작: Tangency Labs)의 공식 문서·저장소 주소는 아직 모릅니다. 먼저 ArtCraft 런처의 앱 정보 화면과 웹 검색으로 공식 문서 주소를 찾아서 알려줘.'}
+  else if(a.agents){doc=a.n+' 문서 :\n'+a.agents}
+  else{doc=a.n+' 저장소 :\n'+a.repo+'\n(저장소에 AGENTS.md가 있으면 가장 먼저 읽고, 없으면 README.md와 최신 릴리스 노트를 읽어줘.)'}
+  var t=doc+'\n위 문서를 읽어보고 AI가 '+a.n+'를 사용해 직접 '+a.job+'하게 해주는 CLI랑 MCP 설치해 줘.\n';
+  t+='정확히 내 컴퓨터 사양에 맞게 설치해야 해. 먼저 내 운영체제, CPU 구조(Apple silicon/Intel, x64/ARM64), 설치된 Rust 버전을 확인해줘'+(a.rust&&a.rust!=='-'?'(이 앱은 Rust '+a.rust+' 이상이 필요하다고 해).':'.')+'\n';
+  t+='공식 페이지에는 CLI 내려받기가 macOS(Universal)용만 안내되어 있어. 내 컴퓨터가 다른 환경이면 소스 빌드 방법을 알려주고 이어서 진행해줘.\n';
+  if(a.mcp==='N'||a.mcp==='U'){t+='MCP 서버가 공식 문서에 없다면 CLI만 설치하고, MCP가 없다는 사실을 알려줘.\n'}
+  t+='가능하면 네가 직접 하고, 권한 문제상 내가 직접 해야 하는 부분이 있다면 어떻게 해야 하는지 정확히 안내해줘.\n설치가 끝나면 간단한 명령으로 CLI와 MCP가 정상 연결됐는지 확인한 결과도 알려줘.';
+  return t;
+}
+ARTAPPS.forEach(function(a){P['ai_'+a.id]=instPrompt(a)});
+P.art_common='[앱 이름] 문서 :\n[앱의 AGENTS.md 또는 GitHub 저장소 주소]\n다음 문서를 읽어보고 AI가 [앱 이름]을 사용해 직접 작업하게 해주는 CLI랑 MCP 설치해 줘.\n정확히 내 컴퓨터 사양에 맞게 설치해야 해. 먼저 내 운영체제, CPU 구조(Apple silicon/Intel, x64/ARM64), 설치된 Rust 버전을 확인해줘.\n가능하면 네가 직접 하고, 권한 문제상 내가 직접 해야 하는 부분이 있다면 어떻게 해야 하는지 정확히 안내해줘.\n설치가 끝나면 간단한 명령으로 CLI와 MCP가 정상 연결됐는지 확인한 결과도 알려줘.';
+P.art_multi='아래 ArtCraft 앱들의 문서를 차례로 읽고, AI가 각 앱을 직접 조작하게 해주는 CLI랑 MCP를 설치해 줘.\n'+ARTAPPS.filter(function(a){return !a.ext&&['filmcraft','vectorcraft','designcraft','wordcraft','deckcraft','gridcraft'].indexOf(a.id)>=0}).map(function(a){return '- '+a.n+': '+(a.agents||a.repo)}).join('\n')+'\n(설치할 앱만 남기고 나머지 줄은 지워서 쓰세요.)\n정확히 내 컴퓨터 사양에 맞게 설치해야 해. 먼저 내 운영체제, CPU 구조, Rust 버전을 확인하고, 앱마다 필요한 Rust 최소 버전이 다르면 알려줘.\n한 앱씩 설치하고, 앱마다 끝나면 CLI와 MCP 연결 확인 결과를 알려준 뒤 다음 앱으로 넘어가줘.\n가능하면 네가 직접 하고, 권한 문제상 내가 직접 해야 하는 부분이 있다면 어떻게 해야 하는지 정확히 안내해줘.';
+
+/* ---------- ArtCraft 앱 16종 상세 가이드 화면 ---------- */
+function appTags(a){return '<span class="tagx">'+esc(ACATN[a.cat])+'</span><span class="tagx'+(a.mcp==='Y'||a.mcp==='G'?' mcp':'')+'">'+MCPL[a.mcp]+'</span><span class="tagx">CLI</span><span class="tagx">v'+esc(a.ver)+'</span>'}
+function appCard(a){return '<a class="app-c" href="#artapps" data-app="'+a.id+'" style="--c:'+a.c+'"><h3>'+esc(a.n)+'<small class="mono">'+esc(a.st)+'</small></h3><p class="vs">비슷한 앱 · '+esc(a.sim)+'</p><p class="use">'+esc(a.tag)+'</p><div class="tags">'+appTags(a)+'</div><span class="more">상세 가이드 →</span></a>'}
+var artCat='all';
+function drawAppCards(){var el=$('#appGrid');if(!el)return;
+  el.innerHTML=ARTAPPS.filter(function(a){return artCat==='all'||a.cat===artCat}).map(appCard).join('');
+  $$('#appCats button').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-cat')===artCat?'true':'false')});
+  var n=$('#appCnt');if(n)n.textContent=el.children.length+'개'}
+document.addEventListener('click',function(e){
+  var c=e.target.closest('#appCats [data-cat]');if(c){artCat=c.getAttribute('data-cat');drawAppCards();return}
+  var a=e.target.closest('[data-app]');if(a){window.__artSel=a.getAttribute('data-app');if(location.hash==='#artapps'){e.preventDefault();openApp(window.__artSel)}}
+});
+function openApp(id){
+  var d=document.getElementById('app-'+id);if(!d)return;
+  $$('#v-artapps details.appd').forEach(function(x){x.open=(x===d)});
+  d.open=true;setTimeout(function(){d.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'})},60);window.__artSel=null;
+}
+function appDetail(a){
+  var li=function(arr){return '<ul class="bl">'+arr.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul>'};
+  var links=(a.page?'<a class="btn sm" href="'+a.page+'" target="_blank" rel="noopener noreferrer">앱 소개 페이지 ↗</a>':'')+(a.ext?'':'<a class="btn sm" href="'+a.repo+'" target="_blank" rel="noopener noreferrer">GitHub 저장소 ↗</a>')+(a.agents?'<a class="btn sm" href="'+a.agents+'" target="_blank" rel="noopener noreferrer">AGENTS.md ↗</a>':'');
+  var rows=[['비슷한 앱',a.sim+(a.sim.indexOf('추정')<0&&a.sim.indexOf('해당')<0?'':'')],['한 줄 소개',a.tag],['지원 형식',a.fmt],['런처 버전',a.ver+' (2026-11-02 런처 기준)'],['개발 상태',a.st],['AI 연동',MCPL[a.mcp]+' · CLI(headless)'],['소스 빌드 요구',a.rust&&a.rust!=='-'?'Rust '+a.rust+' 이상':'공식 페이지에 명시되지 않음'],['분류',ACATN[a.cat]+(a.ext?' · 외부 제작(Tangency Labs)':'')]];
+  return '<details class="appd" id="app-'+a.id+'" style="--c:'+a.c+'"><summary><span class="nm">'+esc(a.n)+'</span><span class="sm">'+esc(a.tag)+'</span><span class="tags">'+appTags(a)+'</span></summary><div class="appbody">'+
+   '<p class="lead" style="max-width:none">'+esc(a.desc)+'</p>'+
+   '<div class="two"><div><h3>핵심 기능</h3>'+li(a.feats)+'</div><div><h3>한눈에 보기</h3><div class="tw"><table class="tbl"><tbody>'+rows.map(function(r){return '<tr><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td></tr>'}).join('')+'</tbody></table></div></div></div>'+
+   '<div><h3>Claude에게 이렇게 시켜 보세요 <small class="sub">(예시 요청입니다. 파일명·구간은 내 작업에 맞게 바꾸세요)</small></h3>'+li(a.tasks)+'</div>'+
+   '<div><h3>설치 방법</h3><p class="sub">Claude 데스크톱 앱 → 코드 탭 → 아래 프롬프트를 붙여넣으세요. 내 컴퓨터 사양 확인부터 시킵니다.</p>'+pr(a.n+' CLI·MCP 설치','ai_'+a.id)+'</div>'+
+   '<p class="callout"><b>알아둘 점</b>'+esc(a.lim)+'</p>'+
+   '<div class="pgref">'+links+'</div></div></details>';
+}
+function renderArtApps(){
+  var perm=[
+   ['macOS','"확인되지 않은 개발자" 경고 → 앱을 우클릭 후 열기, 또는 시스템 설정 → 개인정보 보호 및 보안 → "그래도 열기". 터미널의 설치 명령이 비밀번호(sudo)를 물으면 직접 입력.'],
+   ['Windows','SmartScreen "Windows의 PC 보호" → 추가 정보 → 실행. 설치 중 관리자 권한(UAC) 승인 창은 직접 "예" 선택.'],
+   ['Linux','내려받은 파일에 실행 권한(chmod +x)이 필요할 수 있고, 패키지 설치(deb·rpm·Flatpak)는 sudo 비밀번호를 직접 입력.'],
+   ['공통','Claude는 비밀번호·보안 승인 창을 대신 입력하지 않습니다. 그런 단계가 나오면 Claude가 멈추고 안내하므로 직접 처리한 뒤 "끝났어"라고 알려 주세요.']
+  ];
+  $('#v-artapps').innerHTML='<div style="display:flex;flex-direction:column;gap:var(--sec)">'+
+  '<div class="vhead"><span class="letter" aria-hidden="true" style="font-size:var(--fs-h1)">▲</span><div class="tt"><p class="eyebrow">ARTCRAFT APPS GUIDE</p><h2>ArtCraft 앱 16종 상세 가이드</h2><p class="lead">런처에 표시되는 앱 16개를 앱별로 정리했습니다. 무엇을 하는 앱인지, 어떤 파일을 다루는지, Claude에게 무엇을 시킬 수 있는지, 내 컴퓨터에 CLI·MCP를 설치하는 프롬프트까지 한 곳에 담았습니다.</p><div class="pgref"><a class="btn sm" href="#artcraft">← ArtCraft 앱 구조</a><a class="btn sm" href="https://getartcraft.com/" target="_blank" rel="noopener noreferrer">ArtCraft 사이트 ↗</a><a class="btn sm pri" href="https://github.com/storytold/craft-launcher/releases/tag/v0.13.0" target="_blank" rel="noopener noreferrer">런처 다운받기 ↗</a></div></div></div>'+
+  '<div class="note"><b>정보 기준</b> ArtCraft 공식 앱 소개 페이지와 런처 화면(2026-11-02)을 바탕으로 했습니다. "비슷한 앱"의 (추정) 표시는 공식 설명이 아니라 앱 설명을 보고 붙인 비교입니다. 알파·개발 단계 앱이 대부분이라 기능과 버전은 자주 바뀝니다.</div>'+
+  '<div><div class="sec-head" style="margin-bottom:10px"><h3>01 · 설치 전에 정할 것</h3></div><div class="two">'+
+   '<div class="panelbox"><h3>두 가지 설치</h3><ul class="bl"><li><b>앱 설치</b> — 런처에서 앱을 받아 설치합니다. 눌러서 쓰는 화면 앱입니다.</li><li><b>CLI·MCP 설치</b> — Claude가 앱을 직접 조작하게 하는 도구입니다. 아래 앱별 프롬프트를 Claude 데스크톱 코드 탭에 붙여넣으면 Claude가 설치합니다.</li></ul><p class="sub">공식 페이지는 CLI(headless) 내려받기를 대부분 macOS(Universal)용으로 안내합니다. 다른 OS는 소스 빌드(Rust)가 필요할 수 있어서 프롬프트에 사양 확인을 먼저 넣었습니다.</p></div>'+
+   '<div class="panelbox"><h3>내 컴퓨터 사양 확인(Claude가 대신 확인함)</h3><ul class="bl"><li>운영체제와 버전(macOS·Windows·Linux)</li><li>CPU 구조: Apple silicon(ARM64) / Intel(x64) / ARM64 Windows</li><li>Rust 버전: 앱마다 1.90·1.95·1.97 이상을 요구</li><li>Claude 데스크톱 코드 탭은 유료 요금제에서만 지원됩니다.</li></ul></div></div></div>'+
+  '<div><div class="sec-head" style="margin-bottom:10px"><h3>02 · 권한 때문에 내가 직접 해야 하는 부분</h3><p class="sub">일반적인 운영체제 동작 기준 안내입니다. 화면 문구는 버전에 따라 조금 다를 수 있습니다.</p></div><div class="tw"><table class="tbl"><thead><tr><th>환경</th><th>직접 해야 하는 일</th></tr></thead><tbody>'+perm.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+esc(r[1])+'</td></tr>'}).join('')+'</tbody></table></div></div>'+
+  '<div class="two"><div class="panelbox"><h3>03 · 만능 설치 프롬프트</h3><p class="sub">목록에 없는 앱이나 새로 나온 앱에 쓰는 틀입니다. [대괄호]를 바꿔 쓰세요.</p>'+pr('만능 틀','art_common')+'</div>'+
+  '<div class="panelbox"><h3>04 · 여러 앱 한 번에 설치</h3><p class="sub">MCP가 명시된 앱 위주의 예시입니다. 필요한 줄만 남기세요.</p>'+pr('여러 앱 설치','art_multi')+'</div></div>'+
+  '<div><div class="sec-head" style="margin-bottom:10px"><h3>05 · 앱별 상세 가이드 (16종)</h3><p class="sub">앱을 눌러 펼치세요. 설명·기능·예시 요청·설치 프롬프트가 들어 있습니다.</p></div><div class="appd-list">'+ARTAPPS.map(appDetail).join('')+'</div></div>'+
+  '<p class="foot">출처: getartcraft.com 앱 소개 페이지, 런처 화면 캡처, FilmCraft·VectorCraft 안내 문서. SolidCraft는 외부 제작 앱이라 공개된 정보가 적습니다.</p></div>';
+  if(window.__artSel){openApp(window.__artSel)}
+}
+
 function renderArt(){
   $('#v-artcraft').innerHTML='<div style="display:flex;flex-direction:column;gap:var(--sec)">'+
-  '<div class="vhead"><span class="letter" aria-hidden="true" style="font-size:var(--fs-h1)">▲</span><div class="tt"><p class="eyebrow">ARTCRAFT × CLAUDE</p><h2>ArtCraft 앱 구조</h2><p class="lead">ArtCraft는 어도비 앱과 비슷한 무료 오픈소스 앱을 만드는 팀입니다. 앱을 설치하고 MCP·CLI를 연결하면 Claude가 앱을 직접 조작해 편집을 맡아 줍니다.</p><div class="pgref"><button type="button" class="btn sm" data-guide="art:1">가이드 보기</button></div></div></div>'+
-  '<div><div class="sec-head" style="margin-bottom:10px"><h3>연결 구조</h3></div><div class="flow"><div class="st"><b>1 · 런처</b><span>공식 사이트에서 런처를 설치하고 원하는 앱을 받습니다.</span></div><div class="st"><b>2 · 앱</b><span>PhotoCraft 등 7개 앱을 열어 작업 파일을 둡니다.</span></div><div class="st"><b>3 · MCP·CLI</b><span>AI에게 앱을 조작할 손과 발을 달아 주는 도구입니다.</span></div><div class="st"><b>4 · AGENTS.md</b><span>설치 방법이 적힌 문서 주소를 AI에게 줍니다.</span></div><div class="st"><b>5 · Claude</b><span>데스크톱 코드 탭에서 설치와 편집을 맡깁니다.</span></div></div></div>'+
-  '<div><div class="sec-head" style="margin-bottom:10px"><h3>01 · 앱 7가지</h3><p class="sub">공식 사이트에는 총 13가지 앱이 있고, 이 가이드는 그중 어도비 앱과 비교되는 7가지를 다룹니다.</p></div><div class="apps">'+ART.map(function(a){return '<div class="app-c" style="--c:'+a[3]+'"><h3>'+a[0]+'</h3><p class="vs">비슷한 앱 · '+a[1]+'</p><p class="use">'+a[2]+'</p><div class="tags"><span class="tagx mcp">MCP</span><span class="tagx">CLI</span></div></div>'}).join('')+'</div></div>'+
+  '<div class="vhead"><span class="letter" aria-hidden="true" style="font-size:var(--fs-h1)">▲</span><div class="tt"><p class="eyebrow">ARTCRAFT × CLAUDE</p><h2>ArtCraft 앱 구조</h2><p class="lead">ArtCraft는 어도비 앱과 비슷한 무료 오픈소스 앱을 만드는 팀입니다. 앱을 설치하고 MCP·CLI를 연결하면 Claude가 앱을 직접 조작해 편집을 맡아 줍니다.</p><div class="pgref"><button type="button" class="btn sm" data-guide="art:1">가이드 보기</button><a class="btn sm" href="#artapps">앱 16종 상세 가이드</a><a class="btn sm" href="https://getartcraft.com/" target="_blank" rel="noopener noreferrer">ArtCraft 사이트 바로가기 ↗</a><a class="btn sm pri" href="https://github.com/storytold/craft-launcher/releases/tag/v0.13.0" target="_blank" rel="noopener noreferrer">런처 다운받기 ↗</a></div></div></div>'+
+  '<div><div class="sec-head" style="margin-bottom:10px"><h3>연결 구조</h3></div><div class="flow"><div class="st"><b>1 · 런처</b><span>공식 사이트에서 런처를 설치하고 원하는 앱을 받습니다.</span></div><div class="st"><b>2 · 앱</b><span>PhotoCraft 등 16개 앱을 열어 작업 파일을 둡니다.</span></div><div class="st"><b>3 · MCP·CLI</b><span>AI에게 앱을 조작할 손과 발을 달아 주는 도구입니다.</span></div><div class="st"><b>4 · AGENTS.md</b><span>설치 방법이 적힌 문서 주소를 AI에게 줍니다.</span></div><div class="st"><b>5 · Claude</b><span>데스크톱 코드 탭에서 설치와 편집을 맡깁니다.</span></div></div></div>'+
+  '<div><div class="sec-head" style="margin-bottom:10px"><h3>01 · 앱 16가지</h3><p class="sub">런처에 표시되는 앱 16개입니다. 카드를 누르면 앱별 상세 가이드(설명·기능·예시 요청·설치 프롬프트)가 열립니다. 이 가이드의 설치 예시는 FilmCraft·VectorCraft 기준입니다.</p></div><div class="appfilter"><div class="seg" id="appCats" role="group" aria-label="앱 분류">'+ACAT.map(function(c){return '<button type="button" data-cat="'+c[0]+'" aria-pressed="'+(c[0]===artCat?'true':'false')+'">'+c[1]+'</button>'}).join('')+'</div><span class="pill" id="appCnt"></span></div><div class="apps" id="appGrid"></div></div>'+
   '<div class="two"><div class="panelbox"><h3>02 · 쓰기 전에 알아둘 점</h3><ul class="bl"><li>앱 대부분이 아직 알파 단계입니다. FilmCraft는 스스로 기능 범위 약 86%, 실제 작업 준비도 약 56%로 추정합니다. 고객에게 나갈 최종 작업은 쓰던 도구를 함께 두세요.</li><li>코드는 MIT 또는 Apache-2.0 라이선스로 공개돼 있습니다(앱 README 기준). ArtCraft 이름과 로고는 상표라서 따로 조건이 있습니다.</li><li>Claude 데스크톱의 코드 탭은 유료 요금제에서만 지원됩니다.</li></ul></div>'+
   '<div class="panelbox"><h3>03 · 런처 설치</h3><ol class="bl" style="counter-reset:s"><li>ArtCraft 사이트에서 런처를 내려받아 설치합니다.</li><li>런처를 열면 앱 목록이 나옵니다. 원하는 앱을 골라 내려받으면 설치가 끝납니다.</li><li>이미 설치한 앱은 업데이트 버튼으로 최신 버전을 받습니다.</li></ol></div></div>'+
   '<div class="panelbox"><h3>04·05 · MCP와 CLI 설치를 Claude에게 맡기기</h3><p class="sub">Claude 데스크톱 앱 → 코드 탭 → 아래 설치 프롬프트 붙여넣기. 설치하고 싶은 앱의 문서 주소로 고쳐 쓰세요.</p>'+pr('FilmCraft·VectorCraft 설치','art_install')+'<p class="callout"><b>팁</b>컴퓨터에 맞게 설치하도록 요청하고, 권한 문제로 직접 해야 하는 부분은 안내받도록 마지막 문장에 넣어 둔 프롬프트입니다.</p></div>'+
   '<div class="two"><div class="panelbox"><h3>06 · 영상 색감 보정</h3><p class="sub">푸른빛이 도는 원본 영상을 FilmCraft에 열어 두고 색감 조정을 요청했더니 따뜻한 색감으로 보정됐습니다. Claude가 이펙트로 만들어 준 것이라 원하면 이펙트 안에서 값을 세밀하게 조정할 수 있습니다.</p>'+pr('색감 보정 + 글리치','art_color')+'</div>'+
   '<div class="panelbox"><h3>07 · 명함 인쇄 규격 리디자인</h3><p class="sub">VectorCraft에 예전 명함을 열어 두고 바뀐 직함과 홈페이지를 반영해 인쇄용 규격(90×50mm)으로 수정을 맡겼습니다. [괄호]는 내 파일과 내용에 맞게 바꿔 쓰세요.</p>'+pr('명함 리디자인','art_card')+'</div></div>'+
-  '<div class="two"><div class="panelbox"><h3>08 · 생성 AI 대신 편집 앱을 쓰는 이유</h3><p class="sub">생성 AI는 프롬프트 하나로 최종 결과물을 얻기는 쉽지만 원하는 느낌까지 다듬기는 어렵습니다. 편집 앱을 Claude가 다루면 괜찮은 초안이 나왔을 때 레이어 단위로 컨트롤할 수 있어 수정이 훨씬 쉽습니다.</p><h3 style="margin-top:6px">09 · 나머지 앱</h3><p class="sub">LightCraft, PdfCraft, EffectCraft, DesignCraft도 오픈소스 무료입니다. 런처에서 받은 뒤 앱 문서 주소로 같은 방식의 설치를 요청해 보세요. 앱마다 문서와 지원 범위는 다를 수 있습니다.</p></div>'+
+  '<div class="two"><div class="panelbox"><h3>08 · 생성 AI 대신 편집 앱을 쓰는 이유</h3><p class="sub">생성 AI는 프롬프트 하나로 최종 결과물을 얻기는 쉽지만 원하는 느낌까지 다듬기는 어렵습니다. 편집 앱을 Claude가 다루면 괜찮은 초안이 나왔을 때 레이어 단위로 컨트롤할 수 있어 수정이 훨씬 쉽습니다.</p><h3 style="margin-top:6px">09 · 나머지 앱</h3><p class="sub">가이드의 7개 외에도 FigCraft·WordCraft·SoundCraft·DeckCraft·CADCraft·GridCraft·TextureCraft·Craft Anything가 있고, SolidCraft는 외부 제작 앱입니다. 앱별 설치 프롬프트는 <a href="#artapps">상세 가이드</a>에 정리했습니다. 앱마다 문서와 지원 범위는 다를 수 있습니다.</p></div>'+
   '<div class="panelbox"><h3>10 · 아직 부족한 점</h3><div class="tw"><table class="tbl"><thead><tr><th>앱</th><th>공식 문서에 밝힌 한계</th></tr></thead><tbody><tr><td>PhotoCraft</td><td>생성형 AI 기능 없음</td></tr><tr><td>FilmCraft</td><td>.prproj 파일 열기 불가, 플러그인(VST3·OpenFX) 사용 불가, 글리치 효과가 프리미어보다 덜 세련됨</td></tr><tr><td>VectorCraft</td><td>.ai 파일 교환이 아직 안정적이지 않음</td></tr><tr><td>EffectCraft</td><td>애프터 이펙트 플러그인 사용 불가</td></tr></tbody></table></div><p class="sub">11 · 프로젝트가 100% 무료 오픈소스라 기여자들도 Claude나 Codex 같은 에이전트로 고쳐 나갈 것이고, 버전이 오를수록 에이전트가 쓰기에 더 적합해질 것으로 봅니다.</p></div></div>'+
   '<div class="note"><b>사업 메모</b> 편집 앱 + MCP 조합은 \"Claude로 영상·명함 편집 대행\" 같은 서비스나 강의의 소재가 됩니다. 알파 단계이므로 먼저 소규모 의뢰 1~2건으로 품질을 검증한 뒤 상품화하세요.</div></div>';
+  drawAppCards();
 }
 
 /* ---------- 가이드 뷰어 ---------- */
@@ -1054,7 +1237,7 @@ var rendered={},cur='';
 var page=$('#page');
 Object.keys(VIEWS).forEach(function(k){if(k==='home')return;var s=document.createElement('section');s.className='view';s.id='v-'+k;s.hidden=true;page.appendChild(s)});
 var R={skill:function(){renderSSR('skill')},brain:function(){renderSSR('brain');document.dispatchEvent(new Event('brain:mounted'))},routine:function(){renderSSR('routine')},ext:function(){renderSSR('ext')},
- brand:renderBrand,content:renderContent,ideas:renderIdeas,artcraft:renderArt,guide:renderGuide,plan:renderPlan,spec:renderSpec};
+ brand:renderBrand,content:renderContent,ideas:renderIdeas,artcraft:renderArt,artapps:renderArtApps,guide:renderGuide,plan:renderPlan,spec:renderSpec};
 function show(id){
   if(!VIEWS[id])id='home';
   if(cur===id&&rendered[id])return;
@@ -1062,6 +1245,7 @@ function show(id){
   var el=$('#v-'+id);
   if(!rendered[id]){if(id==='home'){renderHome()}else if(R[id]){R[id]()}rendered[id]=true}
   else if(id==='guide'){renderGuide()}
+  else if(id==='artapps'&&window.__artSel){var sel0=window.__artSel;setTimeout(function(){openApp(sel0)},80)}
   el.hidden=false;cur=id;
   $$('.nl').forEach(function(a){if(a.getAttribute('data-v')===id){a.setAttribute('aria-current','page')}else{a.removeAttribute('aria-current')}});
   $('#vt').textContent=VIEWS[id].t;
@@ -1700,3 +1884,5 @@ paint();resize();upd();requestAnimationFrame(frame);
 })();
 
 </script>
+
+</body></html>
