@@ -1,8 +1,8 @@
 <div class="app" id="app">
   <aside class="gnb" id="gnb" aria-label="주 메뉴">
-    <a class="logo" href="#home" aria-label="Nomad-Lab 홈">
+    <a class="logo" href="#home" aria-label="Nomad-Agents-SYSTEM 홈">
       <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="6.5" fill="var(--accent)"/><ellipse cx="16" cy="16" rx="14" ry="5.5" fill="none" stroke="var(--accent)" stroke-width="1.6" transform="rotate(-24 16 16)"/><circle cx="27" cy="9.2" r="2.2" fill="var(--ink)"/></svg>
-      <span><b>Nomad<span>-Lab</span></b><small>AI WORK SYSTEM</small></span>
+      <span><b>Nomad<span>-Agents-</span>SYSTEM</b><small>NOMAD-LAB · AI WORK</small></span>
     </a>
     <nav id="nav" aria-label="화면 이동"></nav>
     <div class="gnb-foot">
@@ -28,28 +28,28 @@
   <div class="home">
     <div class="col col-l">
       <div class="panelbox">
-        <div class="ringbox">
+        <div class="ph"><span id="calTitle">캘린더</span><small>날짜를 눌러 편집</small></div>
+        <div class="cal" id="cal"></div>
+      </div>
+      <div class="panelbox">
+        <a class="ringbox" href="#plan" aria-label="SSR+ 진행 상세 보기">
           <div class="ring"><svg viewBox="0 0 96 96" aria-hidden="true"><circle class="track" cx="48" cy="48" r="40"/><circle class="prog" id="ring" cx="48" cy="48" r="40"/></svg><div class="pct"><span id="pct">0</span>%</div></div>
           <div><b class="mono" id="doneTxt" style="font-size:var(--fs-stat);font-weight:500">0/12</b><p class="sub">SSR+ 단계 완료</p></div>
-        </div>
+        </a>
         <div class="stats">
-          <div class="stat"><b id="stDays">0/7</b><span>7일 계획</span></div>
-          <div class="stat"><b id="stIdeas">0</b><span>아이디어</span></div>
-          <div class="stat"><b id="stLib">0</b><span>콘텐츠 항목</span></div>
-          <div class="stat"><b>25</b><span>두뇌 노드(예시)</span></div>
+          <a class="stat" href="#plan"><b id="stDays">0/7</b><span>7일 계획</span></a>
+          <a class="stat" href="#ideas"><b id="stIdeas">0</b><span>아이디어</span></a>
+          <a class="stat" href="#content"><b id="stLib">0</b><span>콘텐츠 항목</span></a>
+          <a class="stat" href="#brain"><b>25</b><span>두뇌 노드(예시)</span></a>
         </div>
       </div>
       <div class="panelbox">
-        <div class="ph"><span>오늘의 목표</span><small id="goalCnt"></small></div>
+        <div class="ph"><span>오늘의 목표</span><span class="phr"><small id="goalCnt"></small><a href="#plan">7일 전체</a></span></div>
         <ul id="goals"></ul>
         <div class="note" style="font-size:var(--fs-label)"><b>처음이라면</b> 가이드 p.3 사전 설치부터. <button type="button" class="btn sm" data-copy="node" style="margin-left:6px">Node.js 프롬프트 복사</button></div>
       </div>
       <div class="panelbox">
-        <div class="ph"><span id="calTitle">캘린더</span><small>색칠 = 7일 계획</small></div>
-        <div class="cal" id="cal"></div>
-      </div>
-      <div class="panelbox">
-        <div class="ph"><span>최근 파일</span><small>예시</small></div>
+        <div class="ph"><span>최근 파일</span><span class="phr"><button type="button" class="btn sm" data-edit="recent:new">+ 추가</button></span></div>
         <ul class="rf" id="recent"></ul>
       </div>
       <div class="panelbox">
@@ -72,16 +72,16 @@
 
     <div class="col col-r">
       <div class="panelbox">
-        <div class="ph"><span>S · 스킬</span><a href="#skill">전체 보기</a></div>
+        <div class="ph"><span>+ · 익스텐션</span><span class="phr"><button type="button" class="btn sm" data-edit="ext:new">+ 추가</button><a href="#ext">전체 보기</a></span></div>
+        <ul class="mini" id="rExt"></ul>
+      </div>
+      <div class="panelbox">
+        <div class="ph"><span>S · 스킬</span><span class="phr"><button type="button" class="btn sm" data-edit="skill:new">+ 추가</button><a href="#skill">전체 보기</a></span></div>
         <ul class="mini" id="rSkill"></ul>
       </div>
       <div class="panelbox">
-        <div class="ph"><span>R · 루틴</span><a href="#routine">전체 보기</a></div>
+        <div class="ph"><span>R · 루틴</span><span class="phr"><button type="button" class="btn sm" data-edit="rt:new">+ 추가</button><a href="#routine">전체 보기</a></span></div>
         <ul class="mini" id="rRoutine"></ul>
-      </div>
-      <div class="panelbox">
-        <div class="ph"><span>+ · 익스텐션</span><a href="#ext">전체 보기</a></div>
-        <ul class="mini" id="rExt"></ul>
       </div>
     </div>
   </div>

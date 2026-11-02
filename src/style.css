@@ -53,8 +53,9 @@ h3{font-size:var(--fs-h3);line-height:1.35;font-weight:700}
 .gnb{position:sticky;top:0;height:100vh;height:100dvh;overflow-y:auto;overflow-x:hidden;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:16px 12px 12px;padding-left:max(12px,env(safe-area-inset-left,0px));gap:6px;z-index:40}
 .logo{display:flex;align-items:center;gap:10px;padding:4px 8px 14px;text-decoration:none;border-bottom:1px solid var(--line);margin-bottom:8px}
 .logo svg{flex:none;width:30px;height:30px}
-.logo b{font-size:19px;font-weight:800;letter-spacing:-.02em;white-space:nowrap}
+.logo b{font-size:15px;white-space:nowrap;font-weight:800;letter-spacing:-.02em;white-space:nowrap}
 .logo b span{color:var(--accent)}
+.logo>span{min-width:0}
 .logo small{display:block;font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;color:var(--muted);font-weight:400}
 .ng{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;color:var(--muted);padding:12px 10px 4px}
 .nl{display:flex;align-items:center;gap:10px;min-height:42px;padding:6px 10px;border-radius:8px;text-decoration:none;color:var(--muted);font-size:var(--fs-small);font-weight:500;border:1px solid transparent;position:relative;transition:background .15s,color .15s}
@@ -376,3 +377,37 @@ details.txt2 pre{font-family:var(--font-mono);font-size:var(--fs-small);line-hei
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:var(--fs-small);z-index:80;opacity:0;pointer-events:none;transition:opacity .2s}
 .toast.on{opacity:1}
 @media (prefers-reduced-motion:reduce){.ring .prog,.gp .pb i,.lbl,.gnb{transition:none}}
+
+a.stat,a.ringbox{text-decoration:none;color:inherit}
+a.stat:hover,a.ringbox:hover{border-color:var(--accent)}
+a.ringbox{border-radius:10px}
+.phr{display:inline-flex;align-items:center;gap:10px}
+.cal button.d{background:none;border:0;padding:0;font:inherit;color:inherit}
+.cal button.d:hover{outline:1px solid var(--accent)}
+.cal .d.has::before{content:"";position:absolute;top:3px;right:5px;width:5px;height:5px;border-radius:50%;background:var(--c-fin)}
+.mini .rowb{flex:1;min-width:0;display:flex;align-items:center;gap:10px;background:transparent;border:0;padding:0;text-align:left;font:inherit;color:inherit;border-radius:6px}
+.mini .rowb:hover .nm b{color:var(--accent)}
+.pen{flex:none;width:28px;height:28px;border-radius:6px;border:1px solid var(--line);background:var(--panel);font-size:13px;line-height:1;color:var(--muted)}
+.pen:hover{border-color:var(--accent);color:var(--ink)}
+.rf li{display:flex;align-items:center;gap:6px}
+.rf li button.open{flex:1;min-width:0}
+.rf li+li button.open{border-top:0}
+.rf li+li{border-top:1px solid var(--line)}
+#goals li{display:flex;align-items:flex-start;gap:6px}
+#goals li .cl{flex:1;min-width:0}
+#goals li+li .cl{border-top:0}
+#goals li+li{border-top:1px solid var(--line)}
+.modal{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.mb{width:min(480px,100%);max-height:92vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.mb form{display:flex;flex-direction:column;gap:12px}
+.mb label.f{display:flex;flex-direction:column;gap:4px;font-size:var(--fs-small);color:var(--muted)}
+.mb input,.mb select,.mb textarea{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 12px;min-height:40px;font-size:var(--fs-body);color:var(--ink);width:100%}
+.mb textarea{min-height:90px;resize:vertical}
+.mb .acts{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.mb .acts .del{margin-right:auto;color:var(--c-content)}
+
+/* 탐색기 라벨 가독성 */
+#stage[data-lbl="cap"] .lbl{background:rgba(10,8,7,.86);color:#fff;border:1px solid color-mix(in srgb,var(--lc) 75%,transparent);padding:2px 8px;box-shadow:0 1px 8px rgba(0,0,0,.55)}
+#stage[data-lbl="light"] .lbl{background:rgba(255,255,255,.94);color:#1a1210;border:1px solid var(--lc);padding:2px 8px;box-shadow:0 1px 6px rgba(0,0,0,.35)}
+#stage[data-lbl="text"] .lbl{background:transparent;color:#fff;font-weight:600;text-shadow:0 0 2px #000,0 0 5px #000,0 1px 3px #000}
+#stage[data-lsz="l"] .lbl{font-size:calc(var(--fs-label) + 3px)}

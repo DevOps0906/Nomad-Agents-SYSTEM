@@ -23,7 +23,7 @@ var svg=function(n){return '<svg viewBox="0 0 24 24" aria-hidden="true">'+IC[n]+
 
 /* ---------- 상태 ---------- */
 var KEY='nomad-lab-v1';
-var DEF={lv:{s1:[1,0,0],s2:[1,0,0],s3:[0,0,0],s4:[0,0,0]},days:[1,1,0,0,0,0,0],ck:[0,0,0,0],start:'',ideas:[],content:null,routines:[1,1,0]};
+var DEF={lv:{s1:[1,0,0],s2:[1,0,0],s3:[0,0,0],s4:[0,0,0]},days:[1,1,0,0,0,0,0],ck:[0,0,0,0],start:'',ideas:[],content:null,routines:[1,1,0],skills:[{n:'오늘일정_보고',c:'/daily-report',u:'주 12회'},{n:'회의록 정리',c:'/meeting-notes',u:'주 4회'},{n:'전자책 목차·시장성 분석',c:'/ebook-outline',u:'주 2회'}],rt:[{n:'오늘 할 일 브리핑',t:'매일 09:00',c:'/daily-report',on:1},{n:'지난주 매출·콘텐츠 요약',t:'매주 월 08:30',c:'/weekly-review',on:1},{n:'아이디어 패드 정리',t:'매일 22:00',c:'/idea-digest',on:0}],exts:[{n:'지메일',d:'커넥터 · 메일 확인',on:1},{n:'구글 캘린더',d:'커넥터 · 일정 등록',on:1},{n:'구글 드라이브',d:'커넥터 · 문서 찾기',on:1},{n:'Supabase',d:'MCP · DB 조회',on:0},{n:'brain-explorer',d:'직접 만든 도구 · Extensions/',on:1}],recent:[{t:'MD',n:'AGENTS.md',id:'agents',w:'방금'},{t:'MD',n:'전체목록.md',id:'all',w:'1시간 전'},{t:'MD',n:'쇼츠 대본_최종.md',id:'c_s1',w:'어제'},{t:'MD',n:'프로젝트 기획서.md',id:'d_s1',w:'어제'},{t:'XLS',n:'월간 매출 정리.xlsx',id:'f_s1',w:'3일 전'}],notes:{},dayText:[]};
 var st;
 try{var raw=localStorage.getItem(KEY);if(raw){st=JSON.parse(raw)}}catch(e){}
 if(!st||!st.lv||!st.days){st=JSON.parse(JSON.stringify(DEF))}
@@ -195,18 +195,17 @@ var DAYS=[
  ['이번 주에 가장 아쉬웠던 곳에 스킬·루틴·익스텐션 하나 추가','전체']
 ];
 var CHECK=[['S 스킬','한 줄 호출로 결과물이 매번 같은 품질로 나온다'],['S 세컨드 브레인','새 대화에서 "지금 진행 중인 일"을 설명 없이 맞게 답한다'],['R 루틴','시키지 않아도 정해진 시간에 결과물이 도착한다'],['+ 익스텐션','매주 쓰는 외부 서비스를 에이전트가 직접 다룬다']];
-var SKILLS=[['/daily-report','오늘일정_보고','주 12회'],['/meeting-notes','회의록 정리','주 4회'],['/ebook-outline','전자책 목차·시장성 분석','주 2회']];
-var ROUT=[['매일 09:00','오늘 할 일 브리핑','/daily-report'],['매주 월 08:30','지난주 매출·콘텐츠 요약','/weekly-review'],['매일 22:00','아이디어 패드 정리','/idea-digest']];
-var EXTS=[['지메일','커넥터 · 메일 확인',1],['구글 캘린더','커넥터 · 일정 등록',1],['구글 드라이브','커넥터 · 문서 찾기',1],['Supabase','MCP · DB 조회',0],['brain-explorer','직접 만든 도구 · Extensions/',1]];
-var RECENT=[['MD','AGENTS.md','agents','방금'],['MD','전체목록.md','all','1시간 전'],['MD','쇼츠 대본_최종.md','c_s1','어제'],['MD','프로젝트 기획서.md','d_s1','어제'],['XLS','월간 매출 정리.xlsx','f_s1','3일 전']];
 function dayIdx(){var a=new Date(st.start+'T00:00:00'),b=new Date();b.setHours(0,0,0,0);return Math.round((b-a)/864e5)}
+function dayLabel(i){return (st.dayText&&st.dayText[i])||DAYS[i][0]}
+var NODEOPT=[['agent','메인 에이전트'],['sb','second-brain/'],['agents','AGENTS.md'],['all','전체목록.md'],['c_s1','쇼츠 대본_최종.md'],['d_s1','프로젝트 기획서.md'],['f_s1','월간 매출 정리.xlsx'],['','(연결 없음)']];
 function renderHome(){
   var now=new Date();
   $('#today').textContent=now.getFullYear()+'.'+String(now.getMonth()+1).padStart(2,'0')+'.'+String(now.getDate()).padStart(2,'0')+' · '+['일','월','화','수','목','금','토'][now.getDay()]+'요일';
-  $('#rSkill').innerHTML=SKILLS.map(function(s){return '<li><span class="dot on"></span><span class="nm"><b>'+esc(s[1])+'</b><span class="mono">'+esc(s[0])+'</span></span><span class="sub mono">'+esc(s[2])+'</span></li>'}).join('');
-  $('#rRoutine').innerHTML=ROUT.map(function(r,i){return '<li><span class="nm"><b>'+esc(r[1])+'</b><span>'+esc(r[0])+' · '+esc(r[2])+'</span></span><button type="button" class="tg" data-rt="'+i+'" aria-pressed="'+(st.routines[i]?'true':'false')+'" aria-label="'+esc(r[1])+' 켜기/끄기"></button></li>'}).join('');
-  $('#rExt').innerHTML=EXTS.map(function(x){return '<li><span class="dot'+(x[2]?' on':'')+'"></span><span class="nm"><b>'+esc(x[0])+'</b><span>'+esc(x[1])+'</span></span><span class="sub">'+(x[2]?'연결됨':'대기')+'</span></li>'}).join('');
-  $('#recent').innerHTML=RECENT.map(function(r){return '<li><button type="button" data-open="'+r[2]+'"><span class="fi">'+r[0]+'</span><span class="fn">'+esc(r[1])+'</span><span class="ft">'+esc(r[3])+'</span></button></li>'}).join('');
+  var emp=function(m){return '<li class="empty">'+m+'</li>'};
+  $('#rExt').innerHTML=st.exts.length?st.exts.map(function(x,i){return '<li><button type="button" class="rowb" data-edit="ext:'+i+'"><span class="dot'+(x.on?' on':'')+'"></span><span class="nm"><b>'+esc(x.n)+'</b><span>'+esc(x.d)+'</span></span><span class="sub">'+(x.on?'연결됨':'대기')+'</span></button></li>'}).join(''):emp('+ 추가로 커넥터를 등록하세요');
+  $('#rSkill').innerHTML=st.skills.length?st.skills.map(function(s,i){return '<li><button type="button" class="rowb" data-edit="skill:'+i+'"><span class="dot on"></span><span class="nm"><b>'+esc(s.n)+'</b><span class="mono">'+esc(s.c)+'</span></span><span class="sub mono">'+esc(s.u)+'</span></button></li>'}).join(''):emp('+ 추가로 스킬을 등록하세요');
+  $('#rRoutine').innerHTML=st.rt.length?st.rt.map(function(r,i){return '<li><button type="button" class="rowb" data-edit="rt:'+i+'"><span class="nm"><b>'+esc(r.n)+'</b><span>'+esc(r.t)+' · '+esc(r.c)+'</span></span></button><button type="button" class="tg" data-rt="'+i+'" aria-pressed="'+(r.on?'true':'false')+'" aria-label="'+esc(r.n)+' 켜기/끄기"></button></li>'}).join(''):emp('+ 추가로 루틴을 등록하세요');
+  $('#recent').innerHTML=st.recent.length?st.recent.map(function(r,i){return '<li><button type="button" class="open" data-open="'+esc(r.id)+'"><span class="fi">'+esc(r.t)+'</span><span class="fn">'+esc(r.n)+'</span><span class="ft">'+esc(r.w)+'</span></button><button type="button" class="pen" data-edit="recent:'+i+'" aria-label="'+esc(r.n)+' 편집">✎</button></li>'}).join(''):emp('+ 추가로 파일을 등록하세요');
   $('#dash3').innerHTML=[['brand','브랜드 라이브러리','5색'],['content','콘텐츠 라이브러리','4단계'],['ideas','아이디어 패드','메모']].map(function(d){return '<a href="#'+d[0]+'">'+svg(d[0])+'<b>'+d[1]+'</b><small>'+d[2]+'</small></a>'}).join('');
   renderGoals();renderCal();
 }
@@ -214,27 +213,68 @@ function renderGoals(){
   var di=Math.max(0,Math.min(6,dayIdx()));
   var idx=[];for(var k=0;k<3;k++){if(di+k<=6)idx.push(di+k)}
   if(idx.length<3){idx=[4,5,6]}
-  $('#goals').innerHTML=idx.map(function(i){return '<li><label class="cl"><input type="checkbox" class="cb" data-day="'+i+'"'+(st.days[i]?' checked':'')+'><span class="box"></span><span class="txt"><b class="mono" style="color:var(--label)">'+(i+1)+'일차</b> '+esc(DAYS[i][0])+'</span></label></li>'}).join('');
+  $('#goals').innerHTML=idx.map(function(i){return '<li><label class="cl"><input type="checkbox" class="cb" data-day="'+i+'"'+(st.days[i]?' checked':'')+'><span class="box"></span><span class="txt"><b class="mono" style="color:var(--label)">'+(i+1)+'일차</b> '+esc(dayLabel(i))+'</span></label><button type="button" class="pen" style="margin-top:6px" data-edit="day:'+i+'" aria-label="'+(i+1)+'일차 편집">✎</button></li>'}).join('');
 }
 function renderCal(){
-  var n=new Date(),y=n.getFullYear(),m=n.getMonth(),first=new Date(y,m,1).getDay(),len=new Date(y,m+1,0).getDate(),prev=new Date(y,m,0).getDate();
+  var n=new Date(),y=n.getFullYear(),m=n.getMonth(),first=new Date(y,m,1).getDay(),len=new Date(y,m+1,0).getDate();
   $('#calTitle').textContent=y+'년 '+(m+1)+'월';
   var s0=new Date(st.start+'T00:00:00'),cells=['일','월','화','수','목','금','토'].map(function(d){return '<span class="dw">'+d+'</span>'});
-  for(var i=0;i<first;i++){cells.push('<span class="d mut">'+(prev-first+1+i)+'</span>')}
-  for(var d=1;d<=len;d++){
-    var dt=new Date(y,m,d),diff=Math.round((dt-s0)/864e5),cls='d';
+  var total=Math.ceil((first+len)/7)*7;
+  for(var i=0;i<total;i++){
+    var dt=new Date(y,m,1-first+i),key=iso(dt),diff=Math.round((dt-s0)/864e5),cls='d';
+    if(dt.getMonth()!==m)cls+=' mut';
     if(diff>=0&&diff<=6){cls+=' plan';if(st.days[diff])cls+=' done'}
-    if(d===n.getDate())cls+=' today';
-    cells.push('<span class="'+cls+'">'+d+'</span>');
+    if(key===iso(n))cls+=' today';
+    if(st.notes&&st.notes[key])cls+=' has';
+    cells.push('<button type="button" class="'+cls+'" data-edit="date:'+key+'" aria-label="'+(dt.getMonth()+1)+'월 '+dt.getDate()+'일 편집">'+dt.getDate()+'</button>');
   }
-  var rest=(7-(cells.length-7)%7)%7;for(var j=1;j<=rest;j++){cells.push('<span class="d mut">'+j+'</span>')}
   $('#cal').innerHTML=cells.join('');
 }
+/* ---- 편집 모달 ---- */
+var modal=document.createElement('div');modal.className='modal';modal.hidden=true;
+modal.innerHTML='<div class="mb" role="dialog" aria-modal="true" aria-labelledby="mt"><h3 id="mt"></h3><form id="mf"></form></div>';
+document.body.appendChild(modal);
+var lastFocus=null;
+function closeModal(){modal.hidden=true;if(lastFocus&&lastFocus.focus){try{lastFocus.focus()}catch(e){}}}
+function openEdit(cfg){
+  lastFocus=document.activeElement;
+  $('#mt').textContent=cfg.title;
+  $('#mf').innerHTML=cfg.fields.map(function(f){
+    var v=f.v===undefined?'':f.v,id='mf-'+f.k,ctl;
+    if(f.opts){ctl='<select id="'+id+'" name="'+f.k+'">'+f.opts.map(function(o){return '<option value="'+esc(o[0])+'"'+(String(o[0])===String(v)?' selected':'')+'>'+esc(o[1])+'</option>'}).join('')+'</select>'}
+    else if(f.area){ctl='<textarea id="'+id+'" name="'+f.k+'">'+esc(v)+'</textarea>'}
+    else{ctl='<input id="'+id+'" name="'+f.k+'" value="'+esc(v)+'"'+(f.req?' required':'')+'>'}
+    return '<label class="f" for="'+id+'">'+esc(f.l)+ctl+'</label>';
+  }).join('')+'<div class="acts">'+(cfg.del?'<button type="button" class="btn del" id="mdel">삭제</button>':'')+'<button type="button" class="btn" id="mcan">취소</button><button type="submit" class="btn pri">저장</button></div>';
+  modal.hidden=false;
+  var f0=$('#mf input,#mf textarea,#mf select');if(f0)f0.focus();
+  $('#mcan').onclick=closeModal;
+  if(cfg.del){$('#mdel').onclick=function(){cfg.del();commit()}}
+  $('#mf').onsubmit=function(e){e.preventDefault();var o={};$$('#mf [name]').forEach(function(el){o[el.name]=el.value});cfg.save(o);commit()};
+}
+function commit(){save();closeModal();renderHome();refresh();['plan','skill','brain','routine','ext'].forEach(function(k){if(rendered[k]&&k==='plan')renderPlan()})}
+modal.addEventListener('click',function(e){if(e.target===modal)closeModal()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!modal.hidden)closeModal()});
+var ONOFF=[['1','켜짐/연결됨'],['0','꺼짐/대기']];
+function editFor(type,idx){
+  var isNew=idx==='new',i=+idx;
+  if(type==='skill'){var o=isNew?{n:'',c:'/',u:''}:st.skills[i];return {title:isNew?'스킬 추가':'스킬 편집',fields:[{k:'n',l:'이름',v:o.n,req:1},{k:'c',l:'호출 명령 (예: /daily-report)',v:o.c},{k:'u',l:'사용 빈도 (예: 주 12회)',v:o.u}],save:function(v){var r={n:v.n,c:v.c,u:v.u};if(isNew)st.skills.push(r);else st.skills[i]=r},del:isNew?null:function(){st.skills.splice(i,1)}}}
+  if(type==='rt'){var r0=isNew?{n:'',t:'매일 09:00',c:'/',on:1}:st.rt[i];return {title:isNew?'루틴 추가':'루틴 편집',fields:[{k:'n',l:'루틴 이름',v:r0.n,req:1},{k:'t',l:'실행 시각',v:r0.t},{k:'c',l:'호출할 스킬',v:r0.c},{k:'on',l:'상태',v:r0.on?'1':'0',opts:[['1','켜짐'],['0','꺼짐']]}],save:function(v){var r={n:v.n,t:v.t,c:v.c,on:+v.on};if(isNew)st.rt.push(r);else st.rt[i]=r},del:isNew?null:function(){st.rt.splice(i,1)}}}
+  if(type==='ext'){var x=isNew?{n:'',d:'커넥터 · ',on:0}:st.exts[i];return {title:isNew?'익스텐션 추가':'익스텐션 편집',fields:[{k:'n',l:'이름',v:x.n,req:1},{k:'d',l:'종류·용도',v:x.d},{k:'on',l:'상태',v:x.on?'1':'0',opts:[['1','연결됨'],['0','대기']]}],save:function(v){var r={n:v.n,d:v.d,on:+v.on};if(isNew)st.exts.push(r);else st.exts[i]=r},del:isNew?null:function(){st.exts.splice(i,1)}}}
+  if(type==='recent'){var f=isNew?{t:'MD',n:'',id:'',w:'방금'}:st.recent[i];return {title:isNew?'최근 파일 추가':'최근 파일 편집',fields:[{k:'n',l:'파일 이름',v:f.n,req:1},{k:'t',l:'종류',v:f.t,opts:[['MD','MD'],['XLS','XLS'],['PDF','PDF'],['DOC','DOC'],['TXT','TXT']]},{k:'id',l:'탐색기에서 열 노드',v:f.id,opts:NODEOPT},{k:'w',l:'시점',v:f.w}],save:function(v){var r={t:v.t,n:v.n,id:v.id,w:v.w};if(isNew)st.recent.unshift(r);else st.recent[i]=r},del:isNew?null:function(){st.recent.splice(i,1)}}}
+  if(type==='day'){return {title:(i+1)+'일차 목표 편집',fields:[{k:'t',l:'할 일',v:dayLabel(i),area:1},{k:'d',l:'상태',v:st.days[i]?'1':'0',opts:[['1','완료'],['0','미완료']]}],save:function(v){st.dayText[i]=v.t.trim()===DAYS[i][0]?'':v.t.trim();st.days[i]=+v.d},del:st.dayText[i]?function(){st.dayText[i]=''}:null,delLabel:'기본값으로'}}
+  if(type==='date'){var key=idx;return {title:key+' 편집',fields:[{k:'note',l:'메모',v:(st.notes&&st.notes[key])||'',area:1},{k:'start',l:'7일 계획 시작일',v:'0',opts:[['0','변경 안 함'],['1','이 날짜부터 시작']]}],save:function(v){if(!st.notes)st.notes={};if(v.note.trim())st.notes[key]=v.note.trim();else delete st.notes[key];if(v.start==='1')st.start=key}}}
+}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('[data-edit]');if(!b)return;
+  var a=b.getAttribute('data-edit'),p=a.indexOf(':'),cfg=editFor(a.slice(0,p),a.slice(p+1));
+  if(cfg){if(cfg.delLabel){cfg.del=cfg.del||null}openEdit(cfg);if(cfg.delLabel&&cfg.del){$('#mdel').textContent=cfg.delLabel}}
+});
 document.addEventListener('click',function(e){
   var o=e.target.closest('[data-open]');
-  if(o){var id=o.getAttribute('data-open');location.hash='#brain';setTimeout(function(){if(window.__brainSelect)window.__brainSelect(id)},60)}
+  if(o){var id=o.getAttribute('data-open');if(!id){return}location.hash='#brain';setTimeout(function(){if(window.__brainSelect)window.__brainSelect(id)},60)}
   var r=e.target.closest('[data-rt]');
-  if(r){var i=+r.getAttribute('data-rt');st.routines[i]=st.routines[i]?0:1;r.setAttribute('aria-pressed',st.routines[i]?'true':'false');save()}
+  if(r){var i=+r.getAttribute('data-rt');st.rt[i].on=st.rt[i].on?0:1;r.setAttribute('aria-pressed',st.rt[i].on?'true':'false');save()}
 });
 var ringEl=$('#ring'),shown=0;
 function refresh(){
@@ -304,10 +344,10 @@ document.addEventListener('click',function(e){
 });
 
 /* ---------- 브랜드 라이브러리 ---------- */
-var BR=[['Nomad Coral','#FF8D74','CTA·강조'],['Lab Ink','#0D0A09','배경'],['Sand','#F4ECE6','본문 글자'],['Signal Teal','#3CC8C0','개발 분야'],['Amber','#F2B53A','재무·주의']];
+var BR=[['Agents Coral','#FF8D74','CTA·강조'],['Lab Ink','#0D0A09','배경'],['Sand','#F4ECE6','본문 글자'],['Signal Teal','#3CC8C0','개발 분야'],['Amber','#F2B53A','재무·주의']];
 function renderBrand(){
   $('#v-brand').innerHTML='<div style="display:flex;flex-direction:column;gap:var(--sec)"><div class="sec-head"><p class="eyebrow">BRAND LIBRARY</p><h2>브랜드 라이브러리</h2><p class="sub">로고, 색, 글꼴, 말투를 한곳에 모아 두고 스킬과 콘텐츠에서 같은 기준으로 불러 씁니다. 값은 예시이며 내 브랜드에 맞게 바꾸세요.</p></div>'+
-  '<div class="two"><div class="panelbox"><div class="ph"><span>로고</span><small>Nomad-Lab</small></div><div style="display:flex;align-items:center;gap:14px;padding:18px;background:var(--stage);border-radius:10px"><svg viewBox="0 0 32 32" width="56" height="56" aria-hidden="true"><circle cx="16" cy="16" r="6.5" fill="var(--accent)"/><ellipse cx="16" cy="16" rx="14" ry="5.5" fill="none" stroke="var(--accent)" stroke-width="1.6" transform="rotate(-24 16 16)"/><circle cx="27" cy="9.2" r="2.2" fill="var(--ink)"/></svg><b style="font-size:30px;letter-spacing:-.02em">Nomad<span style="color:var(--accent)">-Lab</span></b></div><ul class="bl"><li>궤도 안의 구는 메인 에이전트, 바깥 점은 연결된 도구를 뜻합니다.</li><li>로고 주변 여백은 로고 높이의 절반 이상 비웁니다.</li><li>어두운 배경이 기본이며, 밝은 배경에서는 코랄을 한 단계 진하게 씁니다.</li></ul></div>'+
+  '<div class="two"><div class="panelbox"><div class="ph"><span>로고</span><small>Nomad-Agents-SYSTEM</small></div><div style="display:flex;align-items:center;gap:14px;padding:18px;background:var(--stage);border-radius:10px"><svg viewBox="0 0 32 32" width="56" height="56" aria-hidden="true"><circle cx="16" cy="16" r="6.5" fill="var(--accent)"/><ellipse cx="16" cy="16" rx="14" ry="5.5" fill="none" stroke="var(--accent)" stroke-width="1.6" transform="rotate(-24 16 16)"/><circle cx="27" cy="9.2" r="2.2" fill="var(--ink)"/></svg><b style="font-size:26px;letter-spacing:-.02em">Nomad<span style="color:var(--accent)">-Agents-</span>SYSTEM</b></div><ul class="bl"><li>궤도 안의 구는 메인 에이전트, 바깥 점은 연결된 도구를 뜻합니다.</li><li>로고 주변 여백은 로고 높이의 절반 이상 비웁니다.</li><li>어두운 배경이 기본이며, 밝은 배경에서는 코랄을 한 단계 진하게 씁니다.</li></ul></div>'+
   '<div class="panelbox"><div class="ph"><span>글꼴과 말투</span></div><ul class="bl"><li>본문 Noto Sans KR 400·500, 제목 700·800</li><li>숫자와 코드 JetBrains Mono</li><li>말투: 존댓말, 짧은 문장, 결론 먼저</li><li>금지: 과장 표현, 근거 없는 수익 보장, 이모지 남발</li></ul><div class="note"><b>스킬 연결</b> 이 페이지 내용을 AGENTS.md의 결과물 기준에 옮기면 모든 결과물에 같은 톤이 적용됩니다.</div></div></div>'+
   '<div><div class="ph" style="margin-bottom:10px"><span>색상 팔레트</span><small>눌러서 HEX 복사</small></div><div class="sw-grid">'+BR.map(function(c){return '<button type="button" class="swc" data-copy="'+c[1]+'"><i style="--c:'+c[1]+'"></i><div><b>'+esc(c[0])+'</b><small>'+c[1]+'</small><span class="sub">'+esc(c[2])+'</span></div></button>'}).join('')+'</div></div></div>';
 }
@@ -383,7 +423,7 @@ document.addEventListener('keydown',function(e){
 /* ---------- 7일 계획, 기획 ---------- */
 function renderPlan(){
   $('#v-plan').innerHTML='<div style="display:flex;flex-direction:column;gap:var(--gap)"><div class="sec-head"><p class="eyebrow">7 DAYS</p><h2>7일 세팅 계획</h2><p class="sub">하루에 한 단계씩, 작게 시작합니다. 끝까지 완성한 작은 시스템이 하다 만 큰 시스템보다 낫습니다. (가이드 p.13)</p></div>'+
-  '<div class="two"><div class="panelbox"><div class="ph"><span>날짜별 할 일</span><small class="mono" id="pcnt">0/7</small></div><ul id="planList">'+DAYS.map(function(d,i){return '<li><label class="cl"><input type="checkbox" class="cb" data-day="'+i+'"><span class="box"></span><span class="txt"><b class="mono" style="color:var(--label)">'+(i+1)+'일차</b> '+esc(d[0])+' <span class="tagx">'+esc(d[1])+'</span></span></label></li>'}).join('')+'</ul><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button type="button" class="btn sm" id="startToday">시작일을 오늘로</button><span class="sub">시작일 <span class="mono" id="startTxt"></span></span></div></div>'+
+  '<div class="two"><div class="panelbox"><div class="ph"><span>날짜별 할 일</span><small class="mono" id="pcnt">0/7</small></div><ul id="planList">'+DAYS.map(function(d,i){return '<li style="display:flex;gap:6px"><label class="cl" style="flex:1"><input type="checkbox" class="cb" data-day="'+i+'"><span class="box"></span><span class="txt"><b class="mono" style="color:var(--label)">'+(i+1)+'일차</b> '+esc(dayLabel(i))+' <span class="tagx">'+esc(d[1])+'</span></span></label><button type="button" class="pen" style="margin-top:6px" data-edit="day:'+i+'" aria-label="편집">✎</button></li>'}).join('')+'</ul><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button type="button" class="btn sm" id="startToday">시작일을 오늘로</button><span class="sub">시작일 <span class="mono" id="startTxt"></span></span></div></div>'+
   '<div style="display:flex;flex-direction:column;gap:var(--gap)"><div class="note"><b>유지 관리 (매주 15분)</b><br>AGENTS.md의 낡은 내용 지우기, 스킬 파일 하나 다듬기, 루틴 결과가 제대로 도착했는지 확인. 낡은 지침은 없는 지침보다 위험합니다. AI는 그 내용을 믿고 그대로 일하기 때문입니다.</div>'+
   '<div class="panelbox"><div class="ph"><span>SSR+ 체크리스트</span><small class="mono" id="ckCnt">0/4</small></div><ul>'+CHECK.map(function(c,i){return '<li><label class="cl"><input type="checkbox" class="cb" data-ck="'+i+'"'+(st.ck[i]?' checked':'')+'><span class="box"></span><span class="txt"><b>'+esc(c[0])+'</b> · '+esc(c[1])+'</span></label></li>'}).join('')+'</ul><p class="sub">네 칸이 모두 채워지면 나만의 AI 에이전트 시스템이 완성됩니다.</p></div></div></div></div>';
   $('#startTxt').textContent=st.start;
@@ -424,7 +464,7 @@ function show(id){
   el.hidden=false;cur=id;
   $$('.nl').forEach(function(a){if(a.getAttribute('data-v')===id){a.setAttribute('aria-current','page')}else{a.removeAttribute('aria-current')}});
   $('#vt').textContent=VIEWS[id].t;
-  document.title=VIEWS[id].t+' · Nomad-Lab';
+  document.title=VIEWS[id].t+' · Nomad-Agents-SYSTEM';
   closeNav();
   window.scrollTo(0,0);
   window.__view=id;document.dispatchEvent(new CustomEvent('viewchange',{detail:id}));
