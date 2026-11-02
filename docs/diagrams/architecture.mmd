@@ -1,0 +1,29 @@
+flowchart LR
+  user["사용자 브라우저"]
+  subgraph vercel["Vercel"]
+    subgraph next["Next.js 앱"]
+      auth["(auth) 로그인·콜백"]
+      app["(app) 13화면 + 모달 6종"]
+      three["3D 모듈 (홈 입자 구·탐색기)"]
+      dal["데이터 접근 계층"]
+    end
+  end
+  subgraph supa["Supabase"]
+    sauth["Auth (매직링크)"]
+    udb[("사용자 데이터 + RLS")]
+    cdb[("카탈로그 (읽기 전용)")]
+    stor[("Storage guide 이미지")]
+  end
+  ls[("localStorage<br/>nomad-lab-v1 · nomad-theme · nomad-lbl")]
+  user --> app
+  user --> auth
+  app --> three
+  app --> dal
+  three -.->|"nomad-lbl"| ls
+  app -.->|"nomad-theme"| ls
+  dal -->|"비로그인"| ls
+  dal -->|"로그인 (RLS)"| udb
+  dal --> cdb
+  auth --> sauth
+  auth -->|"첫 로그인 가져오기"| udb
+  app -->|"공개 URL"| stor

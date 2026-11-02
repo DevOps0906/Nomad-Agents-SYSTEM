@@ -1,0 +1,15 @@
+flowchart TD
+  req["화면 요청 (S01–S13)"] --> layout["셸 레이아웃: GNB·상단 바<br/>테마는 localStorage nomad-theme"]
+  layout --> cat["카탈로그 읽기 (서버, 캐시)"]
+  layout --> who{"로그인?"}
+  who -->|"예"| udb["사용자 데이터 읽기<br/>Supabase + RLS"]
+  who -->|"아니오"| uls["localStorage nomad-lab-v1<br/>누락 키는 DEF로 보충"]
+  cat --> render["화면 렌더 (아티팩트 1:1)"]
+  udb --> render
+  uls --> render
+  render --> edit["사용자 변경 (체크·모달 저장 등)"]
+  edit --> save{"로그인?"}
+  save -->|"예"| sa["Server Action 저장 → DB"]
+  save -->|"아니오"| sl["localStorage 저장"]
+  sa --> refresh["홈·GNB 진행률·관련 화면 갱신"]
+  sl --> refresh

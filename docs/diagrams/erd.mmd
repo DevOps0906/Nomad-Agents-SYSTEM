@@ -1,0 +1,198 @@
+erDiagram
+  admins {
+    uuid user_id PK,FK
+    timestamptz created_at
+  }
+  ssr_stages {
+    text key PK
+    text state_key
+    smallint part_no
+    text letter
+    text en_label
+    text title
+    text lead
+    smallint sort_order
+  }
+  ssr_personas {
+    text stage_key PK,FK
+    text persona PK
+    text body
+  }
+  ssr_levels {
+    text stage_key PK,FK
+    smallint level_index PK
+    text tag
+    text title
+    smallint guide_page
+    jsonb blocks
+  }
+  prompts {
+    text key PK
+    text title
+    text body
+    timestamptz updated_at
+  }
+  art_apps {
+    text id PK
+    text name
+    text category
+    text status
+    text version
+    text rust_version
+    text mcp_code
+    text similar_app
+    text tag
+    text formats
+    text description
+    text__ features
+    string more_12_cols
+  }
+  guide_docs {
+    text key PK
+    text title
+    smallint page_count
+    smallint sort_order
+  }
+  guide_pages {
+    text doc_key PK,FK
+    smallint page_no PK
+    text image_path
+    text body_text
+  }
+  plan_day_defaults {
+    smallint day_index PK
+    text task
+    text tag
+  }
+  ssr_checklist_items {
+    smallint item_index PK
+    text letter
+    text label
+    text done_text
+  }
+  brand_colors {
+    smallint id PK
+    text name
+    text hex
+    text role
+  }
+  content_seeds {
+    smallint id PK
+    text title
+    text channel
+    smallint stage
+  }
+  brain_nodes {
+    text id PK
+    text parent_id FK
+    text kind
+    text domain
+    text name
+    text path
+    text description
+    text body
+    smallint sort_order
+  }
+  brain_links {
+    text source_id PK,FK
+    text target_id PK,FK
+  }
+  user_settings {
+    uuid owner_id PK,FK
+    date plan_start
+    timestamptz imported_v1_at
+    timestamptz created_at
+    timestamptz updated_at
+  }
+  level_progress {
+    uuid owner_id PK,FK
+    text stage_key PK
+    smallint level_index PK
+    boolean done
+    timestamptz updated_at
+  }
+  plan_days {
+    uuid owner_id PK,FK
+    smallint day_index PK,FK
+    boolean done
+    text custom_text
+    timestamptz updated_at
+  }
+  checklist_progress {
+    uuid owner_id PK,FK
+    smallint item_index PK,FK
+    boolean done
+    timestamptz updated_at
+  }
+  ideas {
+    bigint id PK
+    uuid owner_id FK
+    text body
+    text category
+    smallint score
+    bigint legacy_id
+    timestamptz created_at
+  }
+  content_items {
+    bigint id PK
+    uuid owner_id FK
+    text title
+    text channel
+    smallint stage
+    integer sort_order
+    timestamptz created_at
+  }
+  skills {
+    bigint id PK
+    uuid owner_id FK
+    text name
+    text command
+    text frequency
+    integer sort_order
+    timestamptz created_at
+  }
+  routines {
+    bigint id PK
+    uuid owner_id FK
+    text name
+    text schedule_text
+    text skill_command
+    boolean enabled
+    integer sort_order
+    timestamptz created_at
+  }
+  user_extensions {
+    bigint id PK
+    uuid owner_id FK
+    text name
+    text kind_desc
+    boolean connected
+    integer sort_order
+    timestamptz created_at
+  }
+  recent_files {
+    bigint id PK
+    uuid owner_id FK
+    text brain_node_id FK
+    text name
+    text file_type
+    text when_label
+    integer sort_order
+    timestamptz created_at
+  }
+  date_notes {
+    uuid owner_id PK,FK
+    date note_date PK
+    text body
+    timestamptz updated_at
+  }
+  ssr_stages ||--o{ ssr_personas : "stage_key"
+  ssr_stages ||--o{ ssr_levels : "stage_key"
+  guide_docs ||--o{ guide_pages : "doc_key"
+  brain_nodes ||--o{ brain_nodes : "parent_id"
+  brain_nodes ||--o{ brain_links : "source_id"
+  brain_nodes ||--o{ brain_links : "target_id"
+  ssr_levels ||--o{ level_progress : "stage_key"
+  plan_day_defaults ||--o{ plan_days : "day_index"
+  ssr_checklist_items ||--o{ checklist_progress : "item_index"
+  brain_nodes ||--o{ recent_files : "brain_node_id"

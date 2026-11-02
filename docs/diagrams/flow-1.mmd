@@ -1,0 +1,23 @@
+sequenceDiagram
+  actor U as 사용자
+  participant B as 브라우저 (localStorage)
+  participant N as Next.js (auth)
+  participant A as Supabase Auth
+  participant D as Supabase DB (RLS)
+  U->>N: 이메일 입력
+  N->>A: 매직링크 요청
+  A-->>U: 메일 발송
+  U->>N: 링크 클릭 (콜백)
+  N->>A: 코드 → 세션 교환
+  A-->>N: 세션 쿠키
+  N->>D: imported_v1_at 확인
+  alt imported_v1_at null + nomad-lab-v1 있음
+    N-->>U: T2 가져오기 확인
+    B->>N: nomad-lab-v1 값 1회 전송
+    N->>N: 형식 검증 (누락 키는 DEF로 보충)
+    N->>D: upsert (owner = auth.uid())
+    N-->>B: 가져오기 완료 표시 [추정]
+  else 이미 가져옴 또는 로컬 값 없음
+    N-->>U: 가져오기 없음 (DEF는 가입 트리거가 생성, D15)
+  end
+  N-->>U: 홈(/)으로 이동

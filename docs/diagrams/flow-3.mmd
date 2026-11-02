@@ -1,0 +1,11 @@
+flowchart TD
+  open["S03 세컨드 브레인 진입<br/>또는 홈에서 __brainSelect"] --> load["카탈로그 노드·엣지 읽기<br/>(As-Is 노드 25 · 포함 15 · 링크 26)"]
+  load --> panel["패널: 파일 목록 트리 · 검색"]
+  load --> gl{"WebGL 가능?"}
+  gl -->|"아니오"| fb["폴백 안내, 모드·줌 버튼 disabled<br/>패널·검색은 동작"]
+  gl -->|"예"| lay["시드 고정 배치 700회<br/>3D(시드 11)·2D(시드 23)"]
+  lay --> lbl["라벨 옵션 읽기<br/>localStorage nomad-lbl"]
+  lbl --> draw["장면 그리기·등장 애니메이션"]
+  draw --> sel{"선택 id 있음?"}
+  sel -->|"예"| focus["카메라 이동·관련 엣지 강조·패널 상세"]
+  sel -->|"아니오"| idle["전체 보기 대기"]

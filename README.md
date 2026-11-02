@@ -7,6 +7,56 @@ Nomad-Lab AI 업무 시스템 — **SSR+** (Skill · Second brain · Routine · 
 - `app/index.html`을 브라우저로 열면 바로 실행됩니다. (three.js r128, GSAP 3.12.5, Google Fonts는 CDN)
 - `app/guide/`의 PDF 쪽 이미지(ssr-01~13.jpg, art-1~4.jpg)를 같은 폴더에서 불러옵니다.
 - 데이터는 예시이며 서버가 없습니다. 모든 입력은 브라우저 localStorage에 저장됩니다.
+- `app/index.html`에는 `<meta charset>`이 없습니다(Claude 아티팩트 게시 때 래퍼가 붙임). 로컬에서는 UTF-8을 알려 주는 서버로 여세요(예: Python `http.server`에서 `.html`을 `text/html; charset=utf-8`로). 그렇지 않으면 한글이 깨질 수 있습니다.
+
+## 진행 현황 (2026-11-03 기준)
+단일 파일 시안(아티팩트 정본)은 완성됐고, 이를 Next.js + Supabase 플랫폼으로 옮기는 **역기획 문서 세트**를 작성했습니다. 플랫폼 구현은 아직 시작 전입니다.
+
+| 영역 | 현재 상태 |
+|---|---|
+| 시안 사이트 (`app/index.html`) | 완료 — 13화면, 3D 2종, 반응형 3구간, localStorage 저장 |
+| 플랫폼 기획 (`docs/`) | 초안 완료 — LEAN·PRD·아키텍처·화면·API·데이터·작업 분해·ADR 3, 문서 리뷰 반영 |
+| 플랫폼 구현 | 시작 전 — W0 게이트(미결 Q1~Q4, 제3자 이미지 사용 허락) 대기 |
+
+제한: 시안은 서버·로그인이 없고 데이터가 브라우저에만 남습니다. 기획의 [추정] 항목(가격, 성공 지표 목표치, 일부 설계)은 확정 전입니다.
+
+### 작업 진행률
+근거: [`docs/06_AGENT_PLAN.md`](docs/06_AGENT_PLAN.md)의 작업 개수(완료/전체).
+
+| 웨이브 | 내용 | 완료/전체 |
+|---|---|---|
+| 기획 | 역기획 문서 세트 | 1/1 |
+| W0 | 착수 전 게이트 | 0/1 |
+| W1 | 뼈대·보안·마이그레이션·셸 | 0/4 |
+| W2 | 카탈로그 시드·Storage | 0/2 |
+| W3 | 13화면 패리티 | 0/5 |
+| W4 | 로그인·서버 저장·가져오기 | 0/4 |
+| W5 | 패리티 검수·배포 | 0/2 |
+
+### 구현된 주요 항목
+- [x] 시안 13화면(홈·SSR+ 4단계·브랜드·콘텐츠·아이디어·ArtCraft 2화면·가이드·7일 계획·기획 요약)
+- [x] 홈 입자 구 3D, 세컨드 브레인 3D 탐색기
+- [x] ArtCraft 앱 16종 카드(런처 아이콘)·상세 가이드·설치 프롬프트
+- [x] 플랫폼 역기획 문서 세트(`docs/`)
+
+### 다음 개발 단계
+- [ ] W0: 요금제·첫 고객·카탈로그 편집 방식·second-brain 연동 방식 결정, 아이콘·가이드 이미지 사용 허락 확인
+- [ ] W1: Next.js 뼈대·토큰 이식, Supabase 마이그레이션(RLS), 공통 셸
+- [ ] W2~W3: 카탈로그 시드 후 13화면 패리티 구현
+- [ ] W4~W5: 로그인·서버 저장·가져오기, 패리티 검수, 배포
+
+## 콘텐츠 바로가기
+| 콘텐츠 | 화면 경로 | 기획·명세 문서 | 구현 코드 |
+|---|---|---|---|
+| 기획 목차 | — | [`docs/PLAN.md`](docs/PLAN.md) | — |
+| 홈 대시보드 | `#home` | [`docs/03_SCREENS_UX.md`](docs/03_SCREENS_UX.md) S01 | [`src/body.html`](src/body.html), [`src/app.js`](src/app.js), [`src/home3d.js`](src/home3d.js) |
+| SSR+ 4단계·3D 탐색기 | `#skill` `#brain` `#routine` `#ext` | [`docs/03_SCREENS_UX.md`](docs/03_SCREENS_UX.md) S02~S05 | [`src/app.js`](src/app.js), [`src/explorer.js`](src/explorer.js), [`src/prompts.json`](src/prompts.json) |
+| 브랜드·콘텐츠·아이디어 | `#brand` `#content` `#ideas` | [`docs/03_SCREENS_UX.md`](docs/03_SCREENS_UX.md) S06~S08 | [`src/app.js`](src/app.js) |
+| ArtCraft 앱 16종 | `#artcraft` `#artapps` | [`docs/03_SCREENS_UX.md`](docs/03_SCREENS_UX.md) S09·S10 | [`src/app.js`](src/app.js), [`src/style.css`](src/style.css) |
+| 사용 가이드(PDF 17쪽) | `#guide` | [`docs/03_SCREENS_UX.md`](docs/03_SCREENS_UX.md) S11 | [`app/guide/`](app/guide/), [`src/pages.json`](src/pages.json) |
+| 7일 계획·기획 요약 | `#plan` `#spec` | [`docs/03_SCREENS_UX.md`](docs/03_SCREENS_UX.md) S12·S13 | [`src/app.js`](src/app.js) |
+| 데이터·API (플랫폼) | — | [`docs/05_DATA_MODEL.md`](docs/05_DATA_MODEL.md), [`docs/04_API.md`](docs/04_API.md), [`docs/sql/0001_init.sql`](docs/sql/0001_init.sql) | — |
+| 디자인 | — | [`docs/DESIGN.md`](docs/DESIGN.md) | [`src/style.css`](src/style.css) |
 
 ## 저장소 구조
 | 경로 | 내용 |
@@ -20,7 +70,7 @@ Nomad-Lab AI 업무 시스템 — **SSR+** (Skill · Second brain · Routine · 
 | `src/explorer.js` | 세컨드 브레인 3D 탐색기(입자 구, 라벨 옵션) |
 | `src/prompts.json`, `src/pages.json` | PDF에서 추출한 프롬프트·페이지 텍스트 |
 | `src/build.js`, `src/old.html` | 소스 조합 스크립트와 탐색기 마크업 원본 |
-| `docs/PLAN.md` | 기획·디자인 구조 |
+| `docs/PLAN.md` | 플랫폼 역기획 문서 목차 (`docs/00_LEAN.md` ~ `06_AGENT_PLAN.md`, `DESIGN.md`, `adr/`, `sql/`, `diagrams/`, `_research/`) |
 
 ### 빌드
 ```bash
@@ -58,7 +108,7 @@ cd src && node build.js   # ../app/index.html 생성
 SSR+ 13쪽 + ArtCraft 4쪽을 이미지 뷰어로 제공합니다. 썸네일, 쪽 이동, 본문 검색, 쪽별 텍스트. 발표자 얼굴 화면은 제외했습니다.
 
 ### ArtCraft 앱 (16종)
-- **`#artcraft`**: 연결 구조(런처→앱→MCP·CLI→AGENTS.md→Claude), 앱 16종 카드(4열, 모바일 1열). 이미지·사진 / 영상·사운드 / 문서·출판 / 디자인·설계 / 도구로 거르기. 카드에는 런처 아이콘, 한 줄 소개, 비슷한 앱, MCP·버전 표시. 상단에 **가이드 보기 · 앱 16종 상세 가이드 · ArtCraft 사이트 바로가기 · 런처 다운받기** 버튼.
+- **`#artcraft`**: 연결 구조(런처→앱→MCP·CLI→AGENTS.md→Claude), 앱 16종 카드(자동 채움 최소 236px·간격 22px, 모바일 1열). 이미지·사진 / 영상·사운드 / 문서·출판 / 디자인·설계 / 도구로 거르기. 카드에는 런처 아이콘, 한 줄 소개, 비슷한 앱, MCP·버전 표시. 상단에 **가이드 보기 · 앱 16종 상세 가이드 · ArtCraft 사이트 바로가기 · 런처 다운받기** 버튼.
 - **`#artapps` 앱 16종 상세 가이드**: 앱별 설명·핵심 기능·한눈에 보기(비슷한 앱, 지원 형식, 런처 버전, 개발 상태, MCP·CLI, Rust 요구 버전)·예시 요청·**CLI·MCP 설치 프롬프트(복사)**·알아둘 점·공식 링크. 설치 전 확인 사항, OS별 권한 때문에 직접 해야 하는 부분, 만능 설치 틀, 여러 앱 한 번에 설치 프롬프트 포함.
 - 앱: PhotoCraft · VectorCraft · FilmCraft · LightCraft · PdfCraft · EffectCraft · DesignCraft · FigCraft · WordCraft · SoundCraft · DeckCraft · CADCraft · GridCraft · TextureCraft · Craft Anything · SolidCraft(Tangency Labs, 외부 제작).
 - 정보 출처: getartcraft.com 앱 소개 페이지, 런처 화면(2026-11-02). "비슷한 앱"의 (추정)은 앱 설명을 보고 붙인 비교이며 공식 설명이 아닙니다. MCP는 공식 페이지에 명시된 앱만 표시하고 나머지는 "미기재"입니다.

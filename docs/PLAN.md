@@ -7,7 +7,7 @@
 | 순서 | 문서 | 내용 |
 |---|---|---|
 | 0 | [`_research/SITE_FACTS.md`](_research/SITE_FACTS.md) | 사이트 사실 시트(화면·데이터·3D·토큰, 줄 근거 Lnnn) — 모든 문서의 근거 |
-| 0 | [`_research/DECISIONS.md`](_research/DECISIONS.md) | 팀장 결정 D1~D10, 미결 Q1~Q4 |
+| 0 | [`_research/DECISIONS.md`](_research/DECISIONS.md) | 팀장 결정 D1~D18, 미결 Q1~Q6 |
 | 1 | [`00_LEAN.md`](00_LEAN.md) | 문제·고객·가설·가장 싼 검증 |
 | 2 | [`01_PRD.md`](01_PRD.md) | 페르소나 시나리오·범위(MVP/이후)·수익·지표·보안 |
 | 3 | [`02_ARCHITECTURE.md`](02_ARCHITECTURE.md) | As-Is(단일 HTML) → To-Be(Next.js + Supabase) 구성·경계·흐름 |
